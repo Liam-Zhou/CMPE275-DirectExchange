@@ -64,16 +64,16 @@ class Login extends Component {
                                         type="password"
                                            className="form-control" name="password" placeholder="Password"/>
                                 </div>
-                                <label className="radio-inline">
-                                    <input type="radio" name="role"
-                                           // onChange={}
-                                           value="student"/> student
-                                </label>
-                                <label className="radio-inline">
-                                    <input type="radio" name="role"
-                                           // onChange={}
-                                           value="company"/> company
-                                </label>
+                                {/*<label className="radio-inline">*/}
+                                {/*    <input type="radio" name="role"*/}
+                                {/*           // onChange={}*/}
+                                {/*           value="student"/> student*/}
+                                {/*</label>*/}
+                                {/*<label className="radio-inline">*/}
+                                {/*    <input type="radio" name="role"*/}
+                                {/*           // onChange={}*/}
+                                {/*           value="company"/> company*/}
+                                {/*</label>*/}
                                 <button
                                     // onClick={}
                                     className="button">Login</button>
