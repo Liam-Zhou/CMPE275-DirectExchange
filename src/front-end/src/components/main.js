@@ -1,7 +1,7 @@
 import React, {Component} from 'react';
 import {Route} from 'react-router-dom';
 import Login from './Login/login';
-
+import Signup from './Login/signup';
 
 
 
@@ -15,7 +15,7 @@ class Main extends Component {
                 <Route path="/home" component={Login}/>
                 <Route path="/login" component={Login}/>
 
-                {/*<Route path="/signup" component={Signup}/>*/}
+                <Route path="/signup" component={Signup}/>
 
             </div>
         )

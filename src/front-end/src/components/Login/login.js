@@ -4,6 +4,13 @@ import axios from 'axios';
 import {Redirect} from 'react-router';
 import config from '../../config/basicConfig'
 import money from '../../img/money.png'
+import { actionCreators } from '../../store/reducer/userinfo'
+import { connect } from "react-redux";
+import firebase from 'firebase'
+import 'firebaseui/dist/firebaseui.css'
+require('firebase/auth')
+// let firebase = require('firebase');
+let firebaseui = require('firebaseui');
 
 
 //Define a Login Component
@@ -18,6 +25,34 @@ class Login extends Component {
             role : "",
             message:''
         }
+    }
+    componentWillMount(){
+        // TODO: Replace the following with your app's Firebase project configuration
+        // For Firebase JavaScript SDK v7.20.0 and later, `measurementId` is an optional field
+        const firebaseConfig = {
+            apiKey: "AIzaSyAh_2Ac_Dn3NDoqUkrSApaDd5hZixJ6dKE",
+            authDomain: "direct-exchange.firebaseapp.com",
+            databaseURL: "https://direct-exchange.firebaseio.com",
+            projectId: "direct-exchange",
+            storageBucket: "direct-exchange.appspot.com",
+            messagingSenderId: "551976198923",
+            appId: "1:551976198923:web:623ffd4267dd954c85f80e"
+        };
+        // Initialize Firebase
+        if (!firebase.apps.length) {
+            firebase.initializeApp(firebaseConfig);
+        }
+        let ui = new firebaseui.auth.AuthUI(firebase.auth());
+        // firebase.initializeApp(firebaseConfig);
+        ui.start('#firebaseui-auth-container', {
+            signInOptions: [
+                // List of OAuth providers supported.
+                firebase.auth.GoogleAuthProvider.PROVIDER_ID,
+                firebase.auth.FacebookAuthProvider.PROVIDER_ID,
+                // firebase.auth.TwitterAuthProvider.PROVIDER_ID,
+                // firebase.auth.GithubAuthProvider.PROVIDER_ID
+            ],
+        });
     }
     render() {
         let redirectVar = null;
@@ -36,9 +71,9 @@ class Login extends Component {
         let url = host + ':' + port;
         return(
             <div>
-                <div className="container">
 
-                    <div className="maincenter">
+                <div className="container" >
+                    <div className="maincenter" style={{"height":"600px"}}>
                         <div align="center">
                             <h2>Direct Exchange</h2>
                         </div>
@@ -74,10 +109,10 @@ class Login extends Component {
                                 {/*           // onChange={}*/}
                                 {/*           value="company"/> company*/}
                                 {/*</label>*/}
-                                <button
-                                    // onClick={}
-                                    className="button">Login</button>
+                                <div id='firebaseui-auth-container' ></div>
+                                <button className="button">Login</button>
                             </div>
+
                             <div><h4>{this.state.message}</h4></div>
                         </div>
 
@@ -91,4 +126,26 @@ class Login extends Component {
     }
 }
 //export Login Component
-export default Login;
+const mapStateToProps = (state) => {
+    return {
+        isLogin: state.userinfo.isLogin,
+        // userType: state.userinfo.userType,
+        // school_id: state.userinfo.schoolID,
+        // campus: state.userinfo.campus,
+    }
+}
+const mapDispatchToProps = (dispatch) => ({
+    login(email, pwd) {
+        dispatch(actionCreators.login(email, pwd));
+    },
+    // remember(e) {
+    //
+    //     const action = {
+    //         type: '',
+    //         value: e
+    //     }
+    //     dispatch(action)
+    // },
+})
+
+export default connect(mapStateToProps, mapDispatchToProps)(Login);
