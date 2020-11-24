@@ -1,16 +1,21 @@
 package com.example.demo.entities;
 
 import com.example.demo.enums.Currency;
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
+import lombok.ToString;
 import org.hibernate.annotations.Immutable;
 
 import javax.persistence.*;
+import java.util.Objects;
 
 @Entity
 @Table(name="bank_account_details")
-//@Data
+@Data
 public class BankAccount {
 
     @Id
@@ -43,8 +48,11 @@ public class BankAccount {
     private Boolean receiving;
 
     @ManyToOne
-    @JoinColumn(name="user_id", nullable=false, insertable = false,updatable = false)
-    @JsonManagedReference
+    @JoinColumn(name="user_id",insertable = false,updatable = false,nullable = true)
+//    @JsonBackReference
+    @ToString.Exclude
+    @Getter
+    @Setter
     @JsonIgnore
     private User userId;
 

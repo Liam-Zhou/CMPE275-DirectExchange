@@ -2,11 +2,16 @@ package com.example.demo.entities;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
+import lombok.ToString;
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Immutable;
 
 import javax.persistence.*;
+import java.util.List;
 import java.util.Set;
 
 @Entity
@@ -41,8 +46,12 @@ public class User {
 //    private String providerId;
 
     @OneToMany(mappedBy="userId")
-    @JsonBackReference
-    private Set<BankAccount> accounts;
+    @JsonIgnore
+//    @JsonManagedReference
+    @ToString.Exclude
+    @Getter
+    @Setter
+    private List<BankAccount> accounts;
 
     @OneToMany(mappedBy="userId")
     @JsonBackReference
@@ -51,5 +60,14 @@ public class User {
     @Column(name="rating", nullable = false)
     private double rating;
 
+    public void addAcct(BankAccount acct) {
+        this.accounts.add(acct);
+        acct.setUserId(this);
+    }
+
+    public void removeAcct(BankAccount acct) {
+        this.accounts.remove(acct);
+        acct.setUserId(null);
+    }
 
 }
