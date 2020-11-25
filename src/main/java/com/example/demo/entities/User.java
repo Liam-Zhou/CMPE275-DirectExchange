@@ -47,15 +47,13 @@ public class User {
 
     @OneToMany(mappedBy="userId")
     @JsonIgnore
-//    @JsonManagedReference
     @ToString.Exclude
-    @Getter
-    @Setter
     private List<BankAccount> accounts;
 
     @OneToMany(mappedBy="userId")
-    @JsonBackReference
-    private Set<OfferDetails> offers;
+    @ToString.Exclude
+    @JsonIgnore
+    private List<OfferDetails> offers;
 
     @Column(name="rating", nullable = false)
     private double rating;
@@ -68,6 +66,16 @@ public class User {
     public void removeAcct(BankAccount acct) {
         this.accounts.remove(acct);
         acct.setUserId(null);
+    }
+
+    public void addOffer(OfferDetails offer) {
+        this.offers.add(offer);
+        offer.setUserId(this);
+    }
+
+    public void removeOffer(OfferDetails offer) {
+        this.offers.remove(offer);
+        offer.setUserId(null);
     }
 
 }

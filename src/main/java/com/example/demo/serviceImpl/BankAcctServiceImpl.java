@@ -3,6 +3,7 @@ package com.example.demo.serviceImpl;
 import com.example.demo.entities.BankAccount;
 import com.example.demo.entities.User;
 import com.example.demo.enums.Currency;
+import com.example.demo.exceptions.NotFoundException;
 import com.example.demo.repositories.BankAcctRepository;
 import com.example.demo.services.BankAcctService;
 import com.example.demo.services.UserService;
@@ -31,10 +32,11 @@ public class BankAcctServiceImpl {
                                     String ownerAddress,
                                     Currency currency,
                                     Boolean sending,
-                                    Boolean receiving) {
-        Optional<User> user = userService.getUserDetails(userId);
+                                    Boolean receiving,
+                                    User user) {
+//        Optional<User> user = userService.getUserDetails(userId);
         BankAccount savedAcct = null;
-        if(user.isPresent()){
+//        if(user.isPresent()){
             BankAccount acct = new BankAccount();
             acct.setBankName(bankName);
             acct.setCountry(country);
@@ -44,10 +46,13 @@ public class BankAcctServiceImpl {
             acct.setOwnerAddress(ownerAddress);
             acct.setReceiving(receiving);
             acct.setSending(sending);
-            acct.setUserId(user.get());
+            acct.setUserId(user);
             savedAcct = bankAcctRepository.saveAndFlush(acct);
             bankAcctRepository.addUserForeignKey(userId,savedAcct.getId());
-        }
+//        }
+//        else{
+//            throw new NotFoundException("Invalid User Id "+userId);
+//        }
         return  savedAcct;
     }
 

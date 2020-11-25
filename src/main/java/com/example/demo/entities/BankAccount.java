@@ -49,7 +49,6 @@ public class BankAccount {
 
     @ManyToOne
     @JoinColumn(name="user_id",insertable = false,updatable = false,nullable = true)
-//    @JsonBackReference
     @ToString.Exclude
     @Getter
     @Setter
