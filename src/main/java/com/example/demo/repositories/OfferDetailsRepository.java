@@ -64,6 +64,59 @@ public interface OfferDetailsRepository extends JpaRepository<OfferDetails,Long>
                                  @Param("sourceCurrency") String sourceCurrency,
                                  @Param("destinationCurrency") String destinationCurrency);
 
+
+    @Transactional
+    @Query(value = "SELECT oda.id as id1,\n" +
+            "\t\todb.id as id2\n" +
+            "FROM directexchange.offer_details as oda, directexchange.offer_details as odb\n" +
+            "where oda.id>odb.id \n" +
+            "and oda.offer_status='Open' \n" +
+            "and odb.offer_status='Open'\n" +
+            "and ((oda.amount + odb.amount >= (:amount- :lowerApproxRange) * :exchangeRate\n" +
+            "and oda.amount + odb.amount <= (:amount + :higherApproxRange) * :exchangeRate\n" +
+            "and oda.amount + odb.amount != :amount * :exchangeRate\n" +
+            "and oda.source_country = :destinationCountry\n" +
+            "and oda.destination_country = :sourceCountry\n" +
+            "and oda.source_currency = :destinationCurrency\n" +
+            "and oda.destination_currency = :sourceCurrency\n" +
+            "and odb.source_country = :destinationCountry\n" +
+            "and odb.destination_country = :sourceCountry\n" +
+            "and odb.source_currency = :destinationCurrency\n" +
+            "and odb.destination_currency = :sourceCurrency\n )" +
+            "or ( \n" +
+            "\t((oda.amount + :amount - :lowerApproxRange) * :exchangeRate <= odb.amount\n" +
+            "\tand (oda.amount + :amount + :higherApproxRange) * :exchangeRate >= odb.amount\n" +
+            "\tand (oda.amount + :amount) * :exchangeRate != odb.amount\n" +
+            "\t\tand oda.source_country = :sourceCountry\n" +
+            "        and odb.source_country = :destinationCountry\n" +
+            "        and oda.destination_country = :destinationCountry\n" +
+            "        and odb.destination_country = :sourceCountry\n" +
+            "        and oda.source_currency = :sourceCurrency\n" +
+            "        and odb.source_currency = :destinationCurrency\n" +
+            "        and oda.destination_currency = :destinationCurrency\n" +
+            "        and odb.destination_currency = :sourceCurrency) \n" +
+            "\tor \n" +
+            "\t((odb.amount + :amount - :lowerApproxRange) * :exchangeRate <= oda.amount\n" +
+            "\tand (odb.amount + :amount + :higherApproxRange) * :exchangeRate >= oda.amount\n" +
+            "\tand (odb.amount + :amount ) * :exchangeRate != oda.amount\n" +
+            "\t\tand odb.source_country = :sourceCountry\n" +
+            "        and oda.source_country = :destinationCountry\n" +
+            "        and odb.destination_country = :destinationCountry\n" +
+            "        and oda.destination_country = :sourceCountry\n" +
+            "        and odb.source_currency = :sourceCurrency\n" +
+            "        and oda.source_currency = :destinationCurrency\n" +
+            "        and odb.destination_currency = :destinationCurrency\n" +
+            "        and oda.destination_currency = :sourceCurrency) \n" +
+            "))",nativeQuery = true)
+    List<Object[]> getApproxSplitMatches(@Param("amount") Double amount,
+                                  @Param("exchangeRate") Double exchangeRate,
+                                  @Param("sourceCountry") String sourceCountry,
+                                  @Param("destinationCountry") String destinationCountry,
+                                  @Param("sourceCurrency") String sourceCurrency,
+                                  @Param("destinationCurrency") String destinationCurrency,
+                                  @Param("lowerApproxRange") Double lowerApproxRange,
+                                  @Param("higherApproxRange") Double higherApproxRange );
+
     @Transactional
     @Query(value = "SELECT\n" +
             "        oda.id as id1\n" +
@@ -82,6 +135,29 @@ public interface OfferDetailsRepository extends JpaRepository<OfferDetails,Long>
                                    @Param("destinationCountry") String destinationCountry,
                                    @Param("sourceCurrency") String sourceCurrency,
                                    @Param("destinationCurrency") String destinationCurrency);
+
+    @Transactional
+    @Query(value = "SELECT\n" +
+            "        oda.id as id1\n" +
+            "    FROM\n" +
+            "        directexchange.offer_details as oda\n" +
+            "    where \n" +
+            "         oda.offer_status='Open'   \n" +
+            "\t\tand oda.amount  >= (:amount - :lowerApproxRange) * :exchangeRate \n" +
+            "\t\tand oda.amount  <= (:amount + :higherApproxRange) * :exchangeRate \n" +
+            "\t\tand oda.amount  != :amount * :exchangeRate \n" +
+            "\t\tand oda.source_country = :destinationCountry \n" +
+            "\t\tand oda.destination_country = :sourceCountry \n" +
+            "\t\tand oda.source_currency = :destinationCurrency\n" +
+            "\t\tand oda.destination_currency = :sourceCurrency\n" ,nativeQuery = true)
+    List<Object[]> getApproxSingleMatches(@Param("amount") Double amount,
+                                   @Param("exchangeRate") Double exchangeRate,
+                                   @Param("sourceCountry") String sourceCountry,
+                                   @Param("destinationCountry") String destinationCountry,
+                                   @Param("sourceCurrency") String sourceCurrency,
+                                   @Param("destinationCurrency") String destinationCurrency,
+                                   @Param("lowerApproxRange") Double lowerApproxRange,
+                                   @Param("higherApproxRange") Double higherApproxRange );
 
     @Transactional
     @Query(value = "SELECT oda.id as id1,\n" +

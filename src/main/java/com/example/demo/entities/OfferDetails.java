@@ -81,5 +81,7 @@ public class OfferDetails {
         updatedAt = new Date();
     }
 
-
+    public Double getApproxRange(Double percentage){
+        return percentage*this.amount;
+    }
 }

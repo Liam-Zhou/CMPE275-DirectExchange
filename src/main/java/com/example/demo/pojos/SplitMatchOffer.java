@@ -8,7 +8,5 @@ public class SplitMatchOffer {
 
     private OfferDetails offer1;
     private OfferDetails offer2;
-    private Double amountDifference;
-    private double percentageDifference;
 
 }

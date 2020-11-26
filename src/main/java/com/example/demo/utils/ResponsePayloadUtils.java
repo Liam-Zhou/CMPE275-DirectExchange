@@ -33,8 +33,6 @@ public class ResponsePayloadUtils {
     public JSONObject splitMatchJson(SplitMatchOffer splitMatchOffer){
         JSONObject json = new JSONObject();
         if(splitMatchOffer!=null){
-            json.put("amountDifference",splitMatchOffer.getAmountDifference()!=null ? splitMatchOffer.getAmountDifference() : 0.0);
-            json.put("percentageDifference",splitMatchOffer.getPercentageDifference());
             json.put("offer1",offerDetailsJson(splitMatchOffer.getOffer1()));
             json.put("offer2",offerDetailsJson(splitMatchOffer.getOffer2()));
         }
@@ -55,6 +53,16 @@ public class ResponsePayloadUtils {
             }
             json.put("singles",singles);
             json.put("split",split);
+            List<JSONObject> approxSingles = new ArrayList<>();
+            for(OfferDetails offer : matchingOffers.getApproxSingleMatches()){
+                approxSingles.add(offerDetailsJson(offer));
+            }
+            List<JSONObject> approxSplit = new ArrayList<>();
+            for(SplitMatchOffer offer : matchingOffers.getApproxSplitMatches()){
+                approxSplit.add(splitMatchJson(offer));
+            }
+            json.put("approxSingles",approxSingles);
+            json.put("approxSplit",approxSplit);
         }
         return  json;
     }
