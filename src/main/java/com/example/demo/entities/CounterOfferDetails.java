@@ -33,6 +33,7 @@ public class CounterOfferDetails {
     @Column(name="new_amount")
     private double newAmount;
 
+    @Enumerated(EnumType.STRING)
     @Column(name="status", nullable=false)
     private CounterOfferStatus status;
 

@@ -25,6 +25,7 @@ public class OfferDetails {
     @Column(name="source_country")
     private String sourceCountry;
 
+    @Enumerated(EnumType.STRING)
     @Column(name="source_currency")
     private Currency sourceCurrency;
 
@@ -34,6 +35,7 @@ public class OfferDetails {
     @Column(name="destination_country")
     private String destinationCountry;
 
+    @Enumerated(EnumType.STRING)
     @Column(name="destination_currency")
     private Currency destinationCurrency;
 
@@ -49,6 +51,7 @@ public class OfferDetails {
     @Column(name="allow_split_exchange")
     private Boolean allowSplitExchange;
 
+    @Enumerated(EnumType.STRING)
     @Column(name="offer_status")
     private OfferStatus offerStatus;
 

@@ -38,6 +38,7 @@ public class BankAccount {
     @Column(name="owner_address", nullable = false)
     private String ownerAddress;
 
+    @Enumerated(EnumType.STRING)
     @Column(name="currency", nullable = false)
     private Currency currency;
 

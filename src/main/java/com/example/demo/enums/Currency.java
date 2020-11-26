@@ -1,14 +1,19 @@
 package com.example.demo.enums;
 
+import java.io.Serializable;
 import java.util.Set;
 
-public enum Currency {
+public enum Currency implements Serializable {
 
-    EUR(),
-    GBP(),
-    INR(),
-    RMB(),
-    USD();
+    EUR,
+    GBP,
+    INR,
+    RMB,
+    USD;
+
+    public String getCurrency(){
+        return  this.name();
+    }
 
 //    private Set<ExchangeDetails> exchangeDetails;
 //
