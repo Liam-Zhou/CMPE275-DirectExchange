@@ -11,6 +11,7 @@
     />
     <!-- The core Firebase JS SDK is always required and must be listed first -->
     <script src="/__/firebase/8.1.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.1.1/firebase.js"></script>
 
     <!-- TODO: Add SDKs for Firebase products that you want to use
          https://firebase.google.com/docs/web/setup#available-libraries -->
@@ -43,6 +44,27 @@
     <title>Direct Exchange</title>
   </head>
   <body>
+  <script>
+    window.fbAsyncInit = function() {
+      FB.init({
+        appId      : '1287313884963351',
+        xfbml      : true,
+        version    : 'v9.0'
+      });
+    };
+
+    (function(d, s, id){
+      var js, fjs = d.getElementsByTagName(s)[0];
+      if (d.getElementById(id)) {return;}
+      js = d.createElement(s); js.id = id;
+      js.src = "//connect.facebook.net/en_US/sdk.js";
+      fjs.parentNode.insertBefore(js, fjs);
+    }(document, 'script', 'facebook-jssdk'));
+
+    // FB.getLoginStatus(function(response) {
+    //   statusChangeCallback(response);
+    // });
+  </script>
     <noscript>You need to enable JavaScript to run this app.</noscript>
     <div id="root"></div>
     <!--

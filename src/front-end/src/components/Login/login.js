@@ -9,9 +9,9 @@ import { connect } from "react-redux";
 import firebase from 'firebase'
 import 'firebaseui/dist/firebaseui.css'
 require('firebase/auth')
-// let firebase = require('firebase');
 let firebaseui = require('firebaseui');
 
+let backend_url = config.host+":"+config.back_end_port
 
 //Define a Login Component
 class Login extends Component {
@@ -20,13 +20,19 @@ class Login extends Component {
         super(props);
         //const mes = props.location.state
         this.state = {
-            email : "",
+            emailId : "",
             password : "",
-            role : "",
+
             message:''
         }
+        this.handleLogin = this.handleLogin.bind(this)
+
+        this.passwordChangeHandler = this.passwordChangeHandler.bind(this);
+        this.emailIdChangeHandler = this.emailIdChangeHandler.bind(this);
+
     }
     componentWillMount(){
+
         // TODO: Replace the following with your app's Firebase project configuration
         // For Firebase JavaScript SDK v7.20.0 and later, `measurementId` is an optional field
         const firebaseConfig = {
@@ -43,16 +49,107 @@ class Login extends Component {
             firebase.initializeApp(firebaseConfig);
         }
         let ui = new firebaseui.auth.AuthUI(firebase.auth());
-        // firebase.initializeApp(firebaseConfig);
-        ui.start('#firebaseui-auth-container', {
+
+
+        let uiConfig = {
+            callbacks: {
+                signInSuccessWithAuthResult: function(authResult, redirectUrl) {
+                    // User successfully signed in.
+                    // Return type determines whether we continue the redirect automatically
+                    // or whether we leave that to developer to handle.
+                    console.log("authResultauthResultauthResult",authResult.additionalUserInfo.profile)
+                    let out_id = authResult.additionalUserInfo.profile.id
+                    axios({
+                        method:"GET",
+                        url:backend_url+"/user/getByOutId?out_id="+out_id
+                    }).then(function (res) {
+                        if(res.status === 200 && res.data.message === 'success'){
+                            let currentUser = firebase.auth().currentUser;
+                            if(currentUser.emailVerified){
+                                localStorage.setItem("out_id_transfer",out_id)
+                                window.location.href=config.host + ':' + config.front_end_port+"/transfer"
+                            }else{
+                                if(window.confirm("your email haven't verified,do you wanna verification link now ?")){
+                                    currentUser.sendEmailVerification().then(function() {
+                                        alert("success ! check the verification link in your email")
+                                        window.location.href=config.host + ':' + config.front_end_port+"/login"
+                                    }).catch(function(error) {
+
+                                    });
+                                }else{
+                                }
+                            }
+                        }else {
+                            alert("sorry ! you didn't sign up this account")
+
+                            window.location.href=config.host + ':' + config.front_end_port+"/login"
+                        }
+
+                        })
+
+                    return true;
+                }
+
+            },
+            // Will use popup for IDP Providers sign-in flow instead of the default, redirect.
+            signInFlow: 'popup',
+            // signInSuccessUrl: '/login',
             signInOptions: [
-                // List of OAuth providers supported.
+                // Leave the lines as is for the providers you want to offer your users.
                 firebase.auth.GoogleAuthProvider.PROVIDER_ID,
                 firebase.auth.FacebookAuthProvider.PROVIDER_ID,
-                // firebase.auth.TwitterAuthProvider.PROVIDER_ID,
-                // firebase.auth.GithubAuthProvider.PROVIDER_ID
             ],
-        });
+            // Terms of service url.
+            // tosUrl: '<your-tos-url>',
+        };
+
+        ui.start('#firebaseui-auth-container', uiConfig);
+
+
+
+    }
+
+    passwordChangeHandler = (e) => {
+        this.setState({
+            password : e.target.value
+        })
+    }
+    emailIdChangeHandler = (e) => {
+        this.setState({
+            emailId : e.target.value
+        })
+    }
+
+    handleLogin(){
+        firebase.auth().signInWithEmailAndPassword(this.state.emailId, this.state.password)
+            .then((user) => {
+                let currentUser = firebase.auth().currentUser;
+                if(currentUser.emailVerified){
+                    this.props.login('',this.state.emailId,this.state.password)
+                    // let host = config.host;
+                    // let port = config.front_end_port;
+                    // let url = host + ':' + port;
+                    // window.location.href=url+"/"
+                    this.props.history.push("/");
+                }else{
+                    let v = window.confirm("your email haven't verified,do you wanna verification link now ?")
+                    if(v){
+                        currentUser.sendEmailVerification().then(function() {
+                            alert("success ! check the verification link in your email")
+
+                        }).catch(function(error) {
+
+                        });
+                    }else{
+
+                    }
+                }
+            })
+            .catch((error) => {
+                let errorCode = error.code;
+                let errorMessage = error.message;
+                alert(errorMessage)
+            });
     }
     render() {
         let redirectVar = null;
@@ -71,8 +168,9 @@ class Login extends Component {
         let url = host + ':' + port;
         return(
             <div>
-
+<button onClick={this.props.logout}>clear</button>
                 <div className="container" >
+
                     <div className="maincenter" style={{"height":"600px"}}>
                         <div align="center">
                             <h2>Direct Exchange</h2>
@@ -89,28 +187,19 @@ class Login extends Component {
                                 </div>
                                 <div className="form-group">
                                     <input
-                                        // onChange={}
+                                        onChange={this.emailIdChangeHandler}
                                         type="text" className="form-control"
                                            name="email" placeholder="Email"/>
                                 </div>
                                 <div className="form-group">
                                     <input
-                                        // onChange={}
+                                        onChange={this.passwordChangeHandler}
                                         type="password"
                                            className="form-control" name="password" placeholder="Password"/>
                                 </div>
-                                {/*<label className="radio-inline">*/}
-                                {/*    <input type="radio" name="role"*/}
-                                {/*           // onChange={}*/}
-                                {/*           value="student"/> student*/}
-                                {/*</label>*/}
-                                {/*<label className="radio-inline">*/}
-                                {/*    <input type="radio" name="role"*/}
-                                {/*           // onChange={}*/}
-                                {/*           value="company"/> company*/}
-                                {/*</label>*/}
                                 <div id='firebaseui-auth-container' ></div>
-                                <button className="button">Login</button>
+                                <hr/>
+                                <button onClick={this.handleLogin} className="button">Login</button>
                             </div>
 
                             <div><h4>{this.state.message}</h4></div>
@@ -135,17 +224,12 @@ const mapStateToProps = (state) => {
     }
 }
 const mapDispatchToProps = (dispatch) => ({
-    login(email, pwd) {
-        dispatch(actionCreators.login(email, pwd));
+    login(out_id,email, pwd) {
+        dispatch(actionCreators.login(out_id,email, pwd));
     },
-    // remember(e) {
-    //
-    //     const action = {
-    //         type: '',
-    //         value: e
-    //     }
-    //     dispatch(action)
-    // },
+    logout(){
+        dispatch(actionCreators.logOut())
+    }
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(Login);

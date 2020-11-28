@@ -20,4 +20,44 @@ public class UserServiceImpl  {
     public Optional<User> getUserDetails(Long userId) {
         return userRepository.findById(userId);
     }
+
+    public Optional<User> creatUser(String email,String pwd,String nickName){
+        Optional<User> u = userRepository.findByNickNameOrEmail(email,nickName);
+        if(u.isPresent()){
+            return null;
+        }else{
+            User user = new User();
+            user.setNickname(nickName);
+            user.setPassword(pwd);
+            user.setUsername(email);
+            user.setRating(0);
+            user.setOut_id(null);
+            User temp = userRepository.saveAndFlush(user);
+            Optional<User> u2 = Optional.of(temp);
+            return u2;
+        }
+
+
+    }
+    public User creatUserByOutId(String out_id){
+        User user = new User();
+        user.setOut_id(out_id);
+        user.setRating(0);
+        User u = userRepository.saveAndFlush(user);
+        return u;
+    }
+    public int connectLocalAccount(String out_id,String emailId,String pwd,String nickName){
+      int res =  userRepository.connectLocalAccount(nickName, emailId, pwd, out_id);
+        return res;
+    }
+    public Optional<User> getUserByOutId(String out_id){
+        Optional<User> user = userRepository.findByOutId(out_id);
+        return user;
+    }
+    public Optional<User> getUserByEmail(String email){
+        Optional<User> user = userRepository.findByEmail(email);
+        return user;
+    }
+
+
 }

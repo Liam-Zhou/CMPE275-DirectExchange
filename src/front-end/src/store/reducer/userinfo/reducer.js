@@ -1,23 +1,33 @@
 const defaultState = {
+    id:"",
     isLogin:false,
-    email:"",
-    nickName:'',
-    id:null
+    username:"",
+    nickname:'',
+    out_id:"",
+    rating:"",
+    accounts:"",
+    offers:[]
 }
+
 
 
 export default (state = defaultState,action) => {
     let newState = JSON.parse(JSON.stringify(state))
     switch(action.type){
         case 'login':
-            newState.isLogin = true;
-            newState.id = action.id;
-            return newState;
+            delete action.type;
+            delete action.password;
+            return action;
 
         case 'logout':
-            newState.isLogin = false;
-            newState.choose_school = false;
+
             return {};
+
+        // case 'signupByLocal':
+            // delete action.type;
+            // delete action.password;
+            // return action;
+
 
         default:
             return state;

@@ -5,6 +5,15 @@ import axios from 'axios';
 import {Redirect} from 'react-router';
 import config from '../../config/basicConfig'
 
+import { actionCreators } from '../../store/reducer/userinfo'
+import { connect } from "react-redux";
+
+import firebase from 'firebase'
+import 'firebaseui/dist/firebaseui.css'
+require('firebase/auth')
+let firebaseui = require('firebaseui');
+let backend_url = config.host+":"+config.back_end_port
+
 //Define a Signup Component
 class Signup extends Component{
     //call the constructor method
@@ -17,27 +26,88 @@ class Signup extends Component{
             password : "",
             name : "",
             message : null,
-            lead : ''
+            // lead : ''
         }
         //Bind the handlers to this class
         this.nameChangeHandler = this.nameChangeHandler.bind(this);
         this.passwordChangeHandler = this.passwordChangeHandler.bind(this);
         this.emailIdChangeHandler = this.emailIdChangeHandler.bind(this);
-        this.locationChangeHandler = this.locationChangeHandler.bind(this);
-        this.collegeNameChangeHandler = this.collegeNameChangeHandler.bind(this);
-        this.roleChangeHandler = this.roleChangeHandler.bind(this);
 
         this.submitInfo = this.submitInfo.bind(this);
+
     }
     //Call the Will Mount to set the auth Flag to false
     componentWillMount(){
+
+        // TODO: Replace the following with your app's Firebase project configuration
+        // For Firebase JavaScript SDK v7.20.0 and later, `measurementId` is an optional field
+        const firebaseConfig = {
+            apiKey: "AIzaSyAh_2Ac_Dn3NDoqUkrSApaDd5hZixJ6dKE",
+            authDomain: "direct-exchange.firebaseapp.com",
+            databaseURL: "https://direct-exchange.firebaseio.com",
+            projectId: "direct-exchange",
+            storageBucket: "direct-exchange.appspot.com",
+            messagingSenderId: "551976198923",
+            appId: "1:551976198923:web:623ffd4267dd954c85f80e"
+        };
+        // Initialize Firebase
+        if (!firebase.apps.length) {
+            firebase.initializeApp(firebaseConfig);
+        }
+        let ui = new firebaseui.auth.AuthUI(firebase.auth());
+
+        let uiConfig = {
+            callbacks: {
+                signInSuccessWithAuthResult: function(authResult, redirectUrl) {
+                    // User successfully signed in.
+                    // Return type determines whether we continue the redirect automatically
+                    // or whether we leave that to developer to handle.
+                    console.log("authResultauthResultauthResult",authResult.additionalUserInfo.profile)
+                    let profile = authResult.additionalUserInfo.profile;
+                    // localStorage.setItem("outId",profile.id);
+                    let user = firebase.auth().currentUser;
+
+                    user.sendEmailVerification().then(function() {
+                        alert("success ! check the verification link in your email")
+                        // Email sent.
+                    }).catch(function(error) {
+                        // An error happened.
+                    });
+                    // write in the database out_id
+                    localStorage.setItem("out_id",profile.id)
+
+                    return true;
+                }
+
+            },
+            // Will use popup for IDP Providers sign-in flow instead of the default, redirect.
+            signInFlow: 'popup',
+            signInSuccessUrl: '/emailVerification',
+            signInOptions: [
+                // Leave the lines as is for the providers you want to offer your users.
+                firebase.auth.GoogleAuthProvider.PROVIDER_ID,
+                firebase.auth.FacebookAuthProvider.PROVIDER_ID,
+            ],
+            // Terms of service url.
+            // tosUrl: '<your-tos-url>',
+        };
+
+        ui.start('#firebaseui-auth-container', uiConfig);
     }
+
 
     //username change handler to update state variable with the text entered by the user
     nameChangeHandler = (e) => {
-        this.setState({
-            name : e.target.value
-        })
+        if(/^(?=.*[a-zA-Z])(?=.*[0-9])[A-Za-z0-9]+$/.test(e.target.value)){
+            this.setState({
+                name : e.target.value
+            })
+        }else{
+            this.setState({
+                name : ""
+            })
+        }
+
     }
     //password change handler to update state variable with the text entered by the user
     passwordChangeHandler = (e) => {
@@ -50,82 +120,44 @@ class Signup extends Component{
             emailId : e.target.value
         })
     }
-    locationChangeHandler = (e) => {
-        this.setState({
-            location : e.target.value
-        })
-    }
-    collegeNameChangeHandler = (e) => {
-        this.setState({
-            collegeName : e.target.value
-        })
-    }
 
-
-    roleChangeHandler = (e) => {
-        let role = e.target.value
-        this.setState({
-            role : role
-        })
-
-        if(role == 'student'){
-            this.setState({
-                hidden1 : "text",
-                hidden2 : "hidden",
-                location : ''
-            })
-        }else{
-            this.setState({
-                hidden1 : "hidden",
-                hidden2 : "text",
-                collegeName : ''
-            })
-        }
-    }
     //submit Login handler to send a request to the node backend
     submitInfo = (e) => {
         //prevent page from refresh
         e.preventDefault();
-        if(this.state.name && this.state.password && this.state.role && this.state.emailId){
+        if(this.state.name && this.state.password  && this.state.emailId){
 
-            const data = {
-                name : this.state.name,
-                password : this.state.password,
-                emailId : this.state.emailId,
-                location : this.state.location,
-                collegeName : this.state.collegeName,
-                role : this.state.role
-            }
-            let host = config.host;
-            let port = config.back_end_port;
-            let url = host + ':' + port;
-            //make a post request with the user data
-            axios.post(url + '/signup/',data)
-                .then(response => {
-                    console.log("Status Code : ",response.status);
-                    if(response.status === 200){
-                        console.log('response.data',response.data)
-                        if(response.data != 'success'){
-                            this.setState({
-                                message : response.data
-                            })
-                        }else{
-                            //this.props.history.push('/login','sign up success!!')
-                            alert('sign up success!!')
-                            this.props.adduser({user:data})
-                            this.setState({
-                                lead : <Redirect to= "/login"/>
-                            })
+            axios({
+                method:"POST",
+                url:backend_url+"/user/signUpInLocal?emailId="+this.state.emailId +"&pwd="+this.state.password+"&nickName="+this.state.name,
 
-                        }
-                    }else{
-
-                    }
-                });
-        }else{
-            this.setState({
-                message : "no empty please!"
+            }).then(function (res) {
+                if(res.status === 200 && res.data.message === 'success'){
+                    firebase.auth().createUserWithEmailAndPassword(this.state.emailId, this.state.password)
+                        .then((user) => {
+                            let currentUser = firebase.auth().currentUser;
+                            currentUser.sendEmailVerification().then(function() {
+                                alert("success ! check the verification link in your email")
+                                let host = config.host;
+                                let port = config.front_end_port;
+                                let url = host + ':' + port;
+                                window.location.href=url+"/login"
+                            }).catch(function(error) {
+                            });
+                        }).catch((error) => {
+                        let errorCode = error.code;
+                        let errorMessage = error.message;
+                        alert(errorMessage);
+                        console.log("error createUserWithEmailAndPassword",error)
+                    });
+                }else{
+                    alert("nick name or email id duplicated in database");
+                }
             })
+
+
+        }else{
+            alert("make sure no empty and nickName is alphanumeric")
         }
     }
 
@@ -136,7 +168,7 @@ class Signup extends Component{
         let url = host + ':' + port;
         return(
             <div>
-                {this.state.lead}
+                {/*{this.state.lead}*/}
                 <div class="container">
 
                     <div class="maincenter">
@@ -145,15 +177,17 @@ class Signup extends Component{
                                 <p>Please register your information</p>
                             </div>
                             <div class="form-group">
-                                <input onChange = {this.nameChangeHandler}  type="text" class="form-control" name="name" placeholder="name"/>
+                                <input onChange = {this.nameChangeHandler}  type="text" class="form-control" name="name" placeholder="Nick Name"/>
                             </div>
                             <div class="form-group">
-                                <input onChange = {this.emailIdChangeHandler}  type="text" class="form-control" name="email" placeholder="EmailId"/>
+                                <input onChange = {this.emailIdChangeHandler}  type="text" class="form-control" name="email" placeholder="Email Id"/>
                             </div>
                             <div class="form-group">
                                 <input onChange = {this.passwordChangeHandler}  type="password" class="form-control" name="password" placeholder="Password"/>
                             </div>
 
+                            <div id='firebaseui-auth-container' ></div>
+                            <hr/>
                             <button onClick = {this.submitInfo} class="button">Signup</button>
                             <div><h4>{this.state.message}</h4></div>
                         </div>
@@ -166,4 +200,20 @@ class Signup extends Component{
         )
     }
 }
-export default Signup;
+
+const mapStateToProps = (state) => {
+    return {
+        // isLogin: state.userinfo.isLogin,
+    }
+}
+const mapDispatchToProps = (dispatch) => ({
+    signupByLocal(email, pwd,nickName) {
+        dispatch(actionCreators.signupByLocal(email, pwd,nickName));
+    },
+    signupByOutId(out_id){
+        dispatch(actionCreators.signupByOutId(out_id));
+
+    }
+})
+
+export default connect(mapStateToProps, mapDispatchToProps)(Signup);
