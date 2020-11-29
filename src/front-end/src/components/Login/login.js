@@ -22,7 +22,7 @@ class Login extends Component {
         this.state = {
             emailId : "",
             password : "",
-
+            lead: "",
             message:''
         }
         this.handleLogin = this.handleLogin.bind(this)
@@ -34,6 +34,12 @@ class Login extends Component {
     }
 
     componentWillMount(){
+        if(this.props.isLogin){
+            this.setState({
+                lead: <Redirect to="/home"/>
+            })
+        }else{
+
 
         // TODO: Replace the following with your app's Firebase project configuration
         // For Firebase JavaScript SDK v7.20.0 and later, `measurementId` is an optional field
@@ -109,6 +115,7 @@ class Login extends Component {
         ui.start('#firebaseui-auth-container', uiConfig);
 
 
+        }
 
     }
 

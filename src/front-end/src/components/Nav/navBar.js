@@ -21,6 +21,7 @@ class Navbar extends Component {
         if(this.props.isLogin){
 
         }else{
+            redirectVar=<Redirect to="/login"/>
         }
 
         return(
