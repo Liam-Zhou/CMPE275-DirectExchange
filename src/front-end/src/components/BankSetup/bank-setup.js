@@ -2,7 +2,6 @@ import React, { Component, Fragment } from "react";
 import {
     Card, CardBody,
   } from 'reactstrap';
-import UserNav from "../userNav/userNav";
 import Dropdown from 'react-dropdown';
 import 'react-dropdown/style.css';
 import MultiSelect from  'react-multiple-select-dropdown-lite'
@@ -113,7 +112,6 @@ class BankSetup extends Component {
     render() {
         return (
             <Fragment>
-                <UserNav/>
                 <Card className="shadow">
                 <CardBody className="bs-bgcolor">
                 <div class="jumbotron jumbotron-fluid cr-jumbo-container shadow">

@@ -20,7 +20,6 @@ class Main extends Component {
                 )} />
                 <Route exact path="/landing" component={Landing} />
 
-                <Route path="/home" component={Login}/>
                 <Route path="/home" component={Navbar}/>
                 <Route path="/login" component={Login}/>
 
