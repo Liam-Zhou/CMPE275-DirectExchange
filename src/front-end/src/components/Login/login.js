@@ -29,8 +29,10 @@ class Login extends Component {
 
         this.passwordChangeHandler = this.passwordChangeHandler.bind(this);
         this.emailIdChangeHandler = this.emailIdChangeHandler.bind(this);
+        // this.ui = firebaseui.auth.AuthUI.getInstance() || new firebaseui.auth.AuthUI(firebase.auth());
 
     }
+
     componentWillMount(){
 
         // TODO: Replace the following with your app's Firebase project configuration
@@ -91,6 +93,7 @@ class Login extends Component {
                 }
 
             },
+
             // Will use popup for IDP Providers sign-in flow instead of the default, redirect.
             signInFlow: 'popup',
             // signInSuccessUrl: '/login',
@@ -153,22 +156,16 @@ class Login extends Component {
     }
     render() {
         let redirectVar = null;
-        if(sessionStorage.getItem('user')){
-            let role = JSON.parse(sessionStorage.getItem('user')).role;
-            if(role == 'student'){
-                redirectVar = <Redirect to= "/job/jobSearch"/>
-            }
-            if(role == 'company'){
-                redirectVar = <Redirect to= "/job/viewJob"/>
-            }
-
+        if(this.props.isLogin){
+            redirectVar = <Redirect to= "/home"/>
         }
         let host = config.host;
         let port = config.front_end_port;
         let url = host + ':' + port;
         return(
             <div>
-<button onClick={this.props.logout}>clear</button>
+{/*<button onClick={this.props.logout}>clear</button>*/}
+                {redirectVar}
                 <div className="container" >
 
                     <div className="maincenter" style={{"height":"600px"}}>
@@ -218,9 +215,6 @@ class Login extends Component {
 const mapStateToProps = (state) => {
     return {
         isLogin: state.userinfo.isLogin,
-        // userType: state.userinfo.userType,
-        // school_id: state.userinfo.schoolID,
-        // campus: state.userinfo.campus,
     }
 }
 const mapDispatchToProps = (dispatch) => ({

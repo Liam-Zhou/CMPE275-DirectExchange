@@ -4,6 +4,7 @@ import Login from './Login/login';
 import Signup from './Login/signup';
 import emailVerification from './Login/emailVerification'
 import Transfer from './Login/transfer'
+import Navbar from "./Nav/navBar";
 
 //Create a Main Component
 class Main extends Component {
@@ -12,7 +13,7 @@ class Main extends Component {
             <div>
                 {/*Render Different Component based on Route*/}
                 {/*<Route path="/" component={Navbar}/>*/}
-                <Route path="/home" component={Login}/>
+                <Route path="/home" component={Navbar}/>
                 <Route path="/login" component={Login}/>
 
                 <Route path="/transfer" component={Transfer}/>

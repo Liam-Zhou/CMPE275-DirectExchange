@@ -14,7 +14,7 @@ class Transfer extends Component{
             localStorage.removeItem("out_id_transfer");
             // this.setState({'out_id':out_id})
             this.props.login(out_id,"","")
-            this.props.history.push("/");
+            this.props.history.push("/home");
         }
     }
     render(){
