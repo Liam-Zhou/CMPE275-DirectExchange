@@ -55,6 +55,7 @@ class Signup extends Component{
             firebase.initializeApp(firebaseConfig);
         }
         let ui = new firebaseui.auth.AuthUI(firebase.auth());
+        this.ui = firebaseui.auth.AuthUI.getInstance() || new firebaseui.auth.AuthUI(firebase.auth());
 
         let uiConfig = {
             callbacks: {

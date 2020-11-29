@@ -6,6 +6,7 @@ import emailVerification from './Login/emailVerification'
 import Transfer from './Login/transfer'
 import Landing from './Landing/landing';
 import BankSetup from './BankSetup/bank-setup';
+import Navbar from "./Nav/navBar";
 
 //Create a Main Component
 class Main extends Component {
@@ -14,13 +15,13 @@ class Main extends Component {
             <div>
                 {/*Render Different Component based on Route*/}
                 {/*<Route path="/" component={Navbar}/>*/}
-
                 <Route exact path="/" render={() => (
                 <Redirect to="/landing"/>
                 )} />
                 <Route exact path="/landing" component={Landing} />
 
                 <Route path="/home" component={Login}/>
+                <Route path="/home" component={Navbar}/>
                 <Route path="/login" component={Login}/>
 
                 <Route path="/transfer" component={Transfer}/>
