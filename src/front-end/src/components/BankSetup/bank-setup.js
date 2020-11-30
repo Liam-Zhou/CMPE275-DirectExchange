@@ -1,17 +1,37 @@
 import React, { Component, Fragment } from "react";
-import {
+import { Alert,
     Card, CardBody,
   } from 'reactstrap';
-import Dropdown from 'react-dropdown';
 import 'react-dropdown/style.css';
-import MultiSelect from  'react-multiple-select-dropdown-lite'
-import  'react-multiple-select-dropdown-lite/dist/index.css'
+import  'react-multiple-select-dropdown-lite/dist/index.css';
 import './bank-setup.css';
 import Select from 'react-select';
-import { connect } from 'react-redux'
-import config from '../../config/basicConfig'
+import { connect } from 'react-redux';
+import config from '../../config/basicConfig';
+import {bankSetup} from '../../store/reducer/bankSetup/actionCreator';
 
 let BASE_URL = config.host+":"+config.back_end_port
+const Joi = require('joi');
+const schema = Joi.object({
+    bankName: Joi.string()
+        .required(),
+    ownerName: Joi.string()
+        .required(),
+    ownerAddress: Joi.string()
+        .required(),
+    acctNo: Joi.string()
+        .required(),
+    currency: Joi.string()
+        .required(),
+    country: Joi.string()
+        .required(),
+    sending: Joi.boolean()
+        .required(),
+    receiving: Joi.boolean()
+        .required(),
+    userId: Joi.number()
+        .required()
+})
 
 
 class BankSetup extends Component {
@@ -35,25 +55,22 @@ class BankSetup extends Component {
             {label: "Sending" , value: "sending"},
             {label: "Receiving", value: "receiving"}
         ],
+        error:"",
         bankName: "",
         country: "",
         acctNo: "",
         ownerName: "",
         ownerAddress: "",
         currency: "",
-        sending: null,
-        receiving: null
+        sending: false,
+        receiving: false
     };
   }
 
   setupAcct = (event) => {
     event.preventDefault();
-    fetch(BASE_URL+'/bank/setup', {
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      method: 'POST',
-      body: JSON.stringify({
+
+    let accountDetails = {
         bankName: this.state.bankName,
         country: this.state.country,
         acctNo: this.state.acctNo,
@@ -63,44 +80,64 @@ class BankSetup extends Component {
         sending: this.state.sending,
         receiving: this.state.receiving,
         userId: this.props.userId
-        }),
-    })
-      .then((response) => {
-        return response.json();
-      }).then((jsonRes) => {
-        console.log("jsonRes is: ", jsonRes);
-        // if (jsonRes.success == false) {
-        //   console.log("Couldnt login");
-        //   this.setState({
-        //     error: jsonRes.message
-        //   })
-        //   this.props.loginFailureDispatch();
-        // } else {
-        //   console.log("logged in ! ", jsonRes);
-        //   ls.set('jwtToken', jsonRes.token);
-        //   ls.set('isLoggedIn', true);
-        //   ls.set('userType', jsonRes.payload.userType);
-        //   if (jsonRes.payload.userType === "owner") {
-        //     this.props.ownerLoginSuccessDispatch(jsonRes);
-        //     this.props.history.push("/home");
-        //   }
-        //   else {
-        //     this.props.buyerLoginSuccessDispatch(jsonRes);
-        //     this.props.history.push("/lets-eat");
-        //   }
-        // }
-      })
     }
 
-  handleOnchange  =  val  => {
-    // let selects = this.state.selected;
-    // selects.push(val);
-    this.setState({[val]:true})
+    let validationDetails = schema.validate(accountDetails);
+    console.log(`validation -> ${JSON.stringify(validationDetails)}`)
+    if(!validationDetails.error){
+        // fetch(BASE_URL+'/bank/setup', {
+        //     headers: {
+        //       'Content-Type': 'application/json'
+        //     },
+        //     method: 'POST',
+        //     body: JSON.stringify(accountDetails),
+        //   })
+        // .then((response) => {
+        //     if(response.status != 200) {
+        //         let jsonRes = response.json();
+        //         alert("Error in the service\n" + "Status Code: "+ jsonRes.code + "\n"+
+        //         "Debug Message: " +jsonRes.debugMessage);
+        //         return;
+        //     }
+        //     else
+        //         alert("Account successfully added!");
+
+        // })
+        this.props.bankSetup(accountDetails,this.props.history)
+    }
+    else {
+        this.setState({error: validationDetails.error.details.map(d => d.message).join('\n')})
+    }
+    }
+
+  handleOnchange  =  event  => {
+      var id = event.target.id;
+      if(id ==="both"){
+          this.setState({sending:true, receiving: true});
+      }
+      else if(id === "sending"){
+        this.setState({sending:true, receiving: false});
+      }
+      else{
+        this.setState({sending:false, receiving: true});
+      }
   }
 
-  onChange = (e) => {
-    let key = e.label;
-    let value = e.value;
+  onChange = (event) => {
+    let key = event.target.id;//.label;
+    let value = event.target.value;
+    this.setState({ [key]: value });
+  }
+
+  onChangeCountry = (event) => {
+    let key = "country";
+    let value = event.value;
+    this.setState({ [key]: value });
+  }
+
+  onChangeCurrency = (event) => {
+    let key = "currency";
+    let value = event.value;
     this.setState({ [key]: value });
   }
 
@@ -130,7 +167,7 @@ class BankSetup extends Component {
                                     Bank Name:
                                 </div>
                                 <div className="cr-pad-left">
-                                    <input type="text" class="form-control cr-input" id="bankName" placeholder="Bank Name..." aria-describedby="bankName" />
+                                    <input type="text" class="form-control cr-input" id="bankName" onChange={this.onChange} placeholder="Bank Name..." aria-describedby="bankName" />
                                 </div>
                             </div>
                             <div className="cr-row-flex">
@@ -138,7 +175,7 @@ class BankSetup extends Component {
                                     Country:
                                 </div>
                                 <div className="cr-pad-left">
-                                    <Select options={this.state.countries} id="country" className = "cr-input" onChange={this.onChange}/>
+                                    <Select options={this.state.countries} id="country" className = "cr-input" onChange={this.onChangeCountry}/>
                                 </div>
                             </div>
                             <div className="cr-row-flex">
@@ -146,7 +183,7 @@ class BankSetup extends Component {
                                     Account Number:
                                 </div>
                                 <div className="cr-pad-left">
-                                    <input type="text" class="form-control cr-input" id="acctNo" placeholder="Account Number..." aria-describedby="acctNo" />
+                                    <input type="text" class="form-control cr-input" onChange={this.onChange} id="acctNo" placeholder="Account Number..." aria-describedby="acctNo" />
                                 </div>
                             </div>
                             <div className="cr-row-flex">
@@ -154,7 +191,7 @@ class BankSetup extends Component {
                                     Owner Name:
                                 </div>
                                 <div className="cr-pad-left">
-                                    <input type="text" class="form-control cr-input" id="ownerName" placeholder="Onwer Name..." aria-describedby="ownerName" />
+                                    <input type="text" class="form-control cr-input" onChange={this.onChange} id="ownerName" placeholder="Onwer Name..." aria-describedby="ownerName" />
                                 </div>
                             </div>
                             </div>
@@ -164,7 +201,7 @@ class BankSetup extends Component {
                                     Owner Address:
                                 </div>
                                 <div className="cr-pad-left">
-                                    <input type="text" class="form-control cr-input" id="ownerAddress" placeholder="Onwer Address..." aria-describedby="ownerAddress" />
+                                    <input type="text" class="form-control cr-input" onChange={this.onChange} id="ownerAddress" placeholder="Onwer Address..." aria-describedby="ownerAddress" />
                                 </div>
                             </div>
                             <div className="cr-row-flex">
@@ -172,32 +209,60 @@ class BankSetup extends Component {
                                     Currency:
                                 </div>
                                 <div className="cr-pad-left">
-                                    <Select options={this.state.currencies} id="currency" className = "cr-input" onChange={this.onChange}/>
+                                    <Select options={this.state.currencies} id="currency" className = "cr-input" required onChange={this.onChangeCurrency}/>
                                 </div>
                             </div>
                             <div className="cr-row-flex">
-                                <div className="cr-pad-left cr-topics-style">
+                                <div className="cr-topics-style">
                                     Operations:
                                 </div>
+                                {/* <div class="form-check form-check-inline cr-pad-left">
+                                    <input class="form-check-input" type="checkbox" id="sending" onChange={this.handleOnchange} value="sending" />
+                                    <label class="form-check-label" for="Easy">Sending</label>
+                                </div>
+                                <div class="form-check form-check-inline cr-pad-left">
+                                    <input class="form-check-input" type="checkbox" id="receiving" onChange={this.handleOnchange} value="receiving" />
+                                    <label class="form-check-label" for="Medium">Receiving</label>
+                                </div> */}
                                 <div className="cr-pad-left">
-                                    <div className="app">
-                                        <MultiSelect
-                                        className = "cr-input"
-                                        onChange={this.handleOnchange}
-                                        options={this.state.options}
-                                        />
-                                    </div>
+                                    <input className="form-check-input" onChange={this.handleOnchange} type="radio" name="operations" id="sending" value="sending" />
+                                    <label className="form-check-label cr-radio" for="sending">
+                                        Sending
+                                    </label>
+                                </div>
+                                <div className="cr-pad-left">
+                                    <input className="form-check-input" type="radio" onChange={this.handleOnchange} name="operations" id="receiving" value="receiving" />
+                                    <label className="form-check-label cr-radio" for="receiving">
+                                        Receiving
+                                    </label>
+                                </div>
+                                <div className="cr-pad-left">
+                                    <input className="form-check-input" type="radio" onChange={this.handleOnchange} name="operations" id="both" value="both" />
+                                    <label className="form-check-label cr-radio" for="both">
+                                        Both
+                                    </label>
                                 </div>
                             </div>
                             <div className="cr-row-flex">
-                                <div>
+                                { this.state.error &&
+                                    <div className="bs-error-style">
+                                        {this.state.error}
+                                    </div>
+                                //     <Alert color="danger">
+                                //     {this.state.error}
+                                //   </Alert>
+                                }
+                            </div>
+                            <div className="cr-row-flex">
                                 <button type="button" onClick={this.setupAcct} class="btn btn-outline-primary btn-lg">Start Quiz!</button>
-                                </div>
                             </div>
                             </div>
                         </div>
                     </div>
                     </div>
+                    {/* {this.state.error && <div className="bs-error-style">
+                        {this.state.error}
+                    </div>} */}
                     </CardBody>
                     </Card>
             </Fragment>
@@ -211,12 +276,10 @@ class BankSetup extends Component {
     return { isLoggedIn, userId };
   }
 
-  const mapDispatchToProps = (dispatch) => {
-    return {
-    //   ownerLoginSuccessDispatch: (payload) => { dispatch(onOwnerLoginSuccess(payload)) },
-    //   buyerLoginSuccessDispatch: (payload) => { dispatch(onBuyerLoginSuccess(payload)) },
-    //   loginFailureDispatch: () => { dispatch(onLoginFailure()) }
+  const mapDispatchToProps = (dispatch) => ({
+    bankSetup(accountDetails,history) {
+        dispatch(bankSetup(accountDetails,history));
     }
-  }
+})
 
 export default connect(mapStateToProps, mapDispatchToProps)(BankSetup);

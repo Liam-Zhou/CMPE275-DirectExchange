@@ -1,0 +1,1 @@
+export const BANK_SETUP_SUCCESS = "BANK_SETUP_SUCCESS";

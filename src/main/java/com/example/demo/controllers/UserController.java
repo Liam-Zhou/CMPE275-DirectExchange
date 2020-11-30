@@ -4,6 +4,8 @@ import com.example.demo.entities.User;
 import com.example.demo.pojos.RestResponse;
 import com.example.demo.serviceImpl.UserServiceImpl;
 import net.sf.json.JSONObject;
+import net.sf.json.JsonConfig;
+import net.sf.json.util.CycleDetectionStrategy;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
@@ -32,10 +34,10 @@ public class UserController {
             Optional<User> user = userService.getUserByOutId(out_id);
             if(user.isPresent()){
                 response.setPayload(JSONObject.fromObject(user.get()));
-                response.setCode(HttpStatus.OK);
+                response.setCode(HttpStatus.OK.value());
                 response.setMessage("success");
             }else {
-                response.setCode(HttpStatus.NOT_FOUND);
+                response.setCode(HttpStatus.NOT_FOUND.value());
                 response.setMessage("not found");
             }
         }
@@ -43,10 +45,10 @@ public class UserController {
             Optional<User> user = userService.getUserByEmail(email);
             if(user.isPresent()){
                 response.setPayload(JSONObject.fromObject(user.get()));
-                response.setCode(HttpStatus.OK);
+                response.setCode(HttpStatus.OK.value());
                 response.setMessage("success");
             }else {
-                response.setCode(HttpStatus.NOT_FOUND);
+                response.setCode(HttpStatus.NOT_FOUND.value());
                 response.setMessage("not found");
             }
         }
@@ -65,10 +67,10 @@ public class UserController {
         Optional<User> user =  userService.creatUser(emailId,pwd,nickName);
         if(user.isPresent()){
             response.setPayload(JSONObject.fromObject(user));
-            response.setCode(HttpStatus.OK);
+            response.setCode(HttpStatus.OK.value());
             response.setMessage("success");
         }else{
-            response.setCode(HttpStatus.BAD_REQUEST);
+            response.setCode(HttpStatus.BAD_REQUEST.value());
             response.setMessage("no");
         }
 
@@ -81,7 +83,7 @@ public class UserController {
         RestResponse response = new RestResponse();
         User user =  userService.creatUserByOutId(out_id);
         response.setPayload(JSONObject.fromObject(user));
-        response.setCode(HttpStatus.OK);
+        response.setCode(HttpStatus.OK.value());
         response.setMessage("success");
         return response;
     }
@@ -98,11 +100,11 @@ public class UserController {
         int res = userService.connectLocalAccount(out_id,emailId,pwd,nickName);
 
         if(res==1){
-            response.setCode(HttpStatus.OK);
+            response.setCode(HttpStatus.OK.value());
             response.setMessage("success");
 
             }else{
-                response.setCode(HttpStatus.BAD_REQUEST);
+                response.setCode(HttpStatus.BAD_REQUEST.value());
                 response.setMessage("bad");
             }
         return response;
@@ -113,11 +115,14 @@ public class UserController {
         RestResponse response = new RestResponse();
         Optional<User> user = userService.getUserByOutId(out_id);
         if(user.isPresent()){
-            response.setPayload(JSONObject.fromObject(user.get()));
-            response.setCode(HttpStatus.OK);
+            JsonConfig jc = new JsonConfig();
+            jc.setExcludes(new String[]{"userId","accounts","offers"});
+            jc.setCycleDetectionStrategy(CycleDetectionStrategy.LENIENT);
+            response.setPayload(JSONObject.fromObject(user.get(),jc));
+            response.setCode(HttpStatus.OK.value());
             response.setMessage("success");
         }else{
-            response.setCode(HttpStatus.NOT_FOUND);
+            response.setCode(HttpStatus.NOT_FOUND.value());
             response.setMessage("no found");
         }
         return response;

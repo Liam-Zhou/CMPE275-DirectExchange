@@ -8,7 +8,7 @@ import org.springframework.http.HttpStatus;
 public class RestResponse {
 
     private String status;
-    private HttpStatus code;
+    private Integer code;
     private String message;
     private String debugMessage;
     private JSONObject payload;

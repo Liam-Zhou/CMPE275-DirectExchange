@@ -43,12 +43,12 @@ public class MatchingOffersController {
                 MatchingOffers matchingOffers = offerService.getMatchingOffers(offer.get());
                 JSONObject payload = responsePayloadUtils.matchingOffersJson(matchingOffers);//JSONObject.fromObject(matchingOffers);
                 response.setPayload(payload);
-                response.setCode(HttpStatus.OK);
+                response.setCode(HttpStatus.OK.value());
                 response.setMessage("success");
 //                response.setDebugMessage("Invalid Offer Id " + offerId);
             } else {
                 response.setPayload(null);
-                response.setCode(HttpStatus.BAD_REQUEST);
+                response.setCode(HttpStatus.BAD_REQUEST.value());
                 response.setMessage("failure");
                 response.setDebugMessage("Invalid Offer Id " + offerId);
             }
@@ -56,7 +56,7 @@ public class MatchingOffersController {
         }
         catch (Exception ex){
             response.setPayload(null);
-            response.setCode(HttpStatus.INTERNAL_SERVER_ERROR);
+            response.setCode(HttpStatus.INTERNAL_SERVER_ERROR.value());
             response.setMessage("failure");
             response.setDebugMessage(ex.getLocalizedMessage());
             return response;

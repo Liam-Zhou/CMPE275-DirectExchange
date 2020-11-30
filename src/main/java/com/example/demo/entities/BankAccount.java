@@ -9,6 +9,7 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 import org.hibernate.annotations.Immutable;
+import org.hibernate.annotations.Type;
 
 import javax.persistence.*;
 import java.util.Objects;
@@ -39,7 +40,7 @@ public class BankAccount {
     private String ownerAddress;
 
     @Enumerated(EnumType.STRING)
-    @Column(name="currency", nullable = false)
+    @Column(name="currency", nullable = false,  columnDefinition="VARCHAR(10)")
     private Currency currency;
 
     @Column(name="sending", nullable = false)
