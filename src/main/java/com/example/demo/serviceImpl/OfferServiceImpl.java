@@ -83,4 +83,13 @@ public class OfferServiceImpl {
         offerDetailsRepository.addUserForeignKey(user_id,o.getId());
         return o;
     }
+
+    public List<OfferDetails> getOfferList(int pageNum,String Scurrency,int Samount,String Dcurrency){
+        List<OfferDetails> offerList = offerDetailsRepository.getOfferList( pageNum, Scurrency, Samount, Dcurrency);
+        return offerList;
+    }
+    public List<OfferDetails> getOfferByUser(long user_id){
+        List<OfferDetails> offerList = offerDetailsRepository.getOfferByUser(user_id);
+        return offerList;
+    }
 }

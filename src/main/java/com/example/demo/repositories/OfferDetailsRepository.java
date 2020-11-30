@@ -1,6 +1,7 @@
 package com.example.demo.repositories;
 
 import com.example.demo.entities.OfferDetails;
+import com.example.demo.entities.User;
 import com.example.demo.enums.Currency;
 import com.example.demo.pojos.SplitOfferIds;
 import org.springframework.boot.autoconfigure.domain.EntityScan;
@@ -225,4 +226,13 @@ public interface OfferDetailsRepository extends JpaRepository<OfferDetails,Long>
     @Modifying
     @Query(value = "update offer_details set user_id=?1 where id=?2 ",nativeQuery = true)
     void addUserForeignKey(long userId,long offerId);
+
+    @Transactional
+    @Query(value = "select * from offer_details where source_currency=?2 and amount > ?3 and destination_currency=?4 limit ?1,10",nativeQuery = true)
+    List<OfferDetails> getOfferList(int pageNum,String Scurrency,int Samount,String Dcurrency);
+
+    @Transactional
+    @Query(value = "select * from offer_details where user_id=?1",nativeQuery = true)
+    List<OfferDetails> getOfferByUser(long user_id);
+
 }

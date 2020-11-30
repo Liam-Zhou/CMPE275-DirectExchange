@@ -35,8 +35,8 @@ class Navbar extends Component {
                         </div>
                         <ul class="nav navbar-nav navbar-right">
                             <li><Link to="/home/postOffer">Post Offer</Link></li>
-                            <li><Link to="/browseOffer">Browse Offer</Link></li>
-                            <li><Link to="/myOffer">My Offer</Link></li>
+                            <li><Link to="/home/browserOffer">Browse Offer</Link></li>
+                            <li><Link to="/home/myOffer">My Offer</Link></li>
                             <li><Link to="/message">Message</Link></li>
                             <div className="btn btn-group nav navbar-nav navbar-right">
                                 <button type="button" className="btn btn-default dropdown-toggle "
