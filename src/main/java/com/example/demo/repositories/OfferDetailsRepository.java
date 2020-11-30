@@ -220,4 +220,9 @@ public interface OfferDetailsRepository extends JpaRepository<OfferDetails,Long>
             "        )" ,nativeQuery = true)
     List<Object[]> getSplitOffers3();
 
+
+    @Transactional
+    @Modifying
+    @Query(value = "update offer_details set user_id=?1 where id=?2 ",nativeQuery = true)
+    void addUserForeignKey(long userId,long offerId);
 }

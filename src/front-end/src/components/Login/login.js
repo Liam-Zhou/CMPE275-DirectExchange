@@ -140,7 +140,7 @@ class Login extends Component {
                     // let port = config.front_end_port;
                     // let url = host + ':' + port;
                     // window.location.href=url+"/"
-                    this.props.history.push("/");
+                    this.props.history.push("/home");
                 }else{
                     let v = window.confirm("your email haven't verified,do you wanna verification link now ?")
                     if(v){

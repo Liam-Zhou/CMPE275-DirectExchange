@@ -31,10 +31,10 @@ class Navbar extends Component {
                 <nav class="navbar navbar-default navbar-static-top" style = {{"z-index":'9999'}}>
                     <div class="container-fluid">
                         <div class="navbar-header">
-                            <Link class="navbar-brand" to="/job">DirectExchange</Link>
+                            <Link class="navbar-brand" >DirectExchange</Link>
                         </div>
                         <ul class="nav navbar-nav navbar-right">
-                            <li><Link to="/postOffer">Post Offer</Link></li>
+                            <li><Link to="/home/postOffer">Post Offer</Link></li>
                             <li><Link to="/browseOffer">Browse Offer</Link></li>
                             <li><Link to="/myOffer">My Offer</Link></li>
                             <li><Link to="/message">Message</Link></li>

@@ -78,4 +78,9 @@ public class OfferServiceImpl {
         return matchingOffers;
     }
 
+    public OfferDetails CareteOffer(OfferDetails offer,long user_id){
+        OfferDetails o =  offerDetailsRepository.saveAndFlush(offer);
+        offerDetailsRepository.addUserForeignKey(user_id,o.getId());
+        return o;
+    }
 }

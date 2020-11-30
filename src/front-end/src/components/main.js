@@ -5,6 +5,7 @@ import Signup from './Login/signup';
 import emailVerification from './Login/emailVerification'
 import Transfer from './Login/transfer'
 import Navbar from "./Nav/navBar";
+import postOffer from "./Offer/postOffer"
 
 //Create a Main Component
 class Main extends Component {
@@ -21,6 +22,7 @@ class Main extends Component {
                 <Route path="/signup" component={Signup}/>
                 <Route path="/emailVerification" component={emailVerification}/>
 
+                <Route path="/home/postOffer" component={postOffer}/>
             </div>
         )
     }
