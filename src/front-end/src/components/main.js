@@ -7,7 +7,10 @@ import Transfer from './Login/transfer'
 import Landing from './Landing/landing';
 import BankSetup from './BankSetup/bank-setup';
 import Navbar from "./Nav/navBar";
+
 import MatchingOffers from './MatchingOffers/matching-offers';
+
+import postOffer from "./Offer/postOffer"
 
 //Create a Main Component
 class Main extends Component {
@@ -29,8 +32,12 @@ class Main extends Component {
                 <Route path="/signup" component={Signup}/>
                 <Route path="/emailVerification" component={emailVerification}/>
 
+
                 <Route path="/bank-setup" component={BankSetup}/>
                 <Route path="/matchingOffers" component={MatchingOffers}/>
+
+                <Route path="/home/postOffer" component={postOffer}/>
+
             </div>
         )
     }

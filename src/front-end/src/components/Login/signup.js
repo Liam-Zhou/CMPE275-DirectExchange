@@ -67,7 +67,24 @@ class Signup extends Component{
                     let profile = authResult.additionalUserInfo.profile;
                     // localStorage.setItem("outId",profile.id);
                     let user = firebase.auth().currentUser;
+                    let email = localStorage.getItem("emailId")
+                    let password = localStorage.getItem("password")
+                    let nickName = localStorage.getItem('nickName')
+                    if(email && password && nickName){
+                        console.log("email password nickName",email,password,nickName)
+                        firebase.auth().createUserWithEmailAndPassword(email,password)
+                            .then((r) => {
+                                // console.log("rrrrrrr",r)
+                                let currentUser = firebase.auth().currentUser;
+                                currentUser.sendEmailVerification().then(function() {
 
+                                    let credential = firebase.auth.EmailAuthProvider.credential(email, password);
+                                    // user.linkWithCredential(1)
+                                    user.linkWithCredential(credential).then(r2 => {})
+                                })
+                            })
+
+                    }
                     user.sendEmailVerification().then(function() {
                         alert("success ! check the verification link in your email")
                         // Email sent.
@@ -76,7 +93,6 @@ class Signup extends Component{
                     });
                     // write in the database out_id
                     localStorage.setItem("out_id",profile.id)
-
                     return true;
                 }
 
@@ -103,10 +119,13 @@ class Signup extends Component{
             this.setState({
                 name : e.target.value
             })
+            localStorage.setItem("nickName",e.target.value)
         }else{
+            alert("nick name should be alphanumeric")
             this.setState({
                 name : ""
             })
+            localStorage.setItem("nickName","")
         }
 
     }
@@ -115,11 +134,14 @@ class Signup extends Component{
         this.setState({
             password : e.target.value
         })
+        localStorage.setItem("password",e.target.value)
+
     }
     emailIdChangeHandler = (e) => {
         this.setState({
             emailId : e.target.value
         })
+        localStorage.setItem("emailId",e.target.value)
     }
 
     //submit Login handler to send a request to the node backend

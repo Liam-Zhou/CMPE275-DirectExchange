@@ -1,5 +1,7 @@
 package com.example.demo.controllers;
 
+import com.example.demo.entities.BankAccount;
+import com.example.demo.entities.OfferDetails;
 import com.example.demo.entities.User;
 import com.example.demo.pojos.RestResponse;
 import com.example.demo.serviceImpl.UserServiceImpl;
@@ -12,6 +14,8 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 
@@ -21,6 +25,30 @@ import java.util.Optional;
 public class UserController {
     @Resource
     UserServiceImpl userService;
+
+    private JSONObject commonFunc(User u){
+        JSONObject userObj = new JSONObject();
+        userObj.put("id",u.getId());
+        userObj.put("username",u.getUsername());
+        userObj.put("nickname",u.getNickname());
+        userObj.put("out_id",u.getOut_id());
+        userObj.put("rating",u.getRating());
+        List<Long> offerIds = new ArrayList<>();
+        List<Long> accountIds = new ArrayList<>();
+        if(u.getOffers()!= null){
+            for(OfferDetails item : u.getOffers()){
+                offerIds.add(item.getId());
+            }
+        }
+        if(u.getAccounts()!=null){
+            for(BankAccount item : u.getAccounts()){
+                accountIds.add(item.getId());
+            }
+        }
+        userObj.put("accounts",accountIds);
+        userObj.put("offers",offerIds);
+        return userObj;
+    }
 
     @RequestMapping(value={"/login"},method = RequestMethod.GET,produces = {"application/json;charset=utf-8"})
     @ResponseBody
@@ -33,7 +61,8 @@ public class UserController {
         if(out_id != ""){
             Optional<User> user = userService.getUserByOutId(out_id);
             if(user.isPresent()){
-                response.setPayload(JSONObject.fromObject(user.get()));
+                User u = user.get();
+                response.setPayload(this.commonFunc(u));
                 response.setCode(HttpStatus.OK.value());
                 response.setMessage("success");
             }else {
@@ -44,7 +73,7 @@ public class UserController {
         if(email != ""){
             Optional<User> user = userService.getUserByEmail(email);
             if(user.isPresent()){
-                response.setPayload(JSONObject.fromObject(user.get()));
+                response.setPayload(this.commonFunc(user.get()));
                 response.setCode(HttpStatus.OK.value());
                 response.setMessage("success");
             }else {

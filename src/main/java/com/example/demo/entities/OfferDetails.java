@@ -60,7 +60,7 @@ public class OfferDetails {
     private Set<CounterOfferDetails> counterOffers;
 
     @ManyToOne
-    @JoinColumn(name="user_id", nullable=false, insertable = false,updatable = false)
+    @JoinColumn(name="user_id", nullable=true, insertable = false,updatable = false)
     @ToString.Exclude
     @JsonIgnore
     private User userId;
