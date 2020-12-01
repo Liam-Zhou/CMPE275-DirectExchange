@@ -92,4 +92,9 @@ public class OfferServiceImpl {
         List<OfferDetails> offerList = offerDetailsRepository.getOfferByUser(user_id);
         return offerList;
     }
+    public List<OfferDetails> getTotalOffers(String Scurrency,int Samount,String Dcurrency){
+        List<OfferDetails> offerList = offerDetailsRepository.getTotalOffers(Scurrency, Samount, Dcurrency);
+        return offerList;
+    }
+
 }

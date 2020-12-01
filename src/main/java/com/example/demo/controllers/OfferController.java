@@ -120,6 +120,14 @@ public class OfferController {
         }
         List<OfferDetails> offerList = offerService.getOfferList(pageNum,Scurrency,Samount,Dcurrency);
         JSONArray jsonArray = this.commonFunc(offerList);
+
+        //total count
+        List<OfferDetails> totalOffers = offerService.getTotalOffers(Scurrency,Samount,Dcurrency);
+        int length = totalOffers.size();
+        JSONObject temp = new JSONObject();
+        temp.put("totalNum",length);
+
+        response.setPayload(temp);
         response.setPayload_arr(jsonArray);
         response.setCode(HttpStatus.OK);
         response.setMessage("success");

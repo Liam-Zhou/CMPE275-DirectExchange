@@ -228,11 +228,15 @@ public interface OfferDetailsRepository extends JpaRepository<OfferDetails,Long>
     void addUserForeignKey(long userId,long offerId);
 
     @Transactional
-    @Query(value = "select * from offer_details where source_currency=?2 and amount > ?3 and destination_currency=?4 limit ?1,10",nativeQuery = true)
+    @Query(value = "select * from offer_details where source_currency=?2 and amount > ?3 and destination_currency=?4 limit ?1,4",nativeQuery = true)
     List<OfferDetails> getOfferList(int pageNum,String Scurrency,int Samount,String Dcurrency);
 
     @Transactional
     @Query(value = "select * from offer_details where user_id=?1",nativeQuery = true)
     List<OfferDetails> getOfferByUser(long user_id);
+
+    @Transactional
+    @Query(value = "select * from offer_details where source_currency=?1 and amount > ?2 and destination_currency=?3 ",nativeQuery = true)
+    List<OfferDetails> getTotalOffers(String Scurrency,int Samount,String Dcurrency);
 
 }

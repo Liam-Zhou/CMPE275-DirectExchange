@@ -15,8 +15,6 @@ class Navbar extends Component {
         this.props.logout()
     }
     render(){
-        //if Cookie is set render Logout Button
-        let navLogin = null;
         let redirectVar = null;
         if(this.props.isLogin){
 

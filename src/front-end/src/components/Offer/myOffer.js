@@ -42,8 +42,16 @@ class MyOffer extends Component{
 
 
     render(){
+        let redirectVar = null;
+        if(this.props.isLogin){
+
+        }else{
+            redirectVar=<Redirect to="/login"/>
+        }
+
 
         return ( <div class="col-md-12 ">
+                {redirectVar}
                 <h3 className="center">My Offers List </h3>
                     <div className='profile_card' style={{'margin-left': '0px'}}>
 
@@ -70,6 +78,7 @@ class MyOffer extends Component{
 const mapStateToProps = (state) => {
     return {
         id: state.userinfo.id,
+        isLogin: state.userinfo.isLogin,
     }
 }
 

@@ -34,7 +34,7 @@ public class UserController {
         userObj.put("out_id",u.getOut_id());
         userObj.put("rating",u.getRating());
         List<Long> offerIds = new ArrayList<>();
-        List<Long> accountIds = new ArrayList<>();
+        List<JSONObject> accounts = new ArrayList<>();
         if(u.getOffers()!= null){
             for(OfferDetails item : u.getOffers()){
                 offerIds.add(item.getId());
@@ -42,10 +42,13 @@ public class UserController {
         }
         if(u.getAccounts()!=null){
             for(BankAccount item : u.getAccounts()){
-                accountIds.add(item.getId());
+                JSONObject temp= new JSONObject();
+                temp.put("account_id",item.getId());
+                temp.put("country",item.getCountry());
+                accounts.add(temp);
             }
         }
-        userObj.put("accounts",accountIds);
+        userObj.put("accounts",accounts);
         userObj.put("offers",offerIds);
         return userObj;
     }

@@ -23,7 +23,10 @@ class browserOffer extends Component{
             Damount:'',
             Scurrency:'',
             Dcurrency:'',
-            offer:''
+            offer:'',
+            currentPage:1,
+
+            pageNumList:[],
         }
         this.submit = this.submit.bind(this)
 
@@ -35,6 +38,7 @@ class browserOffer extends Component{
         this.DcurrencyChangeHandler = this.DcurrencyChangeHandler.bind(this)
 
         this.detail = this.detail.bind(this)
+        this.getOfferList = this.getOfferList.bind(this)
     }
     componentWillMount(){
 
@@ -102,18 +106,25 @@ class browserOffer extends Component{
             Scurrency:e.target.value
         })
     }
-    submit(e){
-        e.preventDefault();
-        let Samount = this.state.Samount
-        let Scurrency = this.state.Scurrency
-        let Dcurrency = this.state.Dcurrency
-        axios.get(url + '/offer/all?pageNum='+1+"&Scurrency="+Scurrency+"&Samount="+Samount+"&Dcurrency="+Dcurrency)
+
+    commonFunc(n,Scurrency,Samount,Dcurrency){
+        axios.get(url + '/offer/all?pageNum='+n+"&Scurrency="+Scurrency+"&Samount="+Samount+"&Dcurrency="+Dcurrency)
             .then(res => {
                 if(res.status === 200 && res.data.message === 'success'){
                     let payload_arr = res.data.payload_arr
                     if(payload_arr.length != 0){
+                        let l = res.data.payload.totalNum
+                        let pageNum = parseInt(l/4) + 1;
+                        if(l % 4 == 0){
+                            pageNum = parseInt(l/4);
+                        }
+                        let temp_arr = []
+                        for(let i = 0;i < pageNum;i++){
+                            temp_arr.push(i)
+                        }
                         this.setState({
-                            offerList:payload_arr
+                            offerList:payload_arr,
+                            pageNumList:temp_arr
                         })
 
                     }else{
@@ -122,6 +133,39 @@ class browserOffer extends Component{
 
                 }
             })
+    }
+    submit(e){
+        e.preventDefault();
+        let Samount = this.state.Samount
+        let Scurrency = this.state.Scurrency
+        let Dcurrency = this.state.Dcurrency
+        this.commonFunc(1,Scurrency,Samount,Dcurrency)
+
+    }
+
+    getOfferList(index){
+        if(0 < index && index <= this.state.pageNumList.length){
+            this.setState({
+                currentPage:index
+            })
+            axios.get(url + '/offer/all?pageNum='+index+"&Scurrency="+this.state.Scurrency+"&Samount="+this.state.Samount+"&Dcurrency="+this.state.Dcurrency)
+            .then(res => {
+                if(res.status === 200 && res.data.message === 'success'){
+                    let payload_arr = res.data.payload_arr
+                    if(payload_arr.length == 0){
+                        this.setState({
+                            offerList:[],
+                            offer:''
+                        })
+                    }else{
+                        this.setState({
+                            offerList:payload_arr
+                        })
+                    }
+                }
+            })
+        }
+
     }
 
     detail(offer){
@@ -134,7 +178,14 @@ class browserOffer extends Component{
         let Samount = this.state.Samount
         let Damount = this.state.Damount
 
+        let redirectVar = null;
+        if(this.props.isLogin){
+
+        }else{
+            redirectVar=<Redirect to="/login"/>
+        }
         return ( <div class="col-md-12 ">
+                {redirectVar}
                 <h3 className="center">Offers List </h3>
             <div className="cprofile_card img" style={{'width': '100%'}}>
 
@@ -183,6 +234,26 @@ class browserOffer extends Component{
 
                     </div>
                 ))}
+                    <div style={{'margin-left': '40px'}}>
+                        <nav aria-label="Page navigation pagination-sm">
+                            <ul className="pagination">
+                                <li>
+                                    <a onClick={() => this.getOfferList(this.state.currentPage - 1)}
+                                       aria-label="Previous">
+                                        <span aria-hidden="true">&laquo;</span>
+                                    </a>
+                                </li>
+                                {this.state.pageNumList.map((index) => (
+                                    <li><a onClick={() => this.getOfferList(index + 1)}>{index + 1}</a></li>
+                                ))}
+                                <li>
+                                    <a onClick={() => this.getOfferList(this.state.currentPage + 1)} aria-label="Next">
+                                        <span aria-hidden="true">&raquo;</span>
+                                    </a>
+                                </li>
+                            </ul>
+                        </nav>
+                    </div>
                 </div>
             </div>
             <div className="col-md-6">
@@ -208,6 +279,7 @@ class browserOffer extends Component{
 const mapStateToProps = (state) => {
     return {
         id: state.userinfo.id,
+        isLogin: state.userinfo.isLogin,
     }
 }
 

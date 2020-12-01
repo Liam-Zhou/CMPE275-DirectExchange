@@ -22,7 +22,7 @@ class postOffer extends Component{
             Dcountry:'',
             Dcurrency:'',
             rate:'',
-            lead:''
+            flag:''
         }
         this.submit = this.submit.bind(this)
         this.basicCancel = this.basicCancel.bind(this)
@@ -32,15 +32,23 @@ class postOffer extends Component{
 
     }
     componentWillMount(){
-        // let today = new Date()
-        // let year = today.getFullYear();
-        // let month = today.getMonth();
-        // let day = today.getDate();
-        // today = year+'-'+month+'-'+day;
-        // console.log('today',today)
-        // this.setState({
-        //     today:today
-        // })
+        let accounts = this.props.accounts
+        let flag = false;
+        let accounts_country = {}
+        for(let i = 0;i < accounts.length;i++){
+            if(accounts_country[accounts[i].country]){
+
+            }else{
+                accounts_country[accounts[i].country] = 1
+            }
+        }
+        if(Object.keys(accounts_country).length >1 ){
+            flag = true;
+        }
+        this.setState({
+            flag:flag
+        })
+
     }
     ScountryChangeHandler(e){
         e.preventDefault();
@@ -87,6 +95,8 @@ class postOffer extends Component{
     }
     submit(e){
         e.preventDefault();
+        if(this.state.flag){
+
         let timezone = -8;
         let offset_GMT = new Date().getTimezoneOffset();
         let nowDate = new Date(e.target.expireDate.value + " 00:00:00").getTime()
@@ -113,12 +123,13 @@ class postOffer extends Component{
                 if(response.status === 200){
                     console.log('response.data',response.data)
                     alert("success!!")
-                    // this.props.history.push("/");
+                    this.props.history.push("/home/myOffer");
                 }else{
 
                 }})
-
-
+        }else{
+            alert("you should have at least 2 accounts from different country")
+        }
     }
     basicCancel(){
         this.setState({
@@ -130,12 +141,18 @@ class postOffer extends Component{
     }
 
     render(){
+        let redirectVar = null;
+        if(this.props.isLogin){
+
+        }else{
+            redirectVar=<Redirect to="/login"/>
+        }
         return (
             <div>
-                {this.state.lead}
+                {redirectVar}
                 <div class="img">
                     <div class = "cprofile_card img" style = {{'width':'100%'}}>
-                        <h3 class='img center'>Fill Your New Posting Job</h3>
+                        <h3 class='img center'>Fill Your New Offer</h3>
                         <br></br>
                         <form onSubmit={this.submit}  class='img'>
                             <p class='img' style = {{'width':'70%'}}>Source country:
@@ -205,7 +222,8 @@ class postOffer extends Component{
 const mapStateToProps = (state) => {
     return {
         id: state.userinfo.id,
-
+        accounts: state.userinfo.accounts,
+        isLogin: state.userinfo.isLogin,
     }
 }
 

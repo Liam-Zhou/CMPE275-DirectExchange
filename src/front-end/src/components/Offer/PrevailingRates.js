@@ -23,8 +23,15 @@ class PrevailingRates extends Component{
     componentWillMount(){
     }
     render(){
+        let redirectVar = null;
+        if(this.props.isLogin){
+
+        }else{
+            redirectVar=<Redirect to="/login"/>
+        }
         return (
-            <div>
+
+            <div>{redirectVar}
                 <div class="img">
                     <div class = "cprofile_card img" style = {{'width':'100%'}}>
                         <h3 class='img center'>Prevailing Rates</h3>
@@ -58,7 +65,7 @@ class PrevailingRates extends Component{
 const mapStateToProps = (state) => {
     return {
         id: state.userinfo.id,
-
+        isLogin: state.userinfo.isLogin,
     }
 }
 
