@@ -19,8 +19,8 @@ class browserOffer extends Component{
         this.state = {
             offerList:[],
             currencyList:[],
-            Samount:0,
-            Damount:0,
+            Samount:'',
+            Damount:'',
             Scurrency:'',
             Dcurrency:'',
             offer:''
@@ -180,6 +180,7 @@ class browserOffer extends Component{
                         <p style=  {{}}>Destination Currency:<h4 className='inline'>{offer.DCurrency}</h4></p>
                         <p style=  {{}}>Amount:<h4 className='inline'>{offer.Amount}</h4></p>
                         <p style=  {{}}>Rate:<h4 className='inline'>{offer.Rate}</h4></p>
+
                     </div>
                 ))}
                 </div>

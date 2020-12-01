@@ -34,6 +34,7 @@ class Navbar extends Component {
                             <Link class="navbar-brand" >DirectExchange</Link>
                         </div>
                         <ul class="nav navbar-nav navbar-right">
+                            <li><Link to="/home/rates">Prevailing Rates</Link></li>
                             <li><Link to="/home/postOffer">Post Offer</Link></li>
                             <li><Link to="/home/browserOffer">Browse Offer</Link></li>
                             <li><Link to="/home/myOffer">My Offer</Link></li>

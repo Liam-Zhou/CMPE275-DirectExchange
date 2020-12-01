@@ -57,6 +57,7 @@ class MyOffer extends Component{
                                 <p style=  {{}}>Rate:<h4 className='inline'>{offer.Rate}</h4></p>
                                 <p style=  {{}}>Allow Counter Offer:<h4 className='inline'>{offer.CounterOffer}</h4></p>
                                 <p style=  {{}}>Allow Split Offer:<h4 className='inline'>{offer.SplitExchange}</h4></p>
+                                <p style=  {{}}>Expire Date:<h4 className='inline'>{offer['expire']}</h4></p>
 
                             </div>
                         ))}
