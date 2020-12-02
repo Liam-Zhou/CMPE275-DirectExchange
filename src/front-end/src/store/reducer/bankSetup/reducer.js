@@ -1,4 +1,4 @@
-import { BANK_SETUP_SUCCESS } from '../../action-types';
+import { BANK_SETUP } from '../../action-types';
 
 const initialState = {
     accounts : []
@@ -6,7 +6,7 @@ const initialState = {
 
 const bankSetup =  (state = initialState,action) => {
     switch(action.type){
-    case BANK_SETUP_SUCCESS:
+    case BANK_SETUP:
         return {
             ...state,
             accounts: [...state.accounts,action.payload]

@@ -70,10 +70,10 @@ public class OfferController {
             jc.setCycleDetectionStrategy(CycleDetectionStrategy.LENIENT);
 
             response.setPayload(JSONObject.fromObject(offerService.CareteOffer(offer,u.get().getId()),jc));
-            response.setCode(HttpStatus.OK);
+            response.setCode(HttpStatus.OK.value());
             response.setMessage("success");
         }else{
-            response.setCode(HttpStatus.NOT_FOUND);
+            response.setCode(HttpStatus.NOT_FOUND.value());
             response.setMessage("no found");
         }
         return response;

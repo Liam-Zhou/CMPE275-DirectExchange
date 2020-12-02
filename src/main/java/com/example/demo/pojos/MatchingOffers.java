@@ -10,24 +10,24 @@ import java.util.List;
 public class MatchingOffers {
 
     private OfferDetails offerDetails;
-    private List<OfferDetails> singleMatches = new ArrayList<>();
+    private List<SingleMatchOffer> singleMatches = new ArrayList<>();
     private List<SplitMatchOffer> splitMatches = new ArrayList<>();
-    private List<OfferDetails> approxSingleMatches = new ArrayList<>();
-    private List<SplitMatchOffer> approxSplitMatches = new ArrayList<>();
+//    private List<SingleMatchOffer> approxSingleMatches = new ArrayList<>();
+//    private List<SplitMatchOffer> approxSplitMatches = new ArrayList<>();
 
     public void addSplitMatch(SplitMatchOffer splitMatchOffer){
         this.splitMatches.add(splitMatchOffer);
     }
 
-    public void addApproxSplitMatch(SplitMatchOffer splitMatchOffer){
-        this.approxSplitMatches.add(splitMatchOffer);
-    }
+//    public void addApproxSplitMatch(SplitMatchOffer splitMatchOffer){
+//        this.approxSplitMatches.add(splitMatchOffer);
+//    }
 
-    public void addSingleMatch(OfferDetails offerDetails){
+    public void addSingleMatch(SingleMatchOffer offerDetails){
         this.singleMatches.add(offerDetails);
     }
 
-    public void addApproxSingleMatch(OfferDetails offerDetails){
-        this.approxSingleMatches.add(offerDetails);
-    }
+//    public void addApproxSingleMatch(SingleMatchOffer offerDetails){
+//        this.approxSingleMatches.add(offerDetails);
+//    }
 }

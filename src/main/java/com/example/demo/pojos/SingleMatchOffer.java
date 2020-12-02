@@ -4,10 +4,10 @@ import com.example.demo.entities.OfferDetails;
 import lombok.Data;
 
 @Data
-public class SplitMatchOffer {
+public class SingleMatchOffer {
 
     private Double amountDifferencePercentage;
-    private OfferDetails offer1;
-    private OfferDetails offer2;
+    private OfferDetails offer;
 
 }
+

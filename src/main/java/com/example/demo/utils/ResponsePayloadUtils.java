@@ -2,6 +2,7 @@ package com.example.demo.utils;
 
 import com.example.demo.entities.OfferDetails;
 import com.example.demo.pojos.MatchingOffers;
+import com.example.demo.pojos.SingleMatchOffer;
 import com.example.demo.pojos.SplitMatchOffer;
 import net.sf.json.JSON;
 import net.sf.json.JSONObject;
@@ -26,6 +27,7 @@ public class ResponsePayloadUtils {
             json.put("offerStatus",offerDetails.getOfferStatus());
             json.put("counterOffers",offerDetails.getAllowCounterOffers());
             json.put("splitOffers",offerDetails.getAllowSplitExchange());
+            json.put("userNickname",offerDetails.getUserId().getNickname());
         }
         return json;
     }
@@ -35,6 +37,16 @@ public class ResponsePayloadUtils {
         if(splitMatchOffer!=null){
             json.put("offer1",offerDetailsJson(splitMatchOffer.getOffer1()));
             json.put("offer2",offerDetailsJson(splitMatchOffer.getOffer2()));
+            json.put("amountDifferencePercentage",splitMatchOffer.getAmountDifferencePercentage());
+        }
+        return json;
+    }
+
+    public JSONObject singleMatchJson(SingleMatchOffer singleMatchOffer){
+        JSONObject json = new JSONObject();
+        if(singleMatchOffer!=null){
+            json.put("offer",offerDetailsJson(singleMatchOffer.getOffer()));
+            json.put("amountDifferencePercentage",singleMatchOffer.getAmountDifferencePercentage());
         }
         return json;
     }
@@ -44,8 +56,8 @@ public class ResponsePayloadUtils {
         if(matchingOffers!=null){
             json.put("offerDetails",offerDetailsJson(matchingOffers.getOfferDetails()));
             List<JSONObject> singles = new ArrayList<>();
-            for(OfferDetails offer : matchingOffers.getSingleMatches()){
-                singles.add(offerDetailsJson(offer));
+            for(SingleMatchOffer offer : matchingOffers.getSingleMatches()){
+                singles.add(singleMatchJson(offer));
             }
             List<JSONObject> split = new ArrayList<>();
             for(SplitMatchOffer offer : matchingOffers.getSplitMatches()){
@@ -53,16 +65,16 @@ public class ResponsePayloadUtils {
             }
             json.put("singles",singles);
             json.put("split",split);
-            List<JSONObject> approxSingles = new ArrayList<>();
-            for(OfferDetails offer : matchingOffers.getApproxSingleMatches()){
-                approxSingles.add(offerDetailsJson(offer));
-            }
-            List<JSONObject> approxSplit = new ArrayList<>();
-            for(SplitMatchOffer offer : matchingOffers.getApproxSplitMatches()){
-                approxSplit.add(splitMatchJson(offer));
-            }
-            json.put("approxSingles",approxSingles);
-            json.put("approxSplit",approxSplit);
+//            List<JSONObject> approxSingles = new ArrayList<>();
+//            for(SingleMatchOffer offer : matchingOffers.getApproxSingleMatches()){
+//                approxSingles.add(singleMatchJson(offer));
+//            }
+//            List<JSONObject> approxSplit = new ArrayList<>();
+//            for(SplitMatchOffer offer : matchingOffers.getApproxSplitMatches()){
+//                approxSplit.add(splitMatchJson(offer));
+//            }
+//            json.put("approxSingles",approxSingles);
+//            json.put("approxSplit",approxSplit);
         }
         return  json;
     }

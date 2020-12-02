@@ -1,35 +1,40 @@
-import { BANK_SETUP } from '../../action-types';
+import {
+        GET_MATCHING_OFFERS,
+        SET_FILTER
+     } from '../../action-types';
 import axios from 'axios';
 import config from '../../../config/basicConfig'
 let backend_url = config.host+":"+config.back_end_port
 
-export const bankSetup = (accountDetails, history) =>  dispatch => {
+export const getMatchingOffers = (offerId) =>  dispatch => {
         axios({
-            method:"POST",
-            url:backend_url+"/bank/setup",
+            method:"GET",
+            url:backend_url+"/matchingOffers/all?offerId="+offerId,
             headers: {
                 'Content-Type': 'application/json'
-              },
-            data: accountDetails
+              }
         }).then(function (response) {
             if(response.status === 200 && response.data.message === 'success'){
-                alert("Account successfully added!");
                 let data = response.data.payload;
-                console.log(JSON.stringify(data));
-                history.push("/home");
                 dispatch( {
-                    type: BANK_SETUP,
+                    type: GET_MATCHING_OFFERS,
                     payload: data
                 })
             }
             else{
                 let jsonRes = response.data;
-                alert("Account not added! Please try again!\n" + "Status Code: "+ jsonRes.code + "\n"+
+                alert("Couldn't fetch matching offers! Please try again!\n" + "Status Code: "+ jsonRes.code + "\n"+
                 "Message: " +jsonRes.debugMessage);
                 return;
             }
         }).catch(function (error) {
-            console.log(JSON.stringify(error))
-            alert("Account not added! Please try again!\n");
+            console.log(JSON.stringify(error));
         });
+}
+
+export const setFilter = (excludeSetup) => dispatch => {
+    return dispatch( {
+        type: SET_FILTER,
+        payload: excludeSetup
+    })
 }

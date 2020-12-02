@@ -8,7 +8,7 @@ import Landing from './Landing/landing';
 import BankSetup from './BankSetup/bank-setup';
 import Navbar from "./Nav/navBar";
 
-import MatchingOffers from './MatchingOffers/matching-offers';
+import MatchingOffers from './MatchingOffersList/matching-offers-list';
 
 import postOffer from "./Offer/postOffer"
 

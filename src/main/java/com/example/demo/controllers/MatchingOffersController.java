@@ -11,14 +11,12 @@ import net.sf.json.util.CycleDetectionStrategy;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import java.util.Optional;
 
+@CrossOrigin("http://localhost:3000")
 @Controller
 @RequestMapping("/matchingOffers")
 public class MatchingOffersController {
@@ -38,7 +36,7 @@ public class MatchingOffersController {
             Optional<OfferDetails> offer = offerService.getOfferDetailsById(offerId);
             if (offer.isPresent()) {
                 JsonConfig jc = new JsonConfig();
-//                jc.setExcludes(new String[]{"accounts","offers"});
+                jc.setExcludes(new String[]{"accounts","offers"});
                 jc.setCycleDetectionStrategy(CycleDetectionStrategy.LENIENT);
                 MatchingOffers matchingOffers = offerService.getMatchingOffers(offer.get());
                 JSONObject payload = responsePayloadUtils.matchingOffersJson(matchingOffers);//JSONObject.fromObject(matchingOffers);

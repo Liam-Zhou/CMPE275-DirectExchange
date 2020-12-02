@@ -1,1 +1,3 @@
-export const BANK_SETUP_SUCCESS = "BANK_SETUP_SUCCESS";
+export const BANK_SETUP = "BANK_SETUP";
+export const GET_MATCHING_OFFERS = "GET_MATCHING_OFFERS";
+export const SET_FILTER = "SET_FILTER";
