@@ -191,7 +191,6 @@ class Signup extends Component{
         let url = host + ':' + port;
         return(
             <div>
-                {/*{this.state.lead}*/}
                 <div class="container">
 
                     <div class="maincenter">

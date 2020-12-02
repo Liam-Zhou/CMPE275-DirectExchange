@@ -11,6 +11,9 @@ import Navbar from "./Nav/navBar";
 import MatchingOffers from './MatchingOffersList/matching-offers-list';
 
 import postOffer from "./Offer/postOffer"
+import browserOffer from './Offer/Browser'
+import myOffer from './Offer/myOffer'
+import PrevailingRates from'./Offer/PrevailingRates'
 
 //Create a Main Component
 class Main extends Component {
@@ -38,6 +41,10 @@ class Main extends Component {
 
                 <Route path="/home/postOffer" component={postOffer}/>
 
+                <Route path="/home/rates" component={PrevailingRates}/>
+                <Route path="/home/postOffer" component={postOffer}/>
+                <Route path="/home/browserOffer" component={browserOffer}/>
+                <Route path="/home/myOffer" component={myOffer}/>
             </div>
         )
     }

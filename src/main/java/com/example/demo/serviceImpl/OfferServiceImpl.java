@@ -116,6 +116,7 @@ public class OfferServiceImpl {
         return o;
     }
 
+
     public Double calculateAmountDifferenceSplitOffer(Double curentAmount,
                                             Double offer1Amount, Double offer2Amount,
                                             Currency currentSourceCurrency, Double exchangeRate,
@@ -136,9 +137,22 @@ public class OfferServiceImpl {
 
     public Double calculateAmountDifferenceSingleOffer(Double curentAmount,
                                                       Double offer1Amount,
-                                                      Double exchangeRate){
-        Double difference = (curentAmount*exchangeRate) - offer1Amount;
-        return Math.round((difference/(curentAmount*exchangeRate))*100.0*100)/100.0;
+                                                      Double exchangeRate) {
+        Double difference = (curentAmount * exchangeRate) - offer1Amount;
+        return Math.round((difference / (curentAmount * exchangeRate)) * 100.0 * 100) / 100.0;
+    }
+
+    public List<OfferDetails> getOfferList(int pageNum,String Scurrency,int Samount,String Dcurrency){
+        List<OfferDetails> offerList = offerDetailsRepository.getOfferList( pageNum, Scurrency, Samount, Dcurrency);
+        return offerList;
+    }
+    public List<OfferDetails> getOfferByUser(long user_id){
+        List<OfferDetails> offerList = offerDetailsRepository.getOfferByUser(user_id);
+        return offerList;
+    }
+    public List<OfferDetails> getTotalOffers(String Scurrency,int Samount,String Dcurrency){
+        List<OfferDetails> offerList = offerDetailsRepository.getTotalOffers(Scurrency, Samount, Dcurrency);
+        return offerList;
     }
 
 }

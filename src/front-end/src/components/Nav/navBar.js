@@ -15,8 +15,6 @@ class Navbar extends Component {
         this.props.logout()
     }
     render(){
-        //if Cookie is set render Logout Button
-        let navLogin = null;
         let redirectVar = null;
         if(this.props.isLogin){
 
@@ -34,9 +32,10 @@ class Navbar extends Component {
                             <Link class="navbar-brand" >DirectExchange</Link>
                         </div>
                         <ul class="nav navbar-nav navbar-right">
+                            <li><Link to="/home/rates">Prevailing Rates</Link></li>
                             <li><Link to="/home/postOffer">Post Offer</Link></li>
-                            <li><Link to="/browseOffer">Browse Offer</Link></li>
-                            <li><Link to="/myOffer">My Offer</Link></li>
+                            <li><Link to="/home/browserOffer">Browse Offer</Link></li>
+                            <li><Link to="/home/myOffer">My Offer</Link></li>
                             <li><Link to="/message">Message</Link></li>
                             <div className="btn btn-group nav navbar-nav navbar-right">
                                 <button type="button" className="btn btn-default dropdown-toggle "
