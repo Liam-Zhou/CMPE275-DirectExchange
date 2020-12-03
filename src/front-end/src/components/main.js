@@ -40,7 +40,7 @@ class Main extends Component {
                 <Route path="/bankSetup" component={BankSetup}/>
                 <Route path="/matchingOffers" component={MatchingOffers}/>
 
-                <Route path="/home/postOffer" component={postOffer}/>
+                {/*<Route path="/home/postOffer" component={postOffer}/>*/}
 
                 <Route path="/home/rates" component={PrevailingRates}/>
                 <Route path="/home/postOffer" component={postOffer}/>
