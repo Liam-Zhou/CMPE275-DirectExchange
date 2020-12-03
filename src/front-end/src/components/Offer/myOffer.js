@@ -7,6 +7,8 @@ import axios from 'axios';
 import { Redirect } from 'react-router';
 import {connect} from "react-redux";
 import {actionCreators} from "../../store/reducer/userinfo";
+import {Button } from 'reactstrap';
+import { setCurOffer } from '../../store/reducer/matchingOffers/actionCreator';
 
 let host = config.host;
 let port = config.back_end_port;
@@ -40,6 +42,12 @@ class MyOffer extends Component{
     }
 
 
+    getMatchingOffers = (offer) => {
+        this.props.setCurOffer(offer);
+        this.props.history.push("/matchingOffers");
+    }
+
+
 
     render(){
         let redirectVar = null;
@@ -66,7 +74,7 @@ class MyOffer extends Component{
                                 <p style=  {{}}>Allow Counter Offer:<h4 className='inline'>{offer.CounterOffer}</h4></p>
                                 <p style=  {{}}>Allow Split Offer:<h4 className='inline'>{offer.SplitExchange}</h4></p>
                                 <p style=  {{}}>Expire Date:<h4 className='inline'>{offer['expire']}</h4></p>
-
+                                <Button size="lg" color="primary" onClick={()=> this.getMatchingOffers(offer)}>Get Matching Offers</Button>
                             </div>
                         ))}
                     </div>
@@ -89,6 +97,9 @@ const mapDispatchToProps = (dispatch) => ({
     },
     connectLocalAccount(out_id,emailId,pwd,nickName){
         dispatch(actionCreators.connectLocalAccount(out_id,emailId,pwd,nickName));
+    },
+    setCurOffer(offerDetails){
+        dispatch(setCurOffer(offerDetails));
     }
 })
 export default connect(mapStateToProps, mapDispatchToProps)(MyOffer);

@@ -12,31 +12,29 @@ class MatchingOffers extends Component {
     constructor(){
         super();
         this.state = {
-            offerDetails : {
-                id : 40 ,
-                amount : 750.0,
-                sourceCountry : "USA",
-                sourceCurrency : "USD",
-                destinationCountry : "IND",
-                destinationCurrency : "INR",
-                exchangeRate : 74.24,
-                expirationDate : "",
-                allowCounterOffers : true,
-                allowSplitExchange : true,
-                offerStatus : "Open"
-            }
+            // offerDetails : {
+            //     id : 40 ,
+            //     amount : 750.0,
+            //     sourceCountry : "USA",
+            //     sourceCurrency : "USD",
+            //     destinationCountry : "IND",
+            //     destinationCurrency : "INR",
+            //     exchangeRate : 74.24,
+            //     expirationDate : "",
+            //     allowCounterOffers : true,
+            //     allowSplitExchange : true,
+            //     offerStatus : "Open"
+            // }
         }
     }
-
-
 
     render(){
         return <Fragment>
 
             <div className="db-container">
-                <OfferDetailsMO offerDetails={this.state.offerDetails}/>
+                <OfferDetailsMO offerDetails={this.props.offerDetails}/>
                 <FiltersMO />
-                <OffersListMO offerId={this.state.offerDetails.id}/>
+                <OffersListMO offerId={this.props.offerDetails.id}/>
             </div>
         </Fragment>
     }
@@ -45,7 +43,8 @@ class MatchingOffers extends Component {
 const mapStateToProps = (state) => {
     const isLoggedIn = state.userinfo.isLogin;
     const userId = state.userinfo.id;
-    return { isLoggedIn, userId };
+    const offerDetails = state.matchingOffers.offerDetails;
+    return { isLoggedIn, userId, offerDetails };
   }
 
   const mapDispatchToProps = (dispatch) => ({

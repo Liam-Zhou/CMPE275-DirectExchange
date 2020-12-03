@@ -1,6 +1,7 @@
 import {
         GET_MATCHING_OFFERS,
-        SET_FILTER
+        SET_FILTER,
+        SET_CUR_OFFER
      } from '../../action-types';
 import axios from 'axios';
 import config from '../../../config/basicConfig'
@@ -84,5 +85,12 @@ export const setFilter = (excludeSetup) => dispatch => {
     return dispatch( {
         type: SET_FILTER,
         payload: excludeSetup
+    })
+}
+
+export const setCurOffer = (offerDetails) => dispatch => {
+    return dispatch( {
+        type: SET_CUR_OFFER,
+        payload: offerDetails
     })
 }
