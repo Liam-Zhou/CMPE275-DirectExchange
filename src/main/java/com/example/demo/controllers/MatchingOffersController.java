@@ -1,6 +1,10 @@
 package com.example.demo.controllers;
 
 import com.example.demo.entities.OfferDetails;
+import com.example.demo.enums.OfferStatus;
+import com.example.demo.exceptions.NotFoundException;
+import com.example.demo.pojos.AcceptOfferRequest;
+import com.example.demo.pojos.MatchOfferRequest;
 import com.example.demo.pojos.MatchingOffers;
 import com.example.demo.pojos.RestResponse;
 import com.example.demo.serviceImpl.OfferServiceImpl;
@@ -34,7 +38,14 @@ public class MatchingOffersController {
         RestResponse response = new RestResponse();
         try {
             Optional<OfferDetails> offer = offerService.getOfferDetailsById(offerId);
-            if (offer.isPresent()) {
+            if (offer.isPresent() ) {
+                if(offer.get().getOfferStatus()!= OfferStatus.Open){
+                    response.setPayload(null);
+                    response.setCode(HttpStatus.BAD_REQUEST.value());
+                    response.setMessage("failure");
+                    response.setDebugMessage("Offer already in " + offer.get().getOfferStatus() + "status");
+                    return response;
+                }
                 JsonConfig jc = new JsonConfig();
                 jc.setExcludes(new String[]{"accounts","offers"});
                 jc.setCycleDetectionStrategy(CycleDetectionStrategy.LENIENT);
@@ -59,5 +70,52 @@ public class MatchingOffersController {
             response.setDebugMessage(ex.getLocalizedMessage());
             return response;
         }
+    }
+
+    @RequestMapping(value={"/acceptOffer"},method = RequestMethod.POST,produces = {"application/json;charset=utf-8"})
+    @ResponseBody
+    @Transactional
+    public RestResponse acceptOffer(@RequestBody AcceptOfferRequest acceptOfferRequest){
+        RestResponse response = new RestResponse();
+        try{
+            offerService.acceptOffer(acceptOfferRequest);
+            response.setPayload(null);
+            response.setCode(HttpStatus.OK.value());
+            response.setMessage("success");
+        }
+        catch (NotFoundException ex){
+            response.setPayload(null);
+            response.setCode(HttpStatus.BAD_REQUEST.value());
+            response.setMessage("failure");
+            response.setDebugMessage(ex.getMessage());
+        }
+        return response;
+    }
+
+    @RequestMapping(value={"/matchOffer"},method = RequestMethod.PUT,produces = {"application/json;charset=utf-8"})
+    @ResponseBody
+    @Transactional
+    public RestResponse matchOffer(@RequestBody MatchOfferRequest matchOfferRequest){
+        RestResponse response = new RestResponse();
+        try{
+            AcceptOfferRequest acceptOfferRequest = new AcceptOfferRequest();
+            acceptOfferRequest.setTimeStamp(matchOfferRequest.getTimeStamp());
+            OfferDetails updatedOffer = offerService.updateOfferAmt(matchOfferRequest.getOfferId(),
+                    matchOfferRequest.getAmount());
+            acceptOfferRequest.setOfferId1(matchOfferRequest.getOfferId());
+            acceptOfferRequest.setOfferId2(matchOfferRequest.getOfferId1());
+            acceptOfferRequest.setOfferId3(matchOfferRequest.getOfferId2());
+            offerService.acceptOffer(acceptOfferRequest);
+            response.setPayload(responsePayloadUtils.offerDetailsJson(updatedOffer));
+            response.setCode(HttpStatus.OK.value());
+            response.setMessage("success");
+        }
+        catch (NotFoundException ex){
+            response.setPayload(null);
+            response.setCode(HttpStatus.BAD_REQUEST.value());
+            response.setMessage("failure");
+            response.setDebugMessage(ex.getMessage());
+        }
+        return response;
     }
 }

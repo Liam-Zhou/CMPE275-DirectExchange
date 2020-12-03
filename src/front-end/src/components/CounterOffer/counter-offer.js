@@ -101,6 +101,11 @@ class CounterOffer extends Component {
                     </div>
                     <div className="c-line">
                         <div>
+                            NOTICE #2: Please enter remit amount in {otherOffer.sourceCurrency}
+                        </div>
+                    </div>
+                    <div className="c-line">
+                        <div>
                             New Remit Amount: (in {otherOffer.sourceCurrency})
                             <input type="number" min={()=>this.lowRange(otherOffer.amount).toString()} max={()=>this.highRange(otherOffer.amount).toString()} class="form-control cr-input" onChange={this.onChange} id="newAmt" aria-describedby="newAmt" />
                         </div>

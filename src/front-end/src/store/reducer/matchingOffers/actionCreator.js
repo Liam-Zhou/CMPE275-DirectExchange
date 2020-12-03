@@ -32,6 +32,54 @@ export const getMatchingOffers = (offerId) =>  dispatch => {
         });
 }
 
+export const acceptOfferAction = (acceptOfferRequest) => dispatch => {
+    axios({
+        method:"POST",
+        url:backend_url+"/matchingOffers/acceptOffer",
+        headers: {
+            'Content-Type': 'application/json'
+          },
+        data: acceptOfferRequest
+    }).then(function (response) {
+        if(response.status === 200 && response.data.message === 'success'){
+            let data = response.data.payload;
+            alert("Offer Accepted! Please complete the transaction from transactions page!");
+        }
+        else{
+            let jsonRes = response.data;
+            alert("Couldn't accept offer! Please try again!\n" + "Status Code: "+ jsonRes.code + "\n"+
+            "Message: " +jsonRes.debugMessage);
+            return;
+        }
+    }).catch(function (error) {
+        console.log(JSON.stringify(error));
+    });
+}
+
+export const matchOfferAction = (matchOfferRequest) => dispatch => {
+    axios({
+        method:"PUT",
+        url:backend_url+"/matchingOffers/matchOffer",
+        headers: {
+            'Content-Type': 'application/json'
+          },
+        data: matchOfferRequest
+    }).then(function (response) {
+        if(response.status === 200 && response.data.message === 'success'){
+            let data = response.data.payload;
+            alert("Offer Matched! Please complete the transaction from transactions page!");
+        }
+        else{
+            let jsonRes = response.data;
+            alert("Couldn't match offer! Please try again!\n" + "Status Code: "+ jsonRes.code + "\n"+
+            "Message: " +jsonRes.debugMessage);
+            return;
+        }
+    }).catch(function (error) {
+        console.log(JSON.stringify(error));
+    });
+}
+
 export const setFilter = (excludeSetup) => dispatch => {
     return dispatch( {
         type: SET_FILTER,

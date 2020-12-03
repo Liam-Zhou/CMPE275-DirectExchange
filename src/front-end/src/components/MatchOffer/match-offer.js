@@ -3,6 +3,8 @@ import '@fortawesome/fontawesome-free/css/all.css';
 import { connect } from 'react-redux';
 import './match-offer.css';
 import {Button } from 'reactstrap';
+import { matchOfferAction } from '../../store/reducer/matchingOffers/actionCreator';
+import { withRouter } from 'react-router-dom';
 
 class MatchOffer extends Component {
 
@@ -14,7 +16,15 @@ class MatchOffer extends Component {
     }
 
     matchOffer = ()  => {
-
+        let matchOfferRequest = {
+            offerId : this.props.myOffer.id,
+            offerId1 : this.props.offerId1,
+            offerId2 : this.props.offerId2,
+            amount : this.props.newAmt,
+            timeStamp : Date.now()
+        }
+        this.props.matchOfferAction(matchOfferRequest);
+        this.props.history.push("/home");
     }
 
     calculateForignCurrency = (amt,exRate) => {
@@ -106,7 +116,9 @@ const mapStateToProps = (state) => {
   }
 
   const mapDispatchToProps = (dispatch) => ({
-
+    matchOfferAction(matchOfferRequest) {
+        dispatch(matchOfferAction(matchOfferRequest));
+    }
 })
 
-export default connect(mapStateToProps, mapDispatchToProps)(MatchOffer);
+export default connect(mapStateToProps, mapDispatchToProps)(withRouter(MatchOffer));

@@ -3,6 +3,7 @@ package com.example.demo.controllers;
 import com.example.demo.entities.OfferDetails;
 import com.example.demo.entities.User;
 import com.example.demo.enums.Currency;
+import com.example.demo.exceptions.NotFoundException;
 import com.example.demo.pojos.RestResponse;
 import com.example.demo.serviceImpl.OfferServiceImpl;
 import com.example.demo.serviceImpl.UserServiceImpl;
@@ -129,7 +130,7 @@ public class OfferController {
 
         response.setPayload(temp);
         response.setPayload_arr(jsonArray);
-        response.setCode(HttpStatus.OK);
+        response.setCode(HttpStatus.OK.value());
         response.setMessage("success");
         return response;
     }
@@ -143,7 +144,7 @@ public class OfferController {
         List<OfferDetails> offerList = offerService.getOfferByUser(user_id);
         JSONArray jsonArray = this.commonFunc(offerList);
         response.setPayload_arr(jsonArray);
-        response.setCode(HttpStatus.OK);
+        response.setCode(HttpStatus.OK.value());
         response.setMessage("success");
         return response;
 

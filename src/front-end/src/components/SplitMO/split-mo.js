@@ -1,12 +1,11 @@
 import React, {Component, Fragment} from 'react';
 import {
-    Card, CardText, CardBody, CardImg,
-    CardTitle, CardSubtitle, Button, Collapse
+     Button, Collapse
   } from 'reactstrap';
 import './split-mo.css';
 import '@fortawesome/fontawesome-free/css/all.css';
 import Modal from 'react-awesome-modal';
-import AcceptSingleOffer from '../AcceptSingleOffer/accept-single-offer';
+import AcceptSplitOffer from '../AcceptSplitOffer/accept-split-offer';
 import CounterOffer from '../CounterOffer/counter-offer';
 import MatchOffer from '../MatchOffer/match-offer';
 
@@ -248,14 +247,11 @@ class SplitMO extends Component {
                 </div>
                 </div>
                 <hr/>
-                <Modal visible={this.state.acceptOfferModal} width="400" height="500" effect="fadeInUp" onClickAway={this.acceptOfferToggle}>
-                    {/* <AcceptSplitOffer otherOffer1={offer1} otherOffer2={offer2}/> */}
-                    <div>
-                        hello
-                    </div>
+                <Modal visible={this.state.acceptOfferModal} width="400" height="650" effect="fadeInUp" onClickAway={this.acceptOfferToggle}>
+                    <AcceptSplitOffer offer1={offer1} offer2={offer2}/>
                     </Modal>
                     <Modal visible={this.state.matchOfferModal} width="400" height="500" effect="fadeInUp" onClickAway={this.matchOfferToggle}>
-                    <MatchOffer  newAmt={newAmt} exRate={exRate}/>
+                    <MatchOffer  newAmt={newAmt} exRate={exRate} offerId1={offer1.id} offerId2={offer2.id}/>
                     </Modal>
                     <Modal visible={this.state.counterOfferModal} width="400" height="550" effect="fadeInUp" onClickAway={this.counterOfferToggle}>
                     <CounterOffer otherOffer={offer1.amount >= offer2.amount ? offer1 : offer2}/>
