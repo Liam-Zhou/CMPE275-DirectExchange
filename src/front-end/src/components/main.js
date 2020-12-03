@@ -14,7 +14,8 @@ import postOffer from "./Offer/postOffer"
 import browserOffer from './Offer/Browser'
 import myOffer from './Offer/myOffer'
 import PrevailingRates from'./Offer/PrevailingRates'
-
+import transaction from './Offer/transaction'
+import myTransaction from './Offer/myTransaction' 
 //Create a Main Component
 class Main extends Component {
     render(){
@@ -26,7 +27,7 @@ class Main extends Component {
                 <Redirect to="/landing"/>
                 )} />
                 <Route exact path="/landing" component={Landing} />
-
+ 
                 <Route path="/home" component={Navbar}/>
                 <Route path="/login" component={Login}/>
 
@@ -45,6 +46,9 @@ class Main extends Component {
                 <Route path="/home/postOffer" component={postOffer}/>
                 <Route path="/home/browserOffer" component={browserOffer}/>
                 <Route path="/home/myOffer" component={myOffer}/>
+                <Route path="/home/transaction" component={transaction}/>
+
+                <Route path="/home/myTransaction" component={myTransaction}/>
             </div>
         )
     }

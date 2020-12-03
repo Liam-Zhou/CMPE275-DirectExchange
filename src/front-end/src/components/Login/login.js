@@ -6,9 +6,8 @@ import config from '../../config/basicConfig'
 import money from '../../img/money.png'
 import { actionCreators } from '../../store/reducer/userinfo'
 import { connect } from "react-redux";
-import firebase from 'firebase'
 import 'firebaseui/dist/firebaseui.css'
-require('firebase/auth')
+import { auth,firebaseAuth } from "../../config/firebase";
 let firebaseui = require('firebaseui');
 
 let backend_url = config.host+":"+config.back_end_port
@@ -29,7 +28,6 @@ class Login extends Component {
 
         this.passwordChangeHandler = this.passwordChangeHandler.bind(this);
         this.emailIdChangeHandler = this.emailIdChangeHandler.bind(this);
-        // this.ui = firebaseui.auth.AuthUI.getInstance() || new firebaseui.auth.AuthUI(firebase.auth());
 
     }
 
@@ -43,23 +41,17 @@ class Login extends Component {
 
         // TODO: Replace the following with your app's Firebase project configuration
         // For Firebase JavaScript SDK v7.20.0 and later, `measurementId` is an optional field
-        const firebaseConfig = {
-            apiKey: "AIzaSyAh_2Ac_Dn3NDoqUkrSApaDd5hZixJ6dKE",
-            authDomain: "direct-exchange.firebaseapp.com",
-            databaseURL: "https://direct-exchange.firebaseio.com",
-            projectId: "direct-exchange",
-            storageBucket: "direct-exchange.appspot.com",
-            messagingSenderId: "551976198923",
-            appId: "1:551976198923:web:623ffd4267dd954c85f80e"
-        };
-        // Initialize Firebase
-        if (!firebase.apps.length) {
-            firebase.initializeApp(firebaseConfig);
+
+        let existed = true;
+        let ui
+        if(firebaseui.auth.AuthUI.getInstance()){
+            ui = firebaseui.auth.AuthUI.getInstance()
+        }else{
+            existed = false;
+            ui = new firebaseui.auth.AuthUI(auth);
         }
-        let ui = new firebaseui.auth.AuthUI(firebase.auth());
 
-
-        let uiConfig = {
+            let uiConfig = {
             callbacks: {
                 signInSuccessWithAuthResult: function(authResult, redirectUrl) {
                     // User successfully signed in.
@@ -72,11 +64,13 @@ class Login extends Component {
                         url:backend_url+"/user/getByOutId?out_id="+out_id
                     }).then(function (res) {
                         if(res.status === 200 && res.data.message === 'success'){
-                            let currentUser = firebase.auth().currentUser;
+                            let currentUser = auth.currentUser;
                             if(currentUser.emailVerified){
+                                console.log("currentUser.emailVerified",currentUser.emailVerified)
                                 localStorage.setItem("out_id_transfer",out_id)
                                 window.location.href=config.host + ':' + config.front_end_port+"/transfer"
                             }else{
+                                console.log("currentUser.emailVerified",currentUser.emailVerified)
                                 if(window.confirm("your email haven't verified,do you wanna verification link now ?")){
                                     currentUser.sendEmailVerification().then(function() {
                                         alert("success ! check the verification link in your email")
@@ -105,16 +99,15 @@ class Login extends Component {
             // signInSuccessUrl: '/login',
             signInOptions: [
                 // Leave the lines as is for the providers you want to offer your users.
-                firebase.auth.GoogleAuthProvider.PROVIDER_ID,
-                firebase.auth.FacebookAuthProvider.PROVIDER_ID,
+                firebaseAuth.GoogleAuthProvider.PROVIDER_ID,
+                firebaseAuth.FacebookAuthProvider.PROVIDER_ID,
             ],
             // Terms of service url.
             // tosUrl: '<your-tos-url>',
         };
-
-        ui.start('#firebaseui-auth-container', uiConfig);
-
-
+        if(!existed){
+            ui.start('#firebaseui-auth-container', uiConfig);
+        }
         }
 
     }
@@ -131,10 +124,13 @@ class Login extends Component {
     }
 
     handleLogin(){
-        firebase.auth().signInWithEmailAndPassword(this.state.emailId, this.state.password)
-            .then((user) => {
-                let currentUser = firebase.auth().currentUser;
-                if(currentUser.emailVerified){
+        axios({
+            method:"POST",
+            url:backend_url+"/user/signUpInLocal?emailId="+this.state.emailId +"&pwd="+this.state.password,
+
+        }).then(function (res) {
+            if(res.status === 200 && res.data.message === 'success'){
+                if(res.data.payload.out_id){
                     this.props.login('',this.state.emailId,this.state.password)
                     // let host = config.host;
                     // let port = config.front_end_port;
@@ -142,24 +138,39 @@ class Login extends Component {
                     // window.location.href=url+"/"
                     this.props.history.push("/home");
                 }else{
-                    let v = window.confirm("your email haven't verified,do you wanna verification link now ?")
-                    if(v){
-                        currentUser.sendEmailVerification().then(function() {
-                            alert("success ! check the verification link in your email")
 
-                        }).catch(function(error) {
+                    auth.signInWithEmailAndPassword(this.state.emailId, this.state.password)
+                        .then((user) => {
+                            let currentUser = auth.currentUser;
+                            if(currentUser.emailVerified){
+                                this.props.login('',this.state.emailId,this.state.password)
+                                // let host = config.host;
+                                // let port = config.front_end_port;
+                                // let url = host + ':' + port;
+                                // window.location.href=url+"/"
+                                this.props.history.push("/home");
+                            }else{
+                                let v = window.confirm("your email haven't verified,do you wanna verification link now ?")
+                                if(v){
+                                    currentUser.sendEmailVerification().then(function() {
+                                        alert("success ! check the verification link in your email")
 
+                                    }).catch(function(error) {
+
+                                    });
+                                }else{
+
+                                }
+                            }
+                        })
+                        .catch((error) => {
+                            let errorCode = error.code;
+                            let errorMessage = error.message;
+                            alert(errorMessage)
                         });
-                    }else{
-
-                    }
                 }
-            })
-            .catch((error) => {
-                let errorCode = error.code;
-                let errorMessage = error.message;
-                alert(errorMessage)
-            });
+            }
+        })
     }
     render() {
         let redirectVar = null;

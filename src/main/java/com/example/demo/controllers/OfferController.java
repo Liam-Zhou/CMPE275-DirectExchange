@@ -52,10 +52,10 @@ public class OfferController {
             tempObj.put("owner_name",item.getUserId().getNickname());
             tempObj.put("owner_rating",item.getUserId().getRating());
 
-            if(item.getExpirationDate() == null){
+            if(item.getExpirationDate() == 0){
                 tempObj.put("expire","");
             }else{
-                tempObj.put("expire",item.getExpirationDate().toString());
+                tempObj.put("expire",item.getExpirationDate());
             }
 
             jsonArray.add(tempObj);
@@ -90,8 +90,9 @@ public class OfferController {
             offer.setAllowCounterOffers(counterOffer);
             offer.setAllowSplitExchange(splitOffer);
             offer.setExchangeRate(rate);
-            offer.setExpirationDate(new Date(expireDate));
+            offer.setExpirationDate(expireDate);
             offer.setAmount(amount);
+            offer.setStatus("open");
 
             JsonConfig jc = new JsonConfig();
             jc.setExcludes(new String[]{"userId"});
@@ -112,18 +113,19 @@ public class OfferController {
     public RestResponse getAllOffer(@RequestParam(required = true) int pageNum,
                                     @RequestParam(required = true) String Scurrency,
                                     @RequestParam(required = true) int Samount,
-                                    @RequestParam(required = true) String Dcurrency
+                                    @RequestParam(required = true) String Dcurrency,
+                                    @RequestParam(required = true) long user_id
                                     ){
         RestResponse response = new RestResponse();
         pageNum = pageNum -1;
         if(pageNum < 0){
             pageNum = 0;
         }
-        List<OfferDetails> offerList = offerService.getOfferList(pageNum,Scurrency,Samount,Dcurrency);
+        List<OfferDetails> offerList = offerService.getOfferList(pageNum*4,Scurrency,Samount,Dcurrency,user_id);
         JSONArray jsonArray = this.commonFunc(offerList);
 
         //total count
-        List<OfferDetails> totalOffers = offerService.getTotalOffers(Scurrency,Samount,Dcurrency);
+        List<OfferDetails> totalOffers = offerService.getTotalOffers(Scurrency,Samount,Dcurrency,user_id);
         int length = totalOffers.size();
         JSONObject temp = new JSONObject();
         temp.put("totalNum",length);

@@ -1,0 +1,53 @@
+package com.example.demo.repositories;
+
+import com.example.demo.entities.Transaction;
+import com.example.demo.entities.User;
+import org.springframework.boot.autoconfigure.domain.EntityScan;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
+import java.util.Optional;
+
+@EntityScan(basePackages = {"com.example.demo.entity"})
+public interface TransactionRepository extends JpaRepository<Transaction,Long> {
+//    @Transactional
+//    @Modifying
+//    @Query(value = "update transactions_details set user_id=?1 and offer_id =?2 where id=?3 ",nativeQuery = true)
+//    void addUserForeignKey(long userId,long offerId,long t_id);
+
+    @Transactional
+    @Modifying
+    @Query(value = "update transactions_details set user_id=?1 where id=?2 ",nativeQuery = true)
+    void addUserForeignKey(long userId,long t_id);
+
+    @Transactional
+    @Modifying
+    @Query(value = "update transactions_details set offer_id =?1 where id=?2 ",nativeQuery = true)
+    void addOfferForeignKey(long offerId,long t_id);
+
+    @Transactional
+    @Modifying
+    @Query(value = "update transactions_details set status=?3  where user_id=?1 and offer_id =?2 ",nativeQuery = true)
+    void confirmTransfer(long userId,long offerId,String status);
+
+    @Transactional
+    @Query(value = "select * from transactions_details where user_id=?1 and offer_id=?2 ",nativeQuery = true)
+    List<Transaction> getByUserAndOffer(long userId,long offerId);
+
+    @Transactional
+    @Query(value = "select * from transactions_details where user_id=?1",nativeQuery = true)
+    List<Transaction> getByUser(long userId);
+
+    @Transactional
+    @Modifying
+    @Query(value = "update transactions_details set status=?2  where offer_id =?1",nativeQuery = true)
+    void setAbortedOrCompelted(long offerId,String status);
+
+    @Transactional
+    @Query(value = "select * from transactions_details where offer_id=?1 ",nativeQuery = true)
+    List<Transaction> getByOffer(long offerId);
+
+}
