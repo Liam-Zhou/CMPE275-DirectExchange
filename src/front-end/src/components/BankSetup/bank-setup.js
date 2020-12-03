@@ -9,8 +9,9 @@ import Select from 'react-select';
 import { connect } from 'react-redux';
 import config from '../../config/basicConfig';
 import {bankSetup} from '../../store/reducer/bankSetup/actionCreator';
+import currencyConst from '../../config/currency'
+import Navbar from "../Nav/navBar";
 
-let BASE_URL = config.host+":"+config.back_end_port
 const Joi = require('joi');
 const schema = Joi.object({
     bankName: Joi.string()
@@ -42,7 +43,14 @@ class BankSetup extends Component {
         countries: [
             { value: 'India', label: 'India' },
             { value: 'China', label: 'China' },
-            { value: 'UnitedStates', label: 'USA' }
+            { value: 'America', label: 'USA' },
+            { value: 'Germany', label: 'Germany' },
+            { value: 'France', label: 'France' },
+            { value: 'Italy', label: 'Italy' },
+            { value: 'Greece', label: 'Greece' },
+            { value: 'Poland', label: 'Poland' },
+            { value: 'Finland', label: 'Finland' },
+            { value: 'England', label: 'England' }
         ],
         currencies: [
             { value: 'INR', label: 'INR' },
@@ -67,6 +75,12 @@ class BankSetup extends Component {
     };
   }
 
+  componentDidMount(){
+      if(!this.props.isLoggedIn){
+          this.history.push("/login");
+      }
+  }
+
   setupAcct = (event) => {
     event.preventDefault();
 
@@ -85,24 +99,6 @@ class BankSetup extends Component {
     let validationDetails = schema.validate(accountDetails);
     console.log(`validation -> ${JSON.stringify(validationDetails)}`)
     if(!validationDetails.error){
-        // fetch(BASE_URL+'/bank/setup', {
-        //     headers: {
-        //       'Content-Type': 'application/json'
-        //     },
-        //     method: 'POST',
-        //     body: JSON.stringify(accountDetails),
-        //   })
-        // .then((response) => {
-        //     if(response.status != 200) {
-        //         let jsonRes = response.json();
-        //         alert("Error in the service\n" + "Status Code: "+ jsonRes.code + "\n"+
-        //         "Debug Message: " +jsonRes.debugMessage);
-        //         return;
-        //     }
-        //     else
-        //         alert("Account successfully added!");
-
-        // })
         this.props.bankSetup(accountDetails,this.props.history)
     }
     else {
@@ -132,7 +128,8 @@ class BankSetup extends Component {
   onChangeCountry = (event) => {
     let key = "country";
     let value = event.value;
-    this.setState({ [key]: value });
+    let currency = currencyConst[value];
+    this.setState({ [key]: value , currency : currency});
   }
 
   onChangeCurrency = (event) => {
@@ -142,14 +139,11 @@ class BankSetup extends Component {
   }
 
 
-  onClick = (event) => {
-    this.props.history.push("/quiz");
-}
-
     render() {
         return (
             <Fragment>
-                <Card className="shadow">
+                <Navbar/>
+                <Card className="shadow top-style">
                 <CardBody className="bs-bgcolor">
                 <div class="jumbotron jumbotron-fluid cr-jumbo-container shadow">
                     <div class="cr-container">
@@ -209,7 +203,8 @@ class BankSetup extends Component {
                                     Currency:
                                 </div>
                                 <div className="cr-pad-left">
-                                    <Select options={this.state.currencies} id="currency" className = "cr-input" required onChange={this.onChangeCurrency}/>
+                                    {/* <Select options={this.state.currencies} id="currency" className = "cr-input" required onChange={this.onChangeCurrency}/> */}
+                                    {this.state.currency}
                                 </div>
                             </div>
                             <div className="cr-row-flex">
@@ -254,7 +249,7 @@ class BankSetup extends Component {
                                 }
                             </div>
                             <div className="cr-row-flex">
-                                <button type="button" onClick={this.setupAcct} class="btn btn-outline-primary btn-lg">Start Quiz!</button>
+                                <button type="button" onClick={this.setupAcct} class="btn btn-outline-primary btn-lg">Add Account</button>
                             </div>
                             </div>
                         </div>

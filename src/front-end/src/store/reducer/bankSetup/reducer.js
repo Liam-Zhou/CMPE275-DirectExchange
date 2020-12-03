@@ -7,10 +7,8 @@ const initialState = {
 const bankSetup =  (state = initialState,action) => {
     switch(action.type){
     case BANK_SETUP:
-        return {
-            ...state,
-            accounts: [...state.accounts,action.payload]
-          };
+        return Object.assign({},state,
+            {accounts: [action.payload]});
     default:
         return state;
     }

@@ -8,6 +8,10 @@
     font-size: medium;
 }
 
+.top-style {
+    top:-25px;
+}
+
 .cr-container {
     padding-left: 5%;
     width: -webkit-fill-available;

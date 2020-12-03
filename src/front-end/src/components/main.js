@@ -36,7 +36,7 @@ class Main extends Component {
                 <Route path="/emailVerification" component={emailVerification}/>
 
 
-                <Route path="/bank-setup" component={BankSetup}/>
+                <Route path="/bankSetup" component={BankSetup}/>
                 <Route path="/matchingOffers" component={MatchingOffers}/>
 
                 <Route path="/home/postOffer" component={postOffer}/>

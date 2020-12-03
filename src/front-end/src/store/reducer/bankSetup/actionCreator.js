@@ -15,12 +15,11 @@ export const bankSetup = (accountDetails, history) =>  dispatch => {
             if(response.status === 200 && response.data.message === 'success'){
                 alert("Account successfully added!");
                 let data = response.data.payload;
-                console.log(JSON.stringify(data));
-                history.push("/home");
                 dispatch( {
                     type: BANK_SETUP,
                     payload: data
                 })
+                // history.push("/home");
             }
             else{
                 let jsonRes = response.data;
@@ -28,8 +27,8 @@ export const bankSetup = (accountDetails, history) =>  dispatch => {
                 "Message: " +jsonRes.debugMessage);
                 return;
             }
-        }).catch(function (error) {
-            console.log(JSON.stringify(error))
+        }).catch( (error) =>  {
+            console.log(error);
             alert("Account not added! Please try again!\n");
         });
 }

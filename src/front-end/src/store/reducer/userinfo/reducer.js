@@ -1,3 +1,5 @@
+import { BANK_SETUP } from '../../action-types';
+
 const defaultState = {
     id:"",
     isLogin:false,
@@ -22,6 +24,11 @@ export default (state = defaultState,action) => {
         case 'logout':
 
             return {};
+        case BANK_SETUP:
+            return {
+                ...state,
+                accounts: [...state.accounts, action.payload]
+            }
 
         // case 'signupByLocal':
             // delete action.type;

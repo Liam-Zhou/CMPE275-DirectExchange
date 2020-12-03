@@ -3,6 +3,7 @@ import {Link} from 'react-router-dom';
 import {Redirect} from 'react-router';
 import { connect } from "react-redux";
 import {actionCreators} from "../../store/reducer/userinfo";
+import './navBar.css';
 
 //create the Navbar Component
 class Navbar extends Component {
@@ -14,6 +15,11 @@ class Navbar extends Component {
     handleLogout = () => {
         this.props.logout()
     }
+
+    bankSetup = () => {
+        this.props.history.push("/bankSetup");
+    }
+
     render(){
         let redirectVar = null;
         if(this.props.isLogin){
@@ -44,6 +50,8 @@ class Navbar extends Component {
                                     className="caret"></span>
                                 </button>
                                 <ul className="dropdown-menu">
+                                <li><Link to="/bankSetup" onClick={this.bankSetup}><span
+                                        className="glyphicon glyphicon-remove-sign"></span>Add bank account</Link></li>
                                     <li><Link to="/login" onClick={this.handleLogout}><span
                                         className="glyphicon glyphicon-remove-sign"></span>Logout</Link></li>
                                 </ul>
