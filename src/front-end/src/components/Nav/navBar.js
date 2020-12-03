@@ -11,6 +11,10 @@ class Navbar extends Component {
         super(props);
         this.handleLogout = this.handleLogout.bind(this);
     }
+
+    componentWillMount(){
+
+    }
     //handle logout to destroy the cookie
     handleLogout = () => {
         this.props.logout()
@@ -42,7 +46,7 @@ class Navbar extends Component {
                             <li><Link to="/home/postOffer">Post Offer</Link></li>
                             <li><Link to="/home/browserOffer">Browse Offer</Link></li>
                             <li><Link to="/home/myOffer">My Offer</Link></li>
-                            <li><Link to="/message">Message</Link></li>
+                            <li><Link to="/home/myTransaction">My Account Transaction</Link></li>
                             <div className="btn btn-group nav navbar-nav navbar-right">
                                 <button type="button" className="btn btn-default dropdown-toggle "
                                         data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -52,7 +56,7 @@ class Navbar extends Component {
                                 <ul className="dropdown-menu">
                                 <li><Link to="/bankSetup" onClick={this.bankSetup}><span
                                         className="glyphicon glyphicon-remove-sign"></span>Add bank account</Link></li>
-                                    <li><Link to="/login" onClick={this.handleLogout}><span
+                                    <li><Link to="/login" onClick={this.handleLogout}><span  
                                         className="glyphicon glyphicon-remove-sign"></span>Logout</Link></li>
                                 </ul>
                             </div>

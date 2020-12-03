@@ -25,6 +25,12 @@ public interface UserRepository extends JpaRepository<User,Long> {
     Optional<User> findByOutId(String out_id);
 
     @Transactional
+    @Query(value = "select * from user where uname=?1 and password=?2 ",nativeQuery = true)
+    Optional<User> findByPwd(String email,String pwd);
+
+
+
+    @Transactional
     @Query(value = "select * from user where uname=?1 ",nativeQuery = true)
     Optional<User> findByEmail(String email);
 

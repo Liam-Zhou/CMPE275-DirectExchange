@@ -1,5 +1,6 @@
 package com.example.demo.entities;
 
+import com.example.demo.enums.Currency;
 import com.example.demo.enums.TransactionType;
 import lombok.Data;
 
@@ -28,16 +29,25 @@ public class Transaction {
     private double amount;
 
     @Enumerated(EnumType.STRING)
-    @Column(name = "type",nullable = false)
+    @Column(name = "type"
+//            ,nullable = false
+    )
     private TransactionType type;
 
     @Column(name="created_at")
-    private Date createdAt;
+    private long createdAt;
 
-    @PrePersist
-    protected void onCreate() {
-        createdAt = new Date();
-    }
+    @Column(name="status")
+    private String status;
+
+    @Enumerated(EnumType.STRING)
+    @Column(name="currency")
+    private Currency currency;
+
+//    @PrePersist
+//    protected void onCreate() {
+//        createdAt = new Date();
+//    }
 
 
 

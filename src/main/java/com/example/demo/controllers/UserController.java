@@ -31,10 +31,15 @@ public class UserController {
         userObj.put("id",u.getId());
         userObj.put("username",u.getUsername());
         userObj.put("nickname",u.getNickname());
-        userObj.put("out_id",u.getOut_id());
+        if(u.getOut_id()!=null){
+            userObj.put("out_id",u.getOut_id());
+        }else{
+            userObj.put("out_id","");
+        }
         userObj.put("rating",u.getRating());
         List<Long> offerIds = new ArrayList<>();
         List<JSONObject> accounts = new ArrayList<>();
+
         if(u.getOffers()!= null){
             for(OfferDetails item : u.getOffers()){
                 offerIds.add(item.getId());
@@ -93,18 +98,33 @@ public class UserController {
     @Transactional
     public RestResponse signUpInLocal(@RequestParam(required = true) String emailId,
                                       @RequestParam(required = true) String pwd,
-                                      @RequestParam(required = true) String nickName
+                                      @RequestParam(required = false) String nickName
                                       ){
         RestResponse response = new RestResponse();
-        Optional<User> user =  userService.creatUser(emailId,pwd,nickName);
-        if(user.isPresent()){
-            response.setPayload(JSONObject.fromObject(user));
-            response.setCode(HttpStatus.OK.value());
-            response.setMessage("success");
+        if(nickName!= null){
+            Optional<User> user =  userService.creatUser(emailId,pwd,nickName);
+            if(user.isPresent()){
+                response.setPayload(JSONObject.fromObject(user));
+                response.setCode(HttpStatus.OK);
+                response.setMessage("success");
+            }else{
+                response.setCode(HttpStatus.BAD_REQUEST);
+                response.setMessage("no");
+            }
         }else{
-            response.setCode(HttpStatus.BAD_REQUEST.value());
-            response.setMessage("no");
+            //return user object
+            Optional<User> user =  userService.getUserByPwd(emailId,pwd);
+            if(user.isPresent()){
+                User u = user.get();
+                response.setPayload(this.commonFunc(u));
+                response.setCode(HttpStatus.OK);
+                response.setMessage("success");
+            }else{
+                response.setCode(HttpStatus.BAD_REQUEST);
+                response.setMessage("no");
+            }
         }
+
 
         return response;
     }

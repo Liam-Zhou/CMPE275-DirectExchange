@@ -20,6 +20,10 @@ public class UserServiceImpl  {
     public Optional<User> getUserDetails(Long userId) {
         return userRepository.findById(userId);
     }
+    @Transactional
+    public Optional<User> getUserByPwd(String email,String pwd) {
+        return userRepository.findByPwd(email,pwd);
+    }
 
     public Optional<User> creatUser(String email,String pwd,String nickName){
         Optional<User> u = userRepository.findByNickNameOrEmail(email,nickName);
@@ -39,6 +43,8 @@ public class UserServiceImpl  {
 
 
     }
+
+
     public User creatUserByOutId(String out_id){
         User user = new User();
         user.setOut_id(out_id);

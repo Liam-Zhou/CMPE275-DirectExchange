@@ -43,7 +43,7 @@ public class OfferDetails {
     private double exchangeRate;
 
     @Column(name="expiration_date")
-    private Date expirationDate;
+    private long expirationDate;
 
     @Column(name="allow_counter_offers")
     private Boolean allowCounterOffers;
@@ -70,6 +70,9 @@ public class OfferDetails {
 
     @Column(name="updated_at")
     private Date updatedAt;
+
+    @Column(name="status")
+    private String status;
 
     @PrePersist
     protected void onCreate() {

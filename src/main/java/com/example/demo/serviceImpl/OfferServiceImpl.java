@@ -209,9 +209,9 @@ public class OfferServiceImpl {
         Double difference = (curentAmount * exchangeRate) - offer1Amount;
         return Math.round((difference / (curentAmount * exchangeRate)) * 100.0 * 100) / 100.0;
     }
-
-    public List<OfferDetails> getOfferList(int pageNum, String Scurrency, int Samount, String Dcurrency) {
-        List<OfferDetails> offerList = offerDetailsRepository.getOfferList(pageNum, Scurrency, Samount, Dcurrency);
+ 
+    public List<OfferDetails> getOfferList(int pageNum,String Scurrency,int Samount,String Dcurrency,Long user_id){
+        List<OfferDetails> offerList = offerDetailsRepository.getOfferList( pageNum, Scurrency, Samount, Dcurrency,user_id);
         return offerList;
     }
 
@@ -219,9 +219,8 @@ public class OfferServiceImpl {
         List<OfferDetails> offerList = offerDetailsRepository.getOfferByUser(user_id);
         return offerList;
     }
-
-    public List<OfferDetails> getTotalOffers(String Scurrency, int Samount, String Dcurrency) {
-        List<OfferDetails> offerList = offerDetailsRepository.getTotalOffers(Scurrency, Samount, Dcurrency);
+    public List<OfferDetails> getTotalOffers(String Scurrency,int Samount,String Dcurrency,long user_id){
+        List<OfferDetails> offerList = offerDetailsRepository.getTotalOffers(Scurrency, Samount, Dcurrency,user_id);
         return offerList;
     }
 

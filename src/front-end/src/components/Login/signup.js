@@ -1,16 +1,12 @@
 import React, {Component} from 'react';
 import '../../App.css';
 import axios from 'axios';
-
-import {Redirect} from 'react-router';
 import config from '../../config/basicConfig'
 
 import { actionCreators } from '../../store/reducer/userinfo'
 import { connect } from "react-redux";
-
-import firebase from 'firebase'
 import 'firebaseui/dist/firebaseui.css'
-require('firebase/auth')
+import { auth,firebaseAuth } from "../../config/firebase";
 let firebaseui = require('firebaseui');
 let backend_url = config.host+":"+config.back_end_port
 
@@ -41,21 +37,14 @@ class Signup extends Component{
 
         // TODO: Replace the following with your app's Firebase project configuration
         // For Firebase JavaScript SDK v7.20.0 and later, `measurementId` is an optional field
-        const firebaseConfig = {
-            apiKey: "AIzaSyAh_2Ac_Dn3NDoqUkrSApaDd5hZixJ6dKE",
-            authDomain: "direct-exchange.firebaseapp.com",
-            databaseURL: "https://direct-exchange.firebaseio.com",
-            projectId: "direct-exchange",
-            storageBucket: "direct-exchange.appspot.com",
-            messagingSenderId: "551976198923",
-            appId: "1:551976198923:web:623ffd4267dd954c85f80e"
-        };
-        // Initialize Firebase
-        if (!firebase.apps.length) {
-            firebase.initializeApp(firebaseConfig);
+        let existed = true;
+        let ui
+        if(firebaseui.auth.AuthUI.getInstance()){
+            ui = firebaseui.auth.AuthUI.getInstance()
+        }else{
+            existed = false;
+            ui = new firebaseui.auth.AuthUI(auth);
         }
-        let ui = new firebaseui.auth.AuthUI(firebase.auth());
-        this.ui = firebaseui.auth.AuthUI.getInstance() || new firebaseui.auth.AuthUI(firebase.auth());
 
         let uiConfig = {
             callbacks: {
@@ -66,19 +55,21 @@ class Signup extends Component{
                     console.log("authResultauthResultauthResult",authResult.additionalUserInfo.profile)
                     let profile = authResult.additionalUserInfo.profile;
                     // localStorage.setItem("outId",profile.id);
-                    let user = firebase.auth().currentUser;
+                    let user = auth.currentUser;
                     let email = localStorage.getItem("emailId")
                     let password = localStorage.getItem("password")
                     let nickName = localStorage.getItem('nickName')
                     if(email && password && nickName){
                         console.log("email password nickName",email,password,nickName)
-                        firebase.auth().createUserWithEmailAndPassword(email,password)
+                        // firebase.auth().createUserWithEmailAndPassword(email,password)
+                        auth.createUserWithEmailAndPassword(email,password)
                             .then((r) => {
                                 // console.log("rrrrrrr",r)
-                                let currentUser = firebase.auth().currentUser;
+                                // let currentUser = firebase.auth().currentUser;
+                                let currentUser = auth.currentUser;
                                 currentUser.sendEmailVerification().then(function() {
 
-                                    let credential = firebase.auth.EmailAuthProvider.credential(email, password);
+                                    let credential = auth.EmailAuthProvider.credential(email, password);
                                     // user.linkWithCredential(1)
                                     user.linkWithCredential(credential).then(r2 => {})
                                 })
@@ -101,15 +92,17 @@ class Signup extends Component{
             signInFlow: 'popup',
             signInSuccessUrl: '/emailVerification',
             signInOptions: [
-                // Leave the lines as is for the providers you want to offer your users.
-                firebase.auth.GoogleAuthProvider.PROVIDER_ID,
-                firebase.auth.FacebookAuthProvider.PROVIDER_ID,
+                firebaseAuth.GoogleAuthProvider.PROVIDER_ID,
+                firebaseAuth.FacebookAuthProvider.PROVIDER_ID,
+
             ],
             // Terms of service url.
             // tosUrl: '<your-tos-url>',
         };
 
-        ui.start('#firebaseui-auth-container', uiConfig);
+        if(!existed){
+            ui.start('#firebaseui-auth-container', uiConfig);
+        }
     }
 
 
@@ -121,7 +114,7 @@ class Signup extends Component{
             })
             localStorage.setItem("nickName",e.target.value)
         }else{
-            alert("nick name should be alphanumeric")
+            // alert("nick name should be alphanumeric")
             this.setState({
                 name : ""
             })
@@ -156,9 +149,12 @@ class Signup extends Component{
 
             }).then(function (res) {
                 if(res.status === 200 && res.data.message === 'success'){
-                    firebase.auth().createUserWithEmailAndPassword(this.state.emailId, this.state.password)
+                    // firebase.auth().createUserWithEmailAndPassword(this.state.emailId, this.state.password)
+                    auth.createUserWithEmailAndPassword(this.state.emailId, this.state.password)
+
                         .then((user) => {
-                            let currentUser = firebase.auth().currentUser;
+                            // let currentUser = firebase.auth().currentUser;
+                            let currentUser = auth.currentUser;
                             currentUser.sendEmailVerification().then(function() {
                                 alert("success ! check the verification link in your email")
                                 let host = config.host;

@@ -8,6 +8,8 @@ import { Redirect } from 'react-router';
 import {connect} from "react-redux";
 import {actionCreators} from "../../store/reducer/userinfo";
 
+import Rating from '@material-ui/lab/Rating';
+
 let host = config.host;
 let port = config.back_end_port;
 let url = host + ':' + port;
@@ -26,7 +28,11 @@ class browserOffer extends Component{
             offer:'',
             currentPage:1,
 
+            showAcceptButton:'none',
+
             pageNumList:[],
+            showTransactions:'none',
+            transactions:[]
         }
         this.submit = this.submit.bind(this)
 
@@ -39,6 +45,8 @@ class browserOffer extends Component{
 
         this.detail = this.detail.bind(this)
         this.getOfferList = this.getOfferList.bind(this)
+
+        this.jumpToTransaction = this.jumpToTransaction.bind(this)
     }
     componentWillMount(){
 
@@ -108,7 +116,7 @@ class browserOffer extends Component{
     }
 
     commonFunc(n,Scurrency,Samount,Dcurrency){
-        axios.get(url + '/offer/all?pageNum='+n+"&Scurrency="+Scurrency+"&Samount="+Samount+"&Dcurrency="+Dcurrency)
+        axios.get(url + '/offer/all?pageNum='+n+"&Scurrency="+Scurrency+"&Samount="+Samount+"&Dcurrency="+Dcurrency+"&user_id="+this.props.id)
             .then(res => {
                 if(res.status === 200 && res.data.message === 'success'){
                     let payload_arr = res.data.payload_arr
@@ -148,7 +156,7 @@ class browserOffer extends Component{
             this.setState({
                 currentPage:index
             })
-            axios.get(url + '/offer/all?pageNum='+index+"&Scurrency="+this.state.Scurrency+"&Samount="+this.state.Samount+"&Dcurrency="+this.state.Dcurrency)
+            axios.get(url + '/offer/all?pageNum='+index+"&Scurrency="+this.state.Scurrency+"&Samount="+this.state.Samount+"&Dcurrency="+this.state.Dcurrency+"&user_id="+this.props.id)
             .then(res => {
                 if(res.status === 200 && res.data.message === 'success'){
                     let payload_arr = res.data.payload_arr
@@ -171,8 +179,36 @@ class browserOffer extends Component{
     detail(offer){
         console.log("offeroffer",offer)
         this.setState({
-            offer:offer
+            offer:offer,
+            showAcceptButton:'block'
         })
+    }
+
+    jumpToTransaction(){
+        let timezone = -8;
+        let offset_GMT = new Date().getTimezoneOffset();
+        let nowDate = new Date().getTime()
+        let create_time = nowDate + offset_GMT * 60 * 1000 + timezone * 60 * 60 * 1000;
+        console.log("create_time",create_time,Number(create_time))
+
+        let Damount = this.state.offer.Amount * this.state.offer.Rate
+        axios.post(url + '/transaction/creatInProcess?offer_id='+Number(this.state.offer.offerId)+
+            "&SCurrency="+this.state.offer.SCurrency+"&Samount="+this.state.offer.Amount+
+            "&DCurrency="+this.state.offer.DCurrency+"&Damount="+Number(Damount)+
+            "&poster_id="+Number(this.state.offer.owner_id)+"&receiver_id="+Number(this.props.id)+"&create_time="+Number(create_time))
+            .then(res => {
+                if(res.status === 200 && res.data.message === 'success'){
+
+                    this.props.history.push('/home/transaction',{
+                        offer:this.state.offer
+                    })
+
+                }else{
+                    alert("database error!!")
+                }
+            })
+
+
     }
     render(){
         let Samount = this.state.Samount
@@ -187,7 +223,7 @@ class browserOffer extends Component{
         return ( <div class="col-md-12 ">
                 {redirectVar}
                 <h3 className="center">Offers List </h3>
-            <div className="cprofile_card img" style={{'width': '100%'}}>
+                <div className="cprofile_card img" style={{'width': '100%'}}>
 
                 <h3 className="center">left is source  ,  right is destination</h3>
 
@@ -265,9 +301,21 @@ class browserOffer extends Component{
                         <p style={{}}>Allow Split Offer:<h4 className='inline'>{this.state.offer.SplitExchange}</h4></p>
                         <p style={{}}>owner_id:<h4 className='inline'>{this.state.offer.owner_id}</h4></p>
                         <p style={{}}>owner_name:<h4 className='inline'>{this.state.offer.owner_name}</h4></p>
-                        <p style={{}}>owner_rating:<h4 className='inline'>{this.state.offer.owner_rating}</h4></p>
+                        <p style={{}}>owner_rating:<h4 className='inline'><Rating name="disabled" value={parseInt(this.state.offer.owner_rating)} disabled /></h4></p>
+                        <button style = {{'display':this.state.showAcceptButton}} onClick={this.jumpToTransaction}>Accept</button>
 
                     </div>
+
+                    <div className="education_box" style = {{'display':this.state.showTransactions}}>
+                        <h4>transaction history:</h4>
+                        {this.state.transactions.map( (transaction,index) => (
+                            <div class = "education_box" >
+                                <p style = {{}}>:<h4 class='inline'>{transaction}</h4></p>
+
+                            </div>
+                        ))}
+                    </div>
+
                 </div>
             </div>
 
