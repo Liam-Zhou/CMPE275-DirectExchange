@@ -105,10 +105,10 @@ public class UserController {
             Optional<User> user =  userService.creatUser(emailId,pwd,nickName);
             if(user.isPresent()){
                 response.setPayload(JSONObject.fromObject(user));
-                response.setCode(HttpStatus.OK);
+                response.setCode(HttpStatus.OK.value());
                 response.setMessage("success");
             }else{
-                response.setCode(HttpStatus.BAD_REQUEST);
+                response.setCode(HttpStatus.BAD_REQUEST.value());
                 response.setMessage("no");
             }
         }else{
@@ -117,10 +117,10 @@ public class UserController {
             if(user.isPresent()){
                 User u = user.get();
                 response.setPayload(this.commonFunc(u));
-                response.setCode(HttpStatus.OK);
+                response.setCode(HttpStatus.OK.value());
                 response.setMessage("success");
             }else{
-                response.setCode(HttpStatus.BAD_REQUEST);
+                response.setCode(HttpStatus.BAD_REQUEST.value());
                 response.setMessage("no");
             }
         }

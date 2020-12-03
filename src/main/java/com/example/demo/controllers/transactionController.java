@@ -64,7 +64,7 @@ public class transactionController {
         transactionSerive.CareteTransaction(t3,receiver_id,offer_id);
         transactionSerive.CareteTransaction(t4,receiver_id,offer_id);
 
-        response.setCode(HttpStatus.OK);
+        response.setCode(HttpStatus.OK.value());
         response.setMessage("success");
         return response;
     }
@@ -82,7 +82,7 @@ public class transactionController {
         long create_time = transactionListOfUserAndOffer.get(0).getCreatedAt();
         if(timeStamp - create_time > 10*60*1000){
             transactionSerive.setAbortedOrCompelted(offer_id,"aborted");
-            response.setCode(HttpStatus.OK);
+            response.setCode(HttpStatus.OK.value());
             response.setMessage("aborted");
         }else{
             transactionSerive.ConfirmTransfer(user_id,offer_id,"confirmTransfer");
@@ -101,7 +101,7 @@ public class transactionController {
             }else{
                 mess = "comfirmed";
             }
-            response.setCode(HttpStatus.OK);
+            response.setCode(HttpStatus.OK.value());
             response.setMessage(mess);
         }
 
@@ -128,7 +128,7 @@ public class transactionController {
             jsonArray.add(tempObj);
         }
         response.setPayload_arr(jsonArray);
-        response.setCode(HttpStatus.OK);
+        response.setCode(HttpStatus.OK.value());
         response.setMessage("success");
         return response;
     }
