@@ -4,7 +4,7 @@ public enum OfferStatus {
 
     Open,
     Fulfilled,
-    Expired, 
+    Expired,  
     InTransaction,
     CounterMade
 }

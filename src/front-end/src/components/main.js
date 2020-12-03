@@ -27,7 +27,7 @@ class Main extends Component {
                 <Redirect to="/landing"/>
                 )} />
                 <Route exact path="/landing" component={Landing} />
- 
+  
                 <Route path="/home" component={Navbar}/>
                 <Route path="/login" component={Login}/>
 

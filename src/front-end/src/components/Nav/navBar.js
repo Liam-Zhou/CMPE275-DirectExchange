@@ -56,7 +56,7 @@ class Navbar extends Component {
                                 <ul className="dropdown-menu">
                                 <li><Link to="/bankSetup" onClick={this.bankSetup}><span
                                         className="glyphicon glyphicon-remove-sign"></span>Add bank account</Link></li>
-                                    <li><Link to="/login" onClick={this.handleLogout}><span 
+                                    <li><Link to="/login" onClick={this.handleLogout}><span  
                                         className="glyphicon glyphicon-remove-sign"></span>Logout</Link></li>
                                 </ul>
                             </div>
