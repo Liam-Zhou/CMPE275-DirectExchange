@@ -72,13 +72,21 @@ public class OfferController {
                                     @RequestParam(required = true) String Scountry,
                                     @RequestParam(required = true) String Scurrency,
                                     @RequestParam(required = true) double amount,
-                                    @RequestParam(required = true) boolean counterOffer,
-                                    @RequestParam(required = true) boolean splitOffer,
+                                    @RequestParam(required = true) String counterOffer,
+                                    @RequestParam(required = true) String splitOffer,
                                     @RequestParam(required = true) double rate,
                                     @RequestParam(required = true) long expireDate,
                                     @RequestParam(required = true) long user_id
                                     )
     {
+        boolean temp1= true;
+        boolean temp2 =true;
+        if(counterOffer == "false"){
+            temp1 = false;
+        }
+        if(splitOffer == "false"){
+            temp2 = false;
+        }
         RestResponse response = new RestResponse();
         OfferDetails offer = new OfferDetails();
         Optional <User> u = userService.getUserDetails(user_id);
@@ -88,8 +96,8 @@ public class OfferController {
             offer.setSourceCurrency(Currency.valueOf(Scurrency));
             offer.setDestinationCountry(Dcountry);
             offer.setDestinationCurrency(Currency.valueOf(Dcurrency));
-            offer.setAllowCounterOffers(counterOffer);
-            offer.setAllowSplitExchange(splitOffer);
+            offer.setAllowCounterOffers(temp1);
+            offer.setAllowSplitExchange(temp2);
             offer.setExchangeRate(rate);
             offer.setExpirationDate(expireDate);
             offer.setAmount(amount);

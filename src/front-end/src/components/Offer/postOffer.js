@@ -103,6 +103,7 @@ class postOffer extends Component{
         let targetDate = nowDate + offset_GMT * 60 * 1000 + timezone * 60 * 60 * 1000;
         console.log("expireDate：" + targetDate + new Date(targetDate));
 
+
         let paramdata = {
             user_id:this.props.id,
             Scountry: e.target.Scountry.value,
@@ -112,8 +113,8 @@ class postOffer extends Component{
             Dcurrency: this.state.Dcurrency,
             amount: parseInt(e.target.amount.value),
             rate: this.state.rate,
-            splitOffer: Boolean(e.target.splitOffer.value),
-            counterOffer: Boolean(e.target.counterOffer.value),
+            splitOffer: e.target.splitOffer.value,
+            counterOffer:e.target.counterOffer.value,
         }
         console.log("paramdata",paramdata)
         axios.post(url + '/offer/?Dcountry='+paramdata.Dcountry+'&Dcurrency='+paramdata.Dcurrency+'&Scountry='+paramdata.Scountry+'&Scurrency='+paramdata.Scurrency+

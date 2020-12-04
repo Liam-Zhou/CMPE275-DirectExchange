@@ -124,6 +124,9 @@ class Login extends Component {
     }
 
     handleLogin(){
+        let emailId = this.state.emailId
+        let password = this.state.password
+        let that = this
         axios({
             method:"POST",
             url:backend_url+"/user/signUpInLocal?emailId="+this.state.emailId +"&pwd="+this.state.password,
@@ -131,24 +134,19 @@ class Login extends Component {
         }).then(function (res) {
             if(res.status === 200 && res.data.message === 'success'){
                 if(res.data.payload.out_id){
-                    this.props.login('',this.state.emailId,this.state.password)
+                    that.props.login('',emailId,password)
                     // let host = config.host;
                     // let port = config.front_end_port;
                     // let url = host + ':' + port;
                     // window.location.href=url+"/"
-                    this.props.history.push("/home");
+                    that.props.history.push("/home");
                 }else{
-
-                    auth.signInWithEmailAndPassword(this.state.emailId, this.state.password)
+                    auth.signInWithEmailAndPassword(emailId, password)
                         .then((user) => {
                             let currentUser = auth.currentUser;
                             if(currentUser.emailVerified){
-                                this.props.login('',this.state.emailId,this.state.password)
-                                // let host = config.host;
-                                // let port = config.front_end_port;
-                                // let url = host + ':' + port;
-                                // window.location.href=url+"/"
-                                this.props.history.push("/home");
+                                that.props.login('',emailId,password)
+                                that.props.history.push("/home");
                             }else{
                                 let v = window.confirm("your email haven't verified,do you wanna verification link now ?")
                                 if(v){
@@ -169,6 +167,8 @@ class Login extends Component {
                             alert(errorMessage)
                         });
                 }
+            }else{
+                alert("no such account!")
             }
         })
     }
