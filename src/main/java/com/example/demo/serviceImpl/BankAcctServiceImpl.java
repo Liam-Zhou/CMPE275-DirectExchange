@@ -10,6 +10,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 @Service
 public class BankAcctServiceImpl {
@@ -19,6 +22,7 @@ public class BankAcctServiceImpl {
 
     @Resource
     UserServiceImpl userService;
+
 
 //    @Override
     @Transactional
@@ -45,6 +49,19 @@ public class BankAcctServiceImpl {
                 throw  e;
             }
         return  savedAcct;
+    }
+
+    public Boolean bankAccountVerification(User user){
+        List<BankAccount> accounts = user.getAccounts();
+        if(accounts.size()>=2){
+            Set<String> sourceCountries = new HashSet<>();
+            for(BankAccount acct : accounts){
+                sourceCountries.add(acct.getCountry());
+                if(sourceCountries.size()>=2)
+                    return true;
+            }
+        }
+        return false;
     }
 
 }

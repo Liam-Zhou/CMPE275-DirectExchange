@@ -2,7 +2,6 @@ import React, { Component, Fragment } from "react";
 import { connect } from 'react-redux';
 import Navbar from "../Nav/navBar";
 import OfferDetailsMO from '../OfferDetailsMO/offer-details-mo';
-import RecommendationsMO from '../RecommendationsMO/recommendations-mo';
 import './matching-offers-list.css';
 import OffersListMO from '../OffersListMO/offers-list-mo';
 import FiltersMO from '../FiltersMO/filters-mo';

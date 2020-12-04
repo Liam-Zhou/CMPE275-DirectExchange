@@ -73,6 +73,8 @@ public interface OfferDetailsRepository extends JpaRepository<OfferDetails,Long>
             "            where oda.id>odb.id  \n" +
             "            and oda.offer_status='Open'  \n" +
             "            and odb.offer_status='Open' \n" +
+            "            and oda.expiration_date >= UNIX_TIMESTAMP()  \n" +
+            "            and odb.expiration_date >= UNIX_TIMESTAMP()  \n" +
             "            and (\n" +
             "\t\t\t\t(  \n" +
             "\t\t\t\t\t(oda.amount + odb.amount) - ( (oda.amount + odb.amount) * :marginPercentage)  <= :amount * :exchangeRate \n" +
@@ -153,6 +155,7 @@ public interface OfferDetailsRepository extends JpaRepository<OfferDetails,Long>
             "        directexchange.offer_details as oda\n" +
             "    where \n" +
             "         oda.offer_status='Open'   \n" +
+            "         and oda.expiration_date >= UNIX_TIMESTAMP()  \n" +
             "\t\tand oda.amount  >= (:amount - :lowerApproxRange) * :exchangeRate \n" +
             "\t\tand oda.amount  <= (:amount + :higherApproxRange) * :exchangeRate \n" +
 //            "\t\tand oda.amount  != :amount * :exchangeRate \n" +

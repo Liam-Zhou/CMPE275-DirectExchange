@@ -65,16 +65,21 @@ class MyOffer extends Component{
 
                         {this.state.offerList.map( (offer,index) => (
                             <div class = "education_box" >
+                                <p style=  {{}}>Amount:<h4 className='inline'>{offer.Amount}</h4></p>
+                                <p style=  {{}}>Offer Status:<h4 className='inline'>{offer.OfferStatus}</h4></p>
                                 <p style = {{}}>Source Country:<h4 class='inline'>{offer.SCountry}</h4></p>
                                 <p style=  {{}}>Source Currency:<h4 className='inline'>{offer.SCurrency}</h4></p>
                                 <p style=  {{}}>Destination Country:<h4 className='inline'>{offer.DCountry}</h4></p>
                                 <p style=  {{}}>Destination Currency:<h4 className='inline'>{offer.DCurrency}</h4></p>
-                                <p style=  {{}}>Amount:<h4 className='inline'>{offer.Amount}</h4></p>
                                 <p style=  {{}}>Rate:<h4 className='inline'>{offer.Rate}</h4></p>
                                 <p style=  {{}}>Allow Counter Offer:<h4 className='inline'>{offer.CounterOffer}</h4></p>
                                 <p style=  {{}}>Allow Split Offer:<h4 className='inline'>{offer.SplitExchange}</h4></p>
                                 <p style=  {{}}>Expire Date:<h4 className='inline'>{offer['expire']}</h4></p>
-                                <Button size="lg" color="primary" onClick={()=> this.getMatchingOffers(offer)}>Get Matching Offers</Button>
+                                {
+                                    offer.OfferStatus==="Open" &&
+                                    <Button size="lg" color="primary" onClick={()=> this.getMatchingOffers(offer)}>Get Matching Offers</Button>
+                                }
+
                             </div>
                         ))}
                     </div>

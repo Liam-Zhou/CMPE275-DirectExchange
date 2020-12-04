@@ -1,7 +1,9 @@
 package com.example.demo.serviceImpl;
 
 import com.example.demo.entities.AcceptedOffer;
+import com.example.demo.entities.BankAccount;
 import com.example.demo.entities.OfferDetails;
+import com.example.demo.entities.User;
 import com.example.demo.enums.AcceptedOfferStatus;
 import com.example.demo.enums.Currency;
 import com.example.demo.enums.OfferStatus;
@@ -19,10 +21,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
 import java.sql.ResultSet;
-import java.util.Collections;
-import java.util.Date;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 @Service
 public class OfferServiceImpl {
@@ -32,6 +31,12 @@ public class OfferServiceImpl {
 
     @Resource
     AcceptedOfferRepository acceptedOfferRepository;
+
+    @Resource
+    UserServiceImpl userService;
+
+    @Resource
+    BankAcctServiceImpl bankAcctService;
 
     @Transactional
     public Optional<OfferDetails> getOfferDetailsById(Long offerId) {
@@ -124,7 +129,10 @@ public class OfferServiceImpl {
     public Boolean acceptOffer(AcceptOfferRequest acceptOfferRequest) throws NotFoundException {
         Optional<OfferDetails> offer2 = null;
         Optional<OfferDetails> offer3 = null;
-        AcceptedOffer savedAcceptedOffer = null;
+        Optional<User> userDetails = userService.getUserDetails(acceptOfferRequest.getUserId());
+        if(userDetails.isPresent() && !bankAcctService.bankAccountVerification(userDetails.get())){
+            throw new NotFoundException("Please add at least two bank accts to post or accept an offer");
+        }
         Optional<OfferDetails> offer1 = offerDetailsRepository.findById(acceptOfferRequest.getOfferId1());
         if (offer1.isPresent() && acceptOfferRequest.getOfferId2() != null
                 && acceptOfferRequest.getOfferId3() != null) {
@@ -155,6 +163,7 @@ public class OfferServiceImpl {
         } else if (offer1.isPresent() && acceptOfferRequest.getOfferId2() != null) {
             offer2 = offerDetailsRepository.findById(acceptOfferRequest.getOfferId2());
             if (offer2.isPresent()) {
+                offer1.get().setOfferStatus(OfferStatus.InTransaction);
                 offer2.get().setOfferStatus(OfferStatus.InTransaction);
                 AcceptedOffer acceptedOffer = new AcceptedOffer();
                 acceptedOffer.setOfferId1(offer1.get().getId());
