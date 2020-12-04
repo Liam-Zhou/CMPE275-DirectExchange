@@ -22,11 +22,12 @@ class MyTransaction extends Component{
     }
     componentWillMount(){
         let id = this.props.id
-        axios.get(url + '/offer/getByUserId?user_id='+id)
+        axios.get(url + '/transaction/getTransactionsById?user_id='+id)
             .then(res => {
                 if(res.status === 200 && res.data.message === 'success'){
                     let payload_arr = res.data.payload_arr
                     if(payload_arr.length != 0){
+                        console.log("payload_arr",payload_arr)
                         this.setState({
                             tansactionList:payload_arr
                         })
@@ -52,21 +53,17 @@ class MyTransaction extends Component{
 
         return ( <div class="col-md-12 ">
                 {redirectVar}
-                <h3 className="center">My Offers List </h3>
+                <h3 className="center">My Transaction List </h3>
                 <div className='profile_card' style={{'margin-left': '0px'}}>
 
-                    {this.state.tansactionList.map( (offer,index) => (
+                    {this.state.tansactionList.map( (t,index) => (
                         <div class = "education_box" >
-                            <p style = {{}}>Source Country:<h4 class='inline'>{offer.SCountry}</h4></p>
-                            <p style=  {{}}>Source Currency:<h4 className='inline'>{offer.SCurrency}</h4></p>
-                            <p style=  {{}}>Destination Country:<h4 className='inline'>{offer.DCountry}</h4></p>
-                            <p style=  {{}}>Destination Currency:<h4 className='inline'>{offer.DCurrency}</h4></p>
-                            <p style=  {{}}>Amount:<h4 className='inline'>{offer.Amount}</h4></p>
-                            <p style=  {{}}>Rate:<h4 className='inline'>{offer.Rate}</h4></p>
-                            <p style=  {{}}>Allow Counter Offer:<h4 className='inline'>{offer.CounterOffer}</h4></p>
-                            <p style=  {{}}>Allow Split Offer:<h4 className='inline'>{offer.SplitExchange}</h4></p>
-                            <p style=  {{}}>Expire Date:<h4 className='inline'>{offer['expire']}</h4></p>
 
+                            <p style={{}}>transacton id:<h4 className='inline'>{t.id}</h4></p>
+                            <p style = {{}}>status:<h4 class='inline'>{t.status}</h4></p>
+                            <p style=  {{}}>currency:<h4 className='inline'>{t.currency}</h4></p>
+                            <p style=  {{}}>amount:<h4 className='inline'>{t.amount}</h4></p>
+                            <p style=  {{}}>type:<h4 className='inline'>{t.type}</h4></p>
                         </div>
                     ))}
                 </div>
