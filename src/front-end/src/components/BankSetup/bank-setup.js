@@ -77,7 +77,7 @@ class BankSetup extends Component {
 
   componentDidMount(){
       if(!this.props.isLoggedIn){
-          this.history.push("/login");
+          this.props.history.push("/login");
       }
   }
 

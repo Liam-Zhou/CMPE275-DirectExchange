@@ -15,7 +15,7 @@ import browserOffer from './Offer/Browser'
 import myOffer from './Offer/myOffer'
 import PrevailingRates from'./Offer/PrevailingRates'
 import transaction from './Offer/transaction'
-import myTransaction from './Offer/myTransaction' 
+import myTransaction from './Offer/myTransaction'
 //Create a Main Component
 class Main extends Component {
     render(){
@@ -24,10 +24,9 @@ class Main extends Component {
                 {/*Render Different Component based on Route*/}
                 {/* <Route path="/" component={Navbar}/> */}
                 <Route exact path="/" render={() => (
-                <Redirect to="/landing"/>
+                <Redirect to="/home"/>
                 )} />
-                <Route exact path="/landing" component={Landing} />
-  
+
                 <Route path="/home" component={Navbar}/>
                 <Route path="/login" component={Login}/>
 

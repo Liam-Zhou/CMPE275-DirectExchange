@@ -3,6 +3,7 @@ package com.example.demo.controllers;
 import com.example.demo.entities.OfferDetails;
 import com.example.demo.entities.User;
 import com.example.demo.enums.Currency;
+import com.example.demo.enums.OfferStatus;
 import com.example.demo.exceptions.NotFoundException;
 import com.example.demo.pojos.RestResponse;
 import com.example.demo.serviceImpl.OfferServiceImpl;
@@ -47,7 +48,7 @@ public class OfferController {
             tempObj.put("Rate",item.getExchangeRate());
             tempObj.put("CounterOffer",item.getAllowCounterOffers().toString());
             tempObj.put("SplitExchange",item.getAllowSplitExchange().toString());
-
+            tempObj.put("OfferStatus",item.getOfferStatus());
             tempObj.put("owner_id",item.getUserId().getId());
             tempObj.put("owner_name",item.getUserId().getNickname());
             tempObj.put("owner_rating",item.getUserId().getRating());
@@ -93,6 +94,7 @@ public class OfferController {
             offer.setExpirationDate(expireDate);
             offer.setAmount(amount);
             offer.setStatus("open");
+            offer.setOfferStatus(OfferStatus.Open);
 
             JsonConfig jc = new JsonConfig();
             jc.setExcludes(new String[]{"userId"});

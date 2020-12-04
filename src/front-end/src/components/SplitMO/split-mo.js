@@ -113,7 +113,7 @@ class SplitMO extends Component {
                                 }
                                 { offer1.sourceCurrency != offer2.sourceCurrency && offer2.sourceCurrency == curOffer.sourceCurrency &&
                                     <Fragment>
-                                        {curOffer.amount} + {offer2.amount} <i class="fas fa-arrows-alt-h pad-icon"></i> {this.calculateForignCurrency(offer1.amount*offer1.exchangeRate)}
+                                        {curOffer.amount} + {offer2.amount} <i class="fas fa-arrows-alt-h pad-icon"></i> {this.calculateForignCurrency(offer1.amount,offer1.exchangeRate)}
                                     </Fragment>
                                 }
                                 </h4>
