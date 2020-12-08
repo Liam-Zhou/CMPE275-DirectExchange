@@ -1,4 +1,4 @@
-import React, {Component} from 'react';
+import React, {Component, Fragment} from 'react';
 import '../../App.css';
 import config from '../../config/basicConfig'
 import currency from '../../config/currency'
@@ -47,6 +47,11 @@ class MyOffer extends Component{
         this.props.history.push("/matchingOffers");
     }
 
+    getCounterOffers = (offer) => {
+        this.props.setCounterOffer(offer);
+        this.props.history.push("/counterOffers");
+    }
+
 
 
     render(){
@@ -77,7 +82,10 @@ class MyOffer extends Component{
                                 <p style=  {{}}>Expire Date:<h4 className='inline'>{offer['expire']}</h4></p>
                                 {
                                     offer.OfferStatus==="Open" &&
+                                    <div>
                                     <Button size="lg" color="primary" onClick={()=> this.getMatchingOffers(offer)}>Get Matching Offers</Button>
+                                    <Button size="lg" color="primary" onClick={()=> this.getCounterOffers(offer)}>Get Counter Offers</Button>
+                                    </div>
                                 }
 
                             </div>

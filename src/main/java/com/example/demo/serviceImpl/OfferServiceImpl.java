@@ -129,10 +129,10 @@ public class OfferServiceImpl {
     public Boolean acceptOffer(AcceptOfferRequest acceptOfferRequest) throws NotFoundException {
         Optional<OfferDetails> offer2 = null;
         Optional<OfferDetails> offer3 = null;
-        Optional<User> userDetails = userService.getUserDetails(acceptOfferRequest.getUserId());
-        if(userDetails.isPresent() && !bankAcctService.bankAccountVerification(userDetails.get())){
-            throw new NotFoundException("Please add at least two bank accts to post or accept an offer");
-        }
+//        Optional<User> userDetails = userService.getUserDetails(acceptOfferRequest.getUserId());
+//        if(userDetails.isPresent() && !bankAcctService.bankAccountVerification(userDetails.get())){
+//            throw new NotFoundException("Please add at least two bank accts to post or accept an offer");
+//        }
         Optional<OfferDetails> offer1 = offerDetailsRepository.findById(acceptOfferRequest.getOfferId1());
         if (offer1.isPresent() && acceptOfferRequest.getOfferId2() != null
                 && acceptOfferRequest.getOfferId3() != null) {

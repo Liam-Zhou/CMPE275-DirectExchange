@@ -1,6 +1,8 @@
 package com.example.demo.utils;
 
+import com.example.demo.entities.CounterOfferDetails;
 import com.example.demo.entities.OfferDetails;
+import com.example.demo.entities.User;
 import com.example.demo.pojos.MatchingOffers;
 import com.example.demo.pojos.SingleMatchOffer;
 import com.example.demo.pojos.SplitMatchOffer;
@@ -38,6 +40,27 @@ public class ResponsePayloadUtils {
             json.put("offer1",offerDetailsJson(splitMatchOffer.getOffer1()));
             json.put("offer2",offerDetailsJson(splitMatchOffer.getOffer2()));
             json.put("amountDifferencePercentage",splitMatchOffer.getAmountDifferencePercentage());
+        }
+        return json;
+    }
+
+    public JSONObject counterOfferJson(CounterOfferDetails counterOfferDetails) {
+        JSONObject json = new JSONObject();
+        if(counterOfferDetails!=null) {
+            json.put("id",counterOfferDetails.getId());
+            json.put("userId",userShallowJson(counterOfferDetails.getUserId()));
+            json.put("newAmount",counterOfferDetails.getNewAmount());
+            json.put("status",counterOfferDetails.getStatus().name());
+        }
+        return json;
+    }
+
+    public JSONObject userShallowJson(User user){
+        JSONObject json = new JSONObject();
+        if(user!=null){
+            json.put("id",user.getId());
+            json.put("nickname",user.getNickname());
+            json.put("rating",user.getRating());
         }
         return json;
     }

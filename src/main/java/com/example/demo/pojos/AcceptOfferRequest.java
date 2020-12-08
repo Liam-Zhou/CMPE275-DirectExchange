@@ -9,6 +9,6 @@ public class AcceptOfferRequest {
     private Long offerId2;
     private Long offerId3;
     private Long timeStamp;
-    private Long userId;
+//    private Long userId;
 
 }
