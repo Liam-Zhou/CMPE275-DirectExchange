@@ -50,7 +50,7 @@ public class OfferServiceImpl {
         List<Object[]> splitOffers = offerDetailsRepository.getApproxSplitMatches(offerDetails.getAmount(),
                 offerDetails.getExchangeRate(), offerDetails.getSourceCountry(),
                 offerDetails.getDestinationCountry(), offerDetails.getSourceCurrency().name(),
-                offerDetails.getDestinationCurrency().name(), 0.1);
+                offerDetails.getDestinationCurrency().name(), 0.1,offerDetails.getId());
         for (Object[] obj : splitOffers) {
             SplitMatchOffer splitMatchOffer = new SplitMatchOffer();
             Optional<OfferDetails> offer1 = offerDetailsRepository.findById(Long.parseLong(obj[0].toString()));
@@ -88,7 +88,7 @@ public class OfferServiceImpl {
                 offerDetails.getExchangeRate(), offerDetails.getSourceCountry(),
                 offerDetails.getDestinationCountry(), offerDetails.getSourceCurrency().name(),
                 offerDetails.getDestinationCurrency().name(),
-                offerDetails.getApproxRange(0.1), offerDetails.getApproxRange(0.1));
+                offerDetails.getApproxRange(0.1), offerDetails.getApproxRange(0.1),offerDetails.getId());
         for (Object[] obj : singleMatches) {
             Optional<OfferDetails> offer1 = offerDetailsRepository.findById(Long.parseLong(obj[0].toString()));
             if (offer1.isPresent()) {

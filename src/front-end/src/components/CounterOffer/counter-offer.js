@@ -3,6 +3,8 @@ import '@fortawesome/fontawesome-free/css/all.css';
 import { connect } from 'react-redux';
 import './counter-offer.css';
 import {Button } from 'reactstrap';
+import { createCounterOffer } from '../../store/reducer/counterOffers/actionCreator';
+import { withRouter } from 'react-router-dom';
 
 class CounterOffer extends Component {
 
@@ -16,7 +18,14 @@ class CounterOffer extends Component {
     }
 
     counterOffer = ()  => {
-
+        let counterOfferRequest = {
+            "fromUserId" : this.props.userId,
+            "newAmount" : this.props.newAmt,
+            "toOffer" : this.props.otherOffer.id,
+            "fromOffer" : this.props.offerDetails.offerId
+        }
+        this.props.createCounterOffer(counterOfferRequest);
+        this.props.history.push("/home/myOffers");
     }
 
     lowRange = (amt) => {
@@ -107,7 +116,8 @@ class CounterOffer extends Component {
                     <div className="c-line">
                         <div>
                             New Remit Amount: (in {otherOffer.sourceCurrency})
-                            <input type="number" min={()=>this.lowRange(otherOffer.amount).toString()} max={()=>this.highRange(otherOffer.amount).toString()} class="form-control cr-input" onChange={this.onChange} id="newAmt" aria-describedby="newAmt" />
+                            {/* <input type="number" min={()=>this.lowRange(otherOffer.amount).toString()} max={()=>this.highRange(otherOffer.amount).toString()} class="form-control cr-input" onChange={this.onChange} id="newAmt" aria-describedby="newAmt" /> */}
+                            {this.props.newAmt}
                         </div>
                     </div>
                     <div className="c-line">
@@ -117,7 +127,7 @@ class CounterOffer extends Component {
                     </div>
                 </div>
                 {
-                    this.validateNewAmt(this.state.newAmt,otherOffer.amount) && this.state.error==="" &&
+                    // this.validateNewAmt(this.state.newAmt,otherOffer.amount) && this.state.error==="" &&
                     <div className="c-heading">
                     <Button size="lg" color="primary" onClick={this.counterOffer}>Propse Counter offer</Button>
                     </div>
@@ -132,11 +142,14 @@ class CounterOffer extends Component {
 const mapStateToProps = (state) => {
     const isLoggedIn = state.userinfo.isLogin;
     const userId = state.userinfo.id;
-    return { isLoggedIn, userId };
+    const offerDetails = state.matchingOffers.curOffer;
+    return { isLoggedIn, userId, offerDetails };
   }
 
   const mapDispatchToProps = (dispatch) => ({
-
+    createCounterOffer(counterOfferRequest){
+        dispatch(createCounterOffer(counterOfferRequest))
+    }
 })
 
-export default connect(mapStateToProps, mapDispatchToProps)(CounterOffer);
+export default connect(mapStateToProps, mapDispatchToProps)(withRouter(CounterOffer));

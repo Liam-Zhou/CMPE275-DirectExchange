@@ -1,14 +1,14 @@
 import React, {Component, Fragment} from 'react';
 import '../../App.css';
 import config from '../../config/basicConfig'
-import currency from '../../config/currency'
-import rate from '../../config/rate'
 import axios from 'axios';
 import { Redirect } from 'react-router';
 import {connect} from "react-redux";
 import {actionCreators} from "../../store/reducer/userinfo";
 import {Button } from 'reactstrap';
 import { setCurOffer } from '../../store/reducer/matchingOffers/actionCreator';
+import { getCounterOffersReceived } from '../../store/reducer/counterOffers/actionCreator';
+import { getCounterOffersMade } from '../../store/reducer/counterOffers/actionCreator';
 
 let host = config.host;
 let port = config.back_end_port;
@@ -47,12 +47,17 @@ class MyOffer extends Component{
         this.props.history.push("/matchingOffers");
     }
 
-    getCounterOffers = (offer) => {
-        this.props.setCounterOffer(offer);
-        this.props.history.push("/counterOffers");
+    getCounterOffersReceived = (offer) => {
+        this.props.setCurOffer(offer);
+        this.props.getCounterOffersReceived(offer.offerId)
+        this.props.history.push("/counterOffersReceived");
     }
 
-
+    getCounterOffersMade = (offer) => {
+        this.props.setCurOffer(offer);
+        this.props.getCounterOffersMade(this.props.id);
+        this.props.history.push("/counterOffersMade");
+    }
 
     render(){
         let redirectVar = null;
@@ -83,8 +88,15 @@ class MyOffer extends Component{
                                 {
                                     offer.OfferStatus==="Open" &&
                                     <div>
-                                    <Button size="lg" color="primary" onClick={()=> this.getMatchingOffers(offer)}>Get Matching Offers</Button>
-                                    <Button size="lg" color="primary" onClick={()=> this.getCounterOffers(offer)}>Get Counter Offers</Button>
+                                    <Button size="lg" color="primary" onClick={()=> this.getMatchingOffers(offer)}>Matching Offers</Button>
+                                    <Button size="lg" color="primary" onClick={()=> this.getCounterOffersReceived(offer)}>Counter Offers Received</Button>
+                                    <Button size="lg" color="primary" onClick={()=> this.getCounterOffersMade(offer)}>Counter Offers Made</Button>
+                                    </div>
+                                }
+                                {
+                                    offer.OfferStatus==="CounterMade" &&
+                                    <div>
+                                    <Button size="lg" color="primary" onClick={()=> this.getCounterOffersMade(offer)}>Counter Offers Made</Button>
                                     </div>
                                 }
 
@@ -113,6 +125,12 @@ const mapDispatchToProps = (dispatch) => ({
     },
     setCurOffer(offerDetails){
         dispatch(setCurOffer(offerDetails));
+    },
+    getCounterOffersReceived(offerId){
+        dispatch(getCounterOffersReceived(offerId));
+    },
+    getCounterOffersMade(userId){
+        dispatch(getCounterOffersMade(userId));
     }
 })
 export default connect(mapStateToProps, mapDispatchToProps)(MyOffer);

@@ -12,9 +12,9 @@ import javax.persistence.*;
 @Data
 public class CounterOfferRequest {
 
-    private Long userId;
+    private Long fromUserId;
     private double newAmount;
-    private CounterOfferStatus status;
-    private Long offerId;
+    private Long toOffer;
+    private Long fromOffer;
 
 }

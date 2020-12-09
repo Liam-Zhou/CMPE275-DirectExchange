@@ -2,13 +2,9 @@ package com.example.demo.controllers;
 
 import com.example.demo.entities.CounterOfferDetails;
 import com.example.demo.entities.OfferDetails;
-import com.example.demo.entities.User;
-import com.example.demo.enums.CounterOfferStatus;
-import com.example.demo.enums.Currency;
 import com.example.demo.enums.OfferStatus;
 import com.example.demo.exceptions.NotFoundException;
 import com.example.demo.pojos.*;
-import com.example.demo.repositories.CounterOfferRepository;
 import com.example.demo.serviceImpl.CounterOfferServiceImpl;
 import com.example.demo.serviceImpl.OfferServiceImpl;
 import com.example.demo.serviceImpl.UserServiceImpl;
@@ -22,6 +18,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
+import java.util.List;
 import java.util.Optional;
 
 @CrossOrigin("http://localhost:3000")
@@ -129,7 +126,7 @@ public class MatchingOffersController {
         return response;
     }
 
-    @RequestMapping(value={"/counterOffer"},method = RequestMethod.POST,produces = {"application/json;charset=utf-8"})
+    @RequestMapping(value={"/createCounterOffer"},method = RequestMethod.POST,produces = {"application/json;charset=utf-8"})
     @ResponseBody
     @Transactional
     public RestResponse createCounterOffer(@RequestBody CounterOfferRequest counterOfferRequest)
@@ -150,15 +147,80 @@ public class MatchingOffersController {
         return response;
     }
 
-    @RequestMapping(value={"/counterOffer"},method = RequestMethod.POST,produces = {"application/json;charset=utf-8"})
+    @RequestMapping(value={"/acceptCounterOffer"},method = RequestMethod.PUT,produces = {"application/json;charset=utf-8"})
     @ResponseBody
     @Transactional
-    public RestResponse acceptCounterOffer(@RequestBody CounterOfferRequest counterOfferRequest)
+    public RestResponse acceptCounterOffer(@RequestParam Long counterOfferId)
     {
         RestResponse response = new RestResponse();
         try {
-            CounterOfferDetails savedCO = counterOfferService.createCounterOffer(counterOfferRequest);
+            CounterOfferDetails savedCO = counterOfferService.acceptCounterOffer(counterOfferId);
             response.setPayload(responsePayloadUtils.counterOfferJson(savedCO));
+            response.setCode(HttpStatus.OK.value());
+            response.setMessage("success");
+        }
+        catch (NotFoundException ex){
+            response.setPayload(null);
+            response.setCode(HttpStatus.BAD_REQUEST.value());
+            response.setMessage("failure");
+            response.setDebugMessage(ex.getMessage());
+        }
+        return response;
+    }
+
+    @RequestMapping(value={"/rejectCounterOffer"},method = RequestMethod.PUT,produces = {"application/json;charset=utf-8"})
+    @ResponseBody
+    @Transactional
+    public RestResponse rejectCounterOffer(@RequestParam Long counterOfferId)
+    {
+        RestResponse response = new RestResponse();
+        try {
+            CounterOfferDetails savedCO = counterOfferService.rejectCounterOffer(counterOfferId);
+            response.setPayload(responsePayloadUtils.counterOfferJson(savedCO));
+            response.setCode(HttpStatus.OK.value());
+            response.setMessage("success");
+        }
+        catch (NotFoundException ex){
+            response.setPayload(null);
+            response.setCode(HttpStatus.BAD_REQUEST.value());
+            response.setMessage("failure");
+            response.setDebugMessage(ex.getMessage());
+        }
+        return response;
+    }
+
+    @RequestMapping(value={"/getCounterOffersReceived"},method = RequestMethod.GET,produces = {"application/json;charset=utf-8"})
+    @ResponseBody
+    @Transactional
+    public RestResponse getCounterOffersReceived(@RequestParam Long offerId){
+        RestResponse response = new RestResponse();
+        try{
+            Optional<OfferDetails> offer = offerService.getOfferDetailsById(offerId);
+            if(!offer.isPresent()){
+                throw new NotFoundException("Invalid offer id");
+            }
+            List<CounterOfferDetails> counterOffersList = offer.get().getCounterOffers();
+            response.setPayload(responsePayloadUtils.counterOffersListJson(counterOffersList));
+            response.setCode(HttpStatus.OK.value());
+            response.setMessage("success");
+        }
+        catch (NotFoundException ex){
+            response.setPayload(null);
+            response.setCode(HttpStatus.BAD_REQUEST.value());
+            response.setMessage("failure");
+            response.setDebugMessage(ex.getMessage());
+        }
+        return response;
+    }
+
+    @RequestMapping(value={"/getCounterOffersMade"},method = RequestMethod.GET,produces = {"application/json;charset=utf-8"})
+    @ResponseBody
+    @Transactional
+    public RestResponse getCounterOffersMade(@RequestParam Long userId){
+        RestResponse response = new RestResponse();
+        try{
+            List<CounterOfferDetails> counterOffersList = counterOfferService.getCounterOffersMade(userId);
+            response.setPayload(responsePayloadUtils.counterOffersListJson(counterOffersList));
             response.setCode(HttpStatus.OK.value());
             response.setMessage("success");
         }

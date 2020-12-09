@@ -91,19 +91,19 @@ class SingleMO extends Component {
                                     {
                                         amtDiff==0 &&
                                         <div className="single-attr">
-                                            <Button size="lg" color="primary" onClick={this.acceptOfferToggle}>Accept</Button>
+                                            <Button size="lg" color="primary" onClick={this.acceptOfferToggle}>Accept Offer</Button>
                                         </div>
                                     }
                                     {
                                         amtDiff!=0 &&
                                         <div className="single-attr">
-                                                <Button size="lg" color="primary" onClick={this.matchOfferToggle}>Match Offer!</Button>
+                                                <Button size="lg" color="primary" onClick={this.matchOfferToggle}>Modify My Offer</Button>
                                         </div>
                                     }
                                     {
                                         amtDiff!=0 && curOffer.counterOffers && details.counterOffers &&
                                         <div className="single-attr">
-                                            <Button size="lg" color="primary" onClick={this.counterOfferToggle}>Counter Offer!</Button>
+                                            <Button size="lg" color="primary" onClick={this.counterOfferToggle}>Counter Offer</Button>
                                         </div>
                                     }
                                 </div>
@@ -118,7 +118,7 @@ class SingleMO extends Component {
                     <MatchOffer newAmt={newAmt} exRate={curOffer.exchangeRate} offerId1={details.id} offerId2={null}/>
                     </Modal>
                     <Modal visible={this.state.counterOfferModal} width="400" height="550" effect="fadeInUp" onClickAway={this.counterOfferToggle}>
-                    <CounterOffer otherOffer={details}/>
+                    <CounterOffer otherOffer={details} newAmt={newAmt}/>
                     </Modal>
             </Fragment>
         )

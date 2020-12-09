@@ -10,6 +10,7 @@ import lombok.ToString;
 
 import javax.persistence.*;
 import java.util.Date;
+import java.util.List;
 import java.util.Set;
 
 @Entity
@@ -55,9 +56,11 @@ public class OfferDetails {
     @Column(name="offer_status")
     private OfferStatus offerStatus;
 
-    @OneToMany(mappedBy="offer")
-    @JsonBackReference
-    private Set<CounterOfferDetails> counterOffers;
+    @OneToMany(mappedBy="originalOffer")
+    @JsonManagedReference
+    @JsonIgnore
+    @ToString.Exclude
+    private List<CounterOfferDetails> counterOffers;
 
     @ManyToOne
     @JoinColumn(name="user_id", nullable=true, insertable = false,updatable = false)
@@ -86,5 +89,15 @@ public class OfferDetails {
 
     public Double getApproxRange(Double percentage){
         return percentage*this.amount;
+    }
+
+    public void addCounterOffer(CounterOfferDetails counterOfferDetails) {
+        this.counterOffers.add(counterOfferDetails);
+        counterOfferDetails.setOriginalOffer(this);
+    }
+
+    public void removeCounterOffer(CounterOfferDetails counterOfferDetails) {
+        this.counterOffers.remove(counterOfferDetails);
+//        counterOfferDetails.setUserId(null);
     }
 }

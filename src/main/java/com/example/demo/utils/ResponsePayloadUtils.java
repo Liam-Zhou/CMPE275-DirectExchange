@@ -48,10 +48,23 @@ public class ResponsePayloadUtils {
         JSONObject json = new JSONObject();
         if(counterOfferDetails!=null) {
             json.put("id",counterOfferDetails.getId());
-            json.put("userId",userShallowJson(counterOfferDetails.getUserId()));
+            json.put("user",userShallowJson(counterOfferDetails.getUserId()));
             json.put("newAmount",counterOfferDetails.getNewAmount());
             json.put("status",counterOfferDetails.getStatus().name());
+            if(counterOfferDetails.getFromOfferId()!=null)
+                json.put("fromOffer",counterOfferDetails.getFromOfferId());
+            json.put("originalOffer",offerDetailsJson(counterOfferDetails.getOriginalOffer()));
         }
+        return json;
+    }
+
+    public JSONObject counterOffersListJson(List<CounterOfferDetails> list){
+        List<JSONObject> cosList = new ArrayList<>();
+        for(CounterOfferDetails co : list){
+            cosList.add(counterOfferJson(co));
+        }
+        JSONObject json = new JSONObject();
+        json.put("counterOffers",cosList);
         return json;
     }
 

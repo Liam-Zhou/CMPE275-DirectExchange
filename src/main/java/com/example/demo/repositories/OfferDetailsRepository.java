@@ -75,6 +75,7 @@ public interface OfferDetailsRepository extends JpaRepository<OfferDetails,Long>
             "            and odb.offer_status='Open' \n" +
             "            and oda.expiration_date >= UNIX_TIMESTAMP()  \n" +
             "            and odb.expiration_date >= UNIX_TIMESTAMP()  \n" +
+            "            and oda.id!=:offerId and odb.id!= :offerId     \n" +
             "            and (\n" +
             "\t\t\t\t(  \n" +
             "\t\t\t\t\t(oda.amount + odb.amount) - ( (oda.amount + odb.amount) * :marginPercentage)  <= :amount * :exchangeRate \n" +
@@ -126,7 +127,8 @@ public interface OfferDetailsRepository extends JpaRepository<OfferDetails,Long>
                                   @Param("destinationCountry") String destinationCountry,
                                   @Param("sourceCurrency") String sourceCurrency,
                                   @Param("destinationCurrency") String destinationCurrency,
-                                  @Param("marginPercentage") Double marginPercentage);
+                                  @Param("marginPercentage") Double marginPercentage,
+                                         @Param("offerId") Long offerId);
 //                                  @Param("higherApproxRange") Double higherApproxRange );
 
     @Transactional
@@ -155,6 +157,7 @@ public interface OfferDetailsRepository extends JpaRepository<OfferDetails,Long>
             "        directexchange.offer_details as oda\n" +
             "    where \n" +
             "         oda.offer_status='Open'   \n" +
+            "            and oda.id!=:offerId   \n" +
             "         and oda.expiration_date >= UNIX_TIMESTAMP()  \n" +
             "\t\tand oda.amount  >= (:amount - :lowerApproxRange) * :exchangeRate \n" +
             "\t\tand oda.amount  <= (:amount + :higherApproxRange) * :exchangeRate \n" +
@@ -170,7 +173,8 @@ public interface OfferDetailsRepository extends JpaRepository<OfferDetails,Long>
                                    @Param("sourceCurrency") String sourceCurrency,
                                    @Param("destinationCurrency") String destinationCurrency,
                                    @Param("lowerApproxRange") Double lowerApproxRange,
-                                   @Param("higherApproxRange") Double higherApproxRange );
+                                   @Param("higherApproxRange") Double higherApproxRange,
+                                          @Param("offerId") Long offerId);
 
     @Transactional
     @Query(value = "SELECT oda.id as id1,\n" +

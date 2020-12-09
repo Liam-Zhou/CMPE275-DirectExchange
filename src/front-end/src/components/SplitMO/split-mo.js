@@ -8,6 +8,7 @@ import Modal from 'react-awesome-modal';
 import AcceptSplitOffer from '../AcceptSplitOffer/accept-split-offer';
 import CounterOffer from '../CounterOffer/counter-offer';
 import MatchOffer from '../MatchOffer/match-offer';
+import counterOffer from '../CounterOffer/counter-offer';
 
 class SplitMO extends Component {
 
@@ -57,6 +58,12 @@ class SplitMO extends Component {
         return forex;
     }
 
+    calculateCounterOfferDifference = () => {
+        let a = (this.props.difference*this.props.curOffer.amount)/100;
+        let counterOfferAmt = a*this.props.curOffer.exchangeRate;
+        return Math.round(counterOfferAmt*100)/100;
+    }
+
     calculateMatchingAmount = () => {
         let offer1 = this.props.offer1;
         let offer2 = this.props.offer2;
@@ -93,6 +100,14 @@ class SplitMO extends Component {
         let amtDiff = this.props.difference;
         let newAmt = this.calculateMatchingAmount();
         let exRate = this.getExRate();
+        let biggerOffer =null;
+        if(offer1.sourceCurrency==offer2.sourceCurrency)
+            biggerOffer = offer1.amount > offer2.amount ? offer1 : offer2;
+        else{
+            biggerOffer = offer1.amount > this.calculateForignCurrency(offer2.amount,offer2.exchangeRate) ?
+                            offer1 : offer2;
+        }
+        let counterOfferAmt = biggerOffer.amount+this.calculateCounterOfferDifference();
         return (
             <Fragment>
 
@@ -226,7 +241,7 @@ class SplitMO extends Component {
                                 amtDiff==0 &&
                                 <div className="split-profile-button ">
                                     <div className="split-attr">
-                                    <Button size="lg" color="primary" onClick={this.acceptOfferToggle}>Accept</Button>
+                                    <Button size="lg" color="primary" onClick={this.acceptOfferToggle}>Accept Offer</Button>
                                     </div>
                                 </div>
                             }
@@ -234,12 +249,12 @@ class SplitMO extends Component {
                                 amtDiff!=0 &&
                                 <div className="split-profile-button ">
                                     <div className="split-attr">
-                                        <Button size="lg" color="primary" onClick={this.matchOfferToggle}>Match Offer!</Button>
+                                        <Button size="lg" color="primary" onClick={this.matchOfferToggle}>Modify My Offer</Button>
                                     </div>
                                     {
                                         curOffer.counterOffers &&
                                         <div className="split-attr">
-                                            <Button size="lg" color="primary" onClick={this.counterOfferToggle}>Counter Offer!</Button>
+                                            <Button size="lg" color="primary" onClick={this.counterOfferToggle}>Counter Offer</Button>
                                         </div>
                                     }
                                 </div>
@@ -254,7 +269,7 @@ class SplitMO extends Component {
                     <MatchOffer  newAmt={newAmt} exRate={exRate} offerId1={offer1.id} offerId2={offer2.id}/>
                     </Modal>
                     <Modal visible={this.state.counterOfferModal} width="400" height="550" effect="fadeInUp" onClickAway={this.counterOfferToggle}>
-                    <CounterOffer otherOffer={offer1.amount >= offer2.amount ? offer1 : offer2}/>
+                    <CounterOffer otherOffer={biggerOffer} newAmt={counterOfferAmt}/>
                     </Modal>
             </Fragment>
         )

@@ -16,6 +16,9 @@ import myOffer from './Offer/myOffer'
 import PrevailingRates from'./Offer/PrevailingRates'
 import transaction from './Offer/transaction'
 import myTransaction from './Offer/myTransaction'
+import counterOffersReceivedList from './CounterOffersReceivedList/counter-offers-received-list';
+import counterOffersMadeList from './CounterOffersMadeList/counter-offers-made-list';
+
 //Create a Main Component
 class Main extends Component {
     render(){
@@ -38,6 +41,8 @@ class Main extends Component {
 
                 <Route path="/bankSetup" component={BankSetup}/>
                 <Route path="/matchingOffers" component={MatchingOffers}/>
+                <Route path="/counterOffersReceived" component={counterOffersReceivedList}/>
+                <Route path="/counterOffersMade" component={counterOffersMadeList}/>
 
                 {/*<Route path="/home/postOffer" component={postOffer}/>*/}
 

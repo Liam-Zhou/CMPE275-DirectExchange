@@ -1,9 +1,11 @@
 package com.example.demo.entities;
 
 import com.example.demo.enums.CounterOfferStatus;
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.Data;
+import lombok.ToString;
 
 import javax.persistence.*;
 import java.util.Date;
@@ -19,16 +21,20 @@ public class CounterOfferDetails {
     private long id;
 
     @ManyToOne
-    @JoinColumn(name="user_id", nullable=false, insertable = false,updatable = false)
-    @JsonManagedReference
+    @JoinColumn(name="from_user_id", nullable=true, insertable = false,updatable = false)
+    @JsonBackReference
     @JsonIgnore
+    @ToString.Exclude
     private User userId;
 
     @ManyToOne
-    @JoinColumn(name="offer_id", nullable=false,insertable = false,updatable = false)
-    @JsonManagedReference
+    @JoinColumn(name="offer_id", nullable=true,insertable = false,updatable = false)
+    @JsonBackReference
     @JsonIgnore
-    private OfferDetails offer;
+    private OfferDetails originalOffer;
+
+    @Column(name="from_offer_id")
+    private Long fromOfferId;
 
     @Column(name="new_amount")
     private double newAmount;
