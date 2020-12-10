@@ -54,8 +54,8 @@ public class transactionController {
         t1.setOffer(offer.get());t2.setOffer(offer.get());t3.setOffer(offer.get());t4.setOffer(offer.get());
         t1.setCreatedAt(create_time);t2.setCreatedAt(create_time);t3.setCreatedAt(create_time);t4.setCreatedAt(create_time);
         t1.setCurrency(Currency.valueOf(SCurrency));t1.setAmount(0-Samount);t1.setStatus("processing");t1.setUserId(poster.get());
-        t2.setCurrency(Currency.valueOf(DCurrency));t2.setAmount(Damount);t2.setStatus("processing");t2.setUserId(poster.get());
-        t3.setCurrency(Currency.valueOf(SCurrency));t3.setAmount(Samount);t3.setStatus("processing");t3.setUserId(receiver.get());
+        t2.setCurrency(Currency.valueOf(DCurrency));t2.setAmount(Damount*0.9995);t2.setStatus("processing");t2.setUserId(poster.get());
+        t3.setCurrency(Currency.valueOf(SCurrency));t3.setAmount(Samount*0.9995);t3.setStatus("processing");t3.setUserId(receiver.get());
         t4.setCurrency(Currency.valueOf(DCurrency));t4.setAmount(0-Damount);t4.setStatus("processing");t4.setUserId(receiver.get());
 
         transactionSerive.CareteTransaction(t1,poster_id,offer_id);

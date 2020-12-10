@@ -103,7 +103,7 @@ public class UserController {
         RestResponse response = new RestResponse();
         if(nickName!= null){
             Optional<User> user =  userService.creatUser(emailId,pwd,nickName);
-            if(user.isPresent()){
+            if(user != null && user.isPresent()){
                 response.setPayload(JSONObject.fromObject(user));
                 response.setCode(HttpStatus.OK.value());
                 response.setMessage("success");

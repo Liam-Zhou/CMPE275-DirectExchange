@@ -52,6 +52,7 @@ public class OfferController {
             tempObj.put("owner_id",item.getUserId().getId());
             tempObj.put("owner_name",item.getUserId().getNickname());
             tempObj.put("owner_rating",item.getUserId().getRating());
+            tempObj.put("owner_email",item.getUserId().getUsername());
 
             if(item.getExpirationDate() == 0){
                 tempObj.put("expire","");

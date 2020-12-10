@@ -22,5 +22,5 @@ module.exports = {
     'USD_EUR':0.84,
     'USD_GBP':0.75,
     'USD_RMB':6.56,
-    'USD_INR':74.24
+    'USD_INR':73.84
 }
