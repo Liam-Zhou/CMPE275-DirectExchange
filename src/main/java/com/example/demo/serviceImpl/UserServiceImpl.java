@@ -1,8 +1,12 @@
 package com.example.demo.serviceImpl;
 
 import com.example.demo.entities.User;
+import com.example.demo.enums.Rating;
 import com.example.demo.repositories.UserRepository;
 import com.example.demo.services.UserService;
+
+import org.springframework.data.jpa.repository.Modifying;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -25,6 +29,21 @@ public class UserServiceImpl  {
         return userRepository.findByPwd(email,pwd);
     }
 
+    @Transactional
+    public int updateTotalTransactionCount(Integer count,Long user_id) {		
+    	return userRepository.updateTotalTransactionCount(count, user_id);
+    }
+    
+    @Transactional
+    public int updateFaultTransactionCount(Integer count,Long user_id) {		
+    	return userRepository.updateFaultTransactionCount(count, user_id);
+    }
+    
+    @Transactional
+    public int updateRating(Rating rating,Long user_id) {		
+    	return userRepository.updateRating(rating, user_id);
+    }
+    
     public Optional<User> creatUser(String email,String pwd,String nickName){
         Optional<User> u = userRepository.findByNickNameOrEmail(email,nickName);
         if(u.isPresent()){
@@ -34,7 +53,7 @@ public class UserServiceImpl  {
             user.setNickname(nickName);
             user.setPassword(pwd);
             user.setUsername(email);
-            user.setRating(0);
+            user.setRating(Rating.NA);
             user.setOut_id(null);
             User temp = userRepository.saveAndFlush(user);
             Optional<User> u2 = Optional.of(temp);
@@ -48,7 +67,7 @@ public class UserServiceImpl  {
     public User creatUserByOutId(String out_id){
         User user = new User();
         user.setOut_id(out_id);
-        user.setRating(0);
+        user.setRating(Rating.NA);
         User u = userRepository.saveAndFlush(user);
         return u;
     }

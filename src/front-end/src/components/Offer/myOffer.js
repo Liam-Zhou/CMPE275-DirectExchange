@@ -21,6 +21,7 @@ class MyOffer extends Component{
         this.state = {
             offerList:[]
         }
+        this.acceptOffer=this.acceptOffer.bind(this)
     }
     componentWillMount(){
         let id = this.props.id
@@ -58,6 +59,26 @@ class MyOffer extends Component{
         this.props.getCounterOffersMade(this.props.id);
         this.props.history.push("/counterOffersMade");
     }
+    acceptOffer = (offer)=>{
+        let timezone = -8;
+        let offset_GMT = new Date().getTimezoneOffset();
+        let nowDate = new Date().getTime()
+        let timeStamp = nowDate + offset_GMT * 60 * 1000 + timezone * 60 * 60 * 1000;
+
+        axios.put(url + '/transaction/confirmTransfer?offer_id='+Number(offer.offerId)+
+            "&user_id="+Number(this.props.id)+"&timeStamp="+Number(timeStamp)).then(res=>{
+            if(res.status === 200 && res.data.message === 'aborted') {
+                alert("sorry,the transaction is aborted because of overtime")
+            }else{
+                if(res.data.message === 'compeleted'){
+                    alert("this transaction is compeleted,")
+                }
+                if(res.data.message === 'comfirmed'){
+                    alert("your transfer is confirmed! you got wait other people to complete this transaction")
+                }
+            }
+        })
+    }
 
     render(){
         let redirectVar = null;
@@ -77,6 +98,9 @@ class MyOffer extends Component{
                             <div class = "education_box" >
                                 <p style=  {{}}>Amount:<h4 className='inline'>{offer.Amount}</h4></p>
                                 <p style=  {{}}>Offer Status:<h4 className='inline'>{offer.OfferStatus}</h4></p>
+                                <button type="button" style={{}} onClick={()=>this.acceptOffer(offer)}
+                                        className="glyphicon glyphicon-triangle-right edit-right">confirm
+                                </button>
                                 <p style = {{}}>Source Country:<h4 class='inline'>{offer.SCountry}</h4></p>
                                 <p style=  {{}}>Source Currency:<h4 className='inline'>{offer.SCurrency}</h4></p>
                                 <p style=  {{}}>Destination Country:<h4 className='inline'>{offer.DCountry}</h4></p>

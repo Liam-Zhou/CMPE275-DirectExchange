@@ -191,6 +191,16 @@ class browserOffer extends Component{
         let create_time = nowDate + offset_GMT * 60 * 1000 + timezone * 60 * 60 * 1000;
         console.log("create_time",create_time,Number(create_time))
 
+        let user_email = this.props.email
+        let subject = 'Offer Confirm'
+        let mess = 'you have an offer confirmation notification,check your offer information'
+        let poster_email = this.state.offer.owner_email
+        console.log("user_email poster_email ",user_email,poster_email)
+        axios.post(url + '/message/sendmessage?toEmail='+user_email+'&fromEmail='+poster_email+'&subject='+subject+'&message='+mess)
+        axios.post(url + '/message/sendmessage?toEmail='+poster_email+'&fromEmail='+user_email+'&subject='+subject+'&message='+mess)
+
+
+
         let Damount = this.state.offer.Amount * this.state.offer.Rate
         axios.post(url + '/transaction/creatInProcess?offer_id='+Number(this.state.offer.offerId)+
             "&SCurrency="+this.state.offer.SCurrency+"&Samount="+this.state.offer.Amount+
@@ -328,6 +338,7 @@ const mapStateToProps = (state) => {
     return {
         id: state.userinfo.id,
         isLogin: state.userinfo.isLogin,
+        email: state.userinfo.username
     }
 }
 

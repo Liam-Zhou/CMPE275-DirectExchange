@@ -53,17 +53,22 @@ public class transactionController {
         Optional<OfferDetails> offer = offerService.getOfferDetailsById(offer_id);
         t1.setOffer(offer.get());t2.setOffer(offer.get());t3.setOffer(offer.get());t4.setOffer(offer.get());
         t1.setCreatedAt(create_time);t2.setCreatedAt(create_time);t3.setCreatedAt(create_time);t4.setCreatedAt(create_time);
-
         t1.setCurrency(Currency.valueOf(SCurrency));t1.setAmount(0-Samount);t1.setStatus("processing");t1.setUserId(poster.get());
-        t2.setCurrency(Currency.valueOf(DCurrency));t2.setAmount(Damount);t2.setStatus("processing");t2.setUserId(poster.get());
-        t3.setCurrency(Currency.valueOf(SCurrency));t3.setAmount(Samount);t3.setStatus("processing");t3.setUserId(receiver.get());
+        t2.setCurrency(Currency.valueOf(DCurrency));t2.setAmount(Damount*0.9995);t2.setStatus("processing");t2.setUserId(poster.get());
+        t3.setCurrency(Currency.valueOf(SCurrency));t3.setAmount(Samount*0.9995);t3.setStatus("processing");t3.setUserId(receiver.get());
         t4.setCurrency(Currency.valueOf(DCurrency));t4.setAmount(0-Damount);t4.setStatus("processing");t4.setUserId(receiver.get());
 
         transactionSerive.CareteTransaction(t1,poster_id,offer_id);
         transactionSerive.CareteTransaction(t2,poster_id,offer_id);
         transactionSerive.CareteTransaction(t3,receiver_id,offer_id);
         transactionSerive.CareteTransaction(t4,receiver_id,offer_id);
-
+        
+        
+        //updating transaction count to calculate rating
+        poster.get().setTotalTranCnt(poster.get().getTotalTranCnt() + 1);
+        receiver.get().setTotalTranCnt(receiver.get().getTotalTranCnt() + 1);
+        userService.updateTotalTransactionCount(poster.get().getTotalTranCnt(), poster_id);
+        userService.updateTotalTransactionCount(receiver.get().getTotalTranCnt(), receiver_id);
         response.setCode(HttpStatus.OK.value());
         response.setMessage("success");
         return response;
@@ -78,12 +83,17 @@ public class transactionController {
             @RequestParam(required = true) long timeStamp
     ){
         RestResponse response = new RestResponse();
+        Optional<User> user = userService.getUserDetails(user_id);
         List<Transaction> transactionListOfUserAndOffer = transactionSerive.getByUserAndOffer(user_id,offer_id);
         long create_time = transactionListOfUserAndOffer.get(0).getCreatedAt();
         if(timeStamp - create_time > 10*60*1000){
             transactionSerive.setAbortedOrCompelted(offer_id,"aborted");
             response.setCode(HttpStatus.OK.value());
-            response.setMessage("aborted");
+            response.setMessage("aborted");       
+             user.get().setFaultTranCnt(user.get().getFaultTranCnt() + 1);
+             user.get().calcRating();
+             userService.updateRating(user.get().getRating(), user_id);
+            
         }else{
             transactionSerive.ConfirmTransfer(user_id,offer_id,"confirmTransfer");
             String mess = "";
@@ -101,6 +111,19 @@ public class transactionController {
             }else{
                 mess = "comfirmed";
             }
+            
+        	boolean allConfirm2 = true;
+       	 	for(Transaction t : transactionListOfUserAndOffer){
+                if(t.getStatus()!="confirmTransfer"){
+               	 allConfirm2 = false;
+                    break;
+                }
+            }
+            if(allConfirm2){
+           	 user.get().calcRating();
+                userService.updateRating(user.get().getRating(), user_id);
+            }
+            
             response.setCode(HttpStatus.OK.value());
             response.setMessage(mess);
         }

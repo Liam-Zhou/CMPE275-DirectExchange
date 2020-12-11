@@ -1,5 +1,6 @@
 package com.example.demo.entities;
 
+import com.example.demo.enums.Rating;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
@@ -58,8 +59,13 @@ public class User {
     @JsonIgnore
     private List<OfferDetails> offers;
 
-    @Column(name="rating", nullable = false)
-    private double rating;
+    @Enumerated(EnumType.STRING)
+    @Column(name="rating", nullable = false,  columnDefinition="VARCHAR(10) default NA")
+    private Rating rating;
+    
+    private Integer faultTranCnt;
+    
+    private Integer totalTranCnt;
 
     public void addAcct(BankAccount acct) {
         this.accounts.add(acct);
@@ -79,6 +85,12 @@ public class User {
     public void removeOffer(OfferDetails offer) {
         this.offers.remove(offer);
         offer.setUserId(null);
+    }
+    
+    public void calcRating()
+    {
+    	double currRating = Math.round((1-(this.getFaultTranCnt())/(this.getTotalTranCnt())) * 4) + 1;
+    	this.setRating(Rating.values()[(int)currRating]);
     }
 
 }

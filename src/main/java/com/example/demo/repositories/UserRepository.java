@@ -1,6 +1,8 @@
 package com.example.demo.repositories;
 
 import com.example.demo.entities.User;
+import com.example.demo.enums.Rating;
+
 import org.springframework.boot.autoconfigure.domain.EntityScan;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
@@ -37,5 +39,20 @@ public interface UserRepository extends JpaRepository<User,Long> {
     @Transactional
     @Query(value = "select * from user where uname=?1 or nickname=?2",nativeQuery = true)
     Optional<User> findByNickNameOrEmail(String email,String nickName);
+    
+    @Transactional
+    @Modifying
+    @Query(value = "update user set totalTranCnt=?1 where user_id=?2 ",nativeQuery = true)
+    int updateTotalTransactionCount(Integer count,Long user_id);
+    
+    @Transactional
+    @Modifying
+    @Query(value = "update user set faultTranCnt=?1 where user_id=?2 ",nativeQuery = true)
+    int updateFaultTransactionCount(Integer count,Long user_id);
+    
+    @Transactional
+    @Modifying
+    @Query(value = "update user set rating=?1 where user_id=?2 ",nativeQuery = true)
+    int updateRating(Rating rating,Long user_id);
 
 }

@@ -141,6 +141,7 @@ class Signup extends Component{
     submitInfo = (e) => {
         //prevent page from refresh
         e.preventDefault();
+        let that = this
         if(this.state.name && this.state.password  && this.state.emailId){
 
             axios({
@@ -150,7 +151,7 @@ class Signup extends Component{
             }).then(function (res) {
                 if(res.status === 200 && res.data.message === 'success'){
                     // firebase.auth().createUserWithEmailAndPassword(this.state.emailId, this.state.password)
-                    auth.createUserWithEmailAndPassword(this.state.emailId, this.state.password)
+                    auth.createUserWithEmailAndPassword(that.state.emailId, that.state.password)
 
                         .then((user) => {
                             // let currentUser = firebase.auth().currentUser;
