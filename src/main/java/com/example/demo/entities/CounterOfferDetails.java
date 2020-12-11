@@ -21,7 +21,7 @@ public class CounterOfferDetails {
     private long id;
 
     @ManyToOne
-    @JoinColumn(name="from_user_id", nullable=true, insertable = false,updatable = false)
+    @JoinColumn(name="from_user_id", nullable=true, insertable = false,updatable = true)
     @JsonBackReference
     @JsonIgnore
     @ToString.Exclude

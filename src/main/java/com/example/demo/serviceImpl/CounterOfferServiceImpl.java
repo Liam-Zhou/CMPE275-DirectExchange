@@ -12,6 +12,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
+import java.sql.Timestamp;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -92,5 +94,30 @@ public class CounterOfferServiceImpl {
 
     public List<CounterOfferDetails> getCounterOffersMade(Long userId){
         return counterOfferRepository.getCountersMade(userId);
+    }
+
+    public void updateExpiredOffers(){
+        List<CounterOfferDetails> counterOfferDetails = counterOfferRepository.findAll();
+        counterOfferDetails.forEach( co -> {
+            if(co.getStatus()==CounterOfferStatus.New && isExpired(co)) {
+                co.setStatus(CounterOfferStatus.Expired);
+                try {
+                    counterOfferRepository.save(co);
+                } catch (Exception ex) {
+                    System.out.println("Cron failure with ex: " + ex.getMessage());
+                }
+            }
+        });
+    }
+
+    public synchronized boolean isExpired(CounterOfferDetails co){
+        Date curr = new Date();
+        long diff = curr.getTime() - co.getCreatedAt().getTime();
+        long diffMinutes = diff / (60 * 1000) % 60;
+        long diffSeconds = diff / 1000 % 60;
+        long diffHours = diff / (60 * 60 * 1000);
+        if( diffHours>0 || diffMinutes> 5 || (diffMinutes==5 && diffSeconds>0))
+            return true;
+        return false;
     }
 }

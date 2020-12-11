@@ -17,6 +17,33 @@ class CounterOffer extends Component {
         }
     }
 
+    // jumpToTransaction(){
+    //     let timezone = -8;
+    //     let offset_GMT = new Date().getTimezoneOffset();
+    //     let nowDate = new Date().getTime()
+    //     let create_time = nowDate + offset_GMT * 60 * 1000 + timezone * 60 * 60 * 1000;
+    //     console.log("create_time",create_time,Number(create_time))
+
+    //     let Damount = this.state.offer.Amount * this.state.offer.Rate
+    //     axios.post(url + '/transaction/creatInProcess?offer_id='+Number(this.state.offer.offerId)+
+    //         "&SCurrency="+this.state.offer.SCurrency+"&Samount="+this.state.offer.Amount+
+    //         "&DCurrency="+this.state.offer.DCurrency+"&Damount="+Number(Damount)+
+    //         "&poster_id="+Number(this.state.offer.owner_id)+"&receiver_id="+Number(this.props.id)+"&create_time="+Number(create_time))
+    //         .then(res => {
+    //             if(res.status === 200 && res.data.message === 'success'){
+
+    //                 this.props.history.push('/home/transaction',{
+    //                     offer:this.state.offer
+    //                 })
+
+    //             }else{
+    //                 alert("database error!!")
+    //             }
+    //         })
+
+
+    // }
+
     counterOffer = ()  => {
         let counterOfferRequest = {
             "fromUserId" : this.props.userId,

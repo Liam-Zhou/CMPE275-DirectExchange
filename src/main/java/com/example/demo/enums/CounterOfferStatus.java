@@ -4,5 +4,6 @@ public enum CounterOfferStatus {
 
     Accept,
     Reject,
-    New
+    New,
+    Expired;
 }
