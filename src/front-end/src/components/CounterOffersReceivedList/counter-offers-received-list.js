@@ -5,6 +5,10 @@ import './counter-offers-received-list.css';
 import OfferDetailsMO from '../OfferDetailsMO/offer-details-mo';
 import CounterOfferReceived from '../CounterOfferReceived/counter-offer-received';
 import { getCounterOffersReceived } from '../../store/reducer/counterOffers/actionCreator';
+import '@fortawesome/fontawesome-free/css/all.css';
+import {
+    Button
+ } from 'reactstrap';
 
 class CounterOffersReceivedList extends Component {
 
@@ -16,6 +20,10 @@ class CounterOffersReceivedList extends Component {
 
     componentDidMount(){
         // this.props.getCounterOffersReceived(this.props.offerDetails.offerId);
+    }
+
+    backButton = () => {
+        this.props.history.push("/home/myOffer");
     }
 
     render(){
@@ -40,6 +48,10 @@ class CounterOffersReceivedList extends Component {
     }
         return <Fragment>
             <div class="cor-container shadow">
+                <div className="corl-button">
+                    <i class="fas fa-arrow-left"></i>
+                    <Button size="lg" color="link" onClick={this.backButton}>Back</Button>
+                </div>
                 {
                     offerDetails &&
                     <OfferDetailsMO offerDetails={offerDetails}/>
@@ -60,6 +72,20 @@ class CounterOffersReceivedList extends Component {
                         })
                     }
                     </div>
+                    </ScrollArea>
+                }
+                {
+                    (counterOffersReceived==null || counterOffersReceived.length==0)  &&
+                    <ScrollArea
+                        speed={0.8}
+                        className="area"
+                        contentClassName="content"
+                        horizontal={false}
+                        smoothScrolling={true}
+                        >
+                        <div class="coml-msg-container">
+                            No Counter Offers Received for this offer.
+                        </div>
                     </ScrollArea>
                 }
             </div>

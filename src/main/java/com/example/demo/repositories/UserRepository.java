@@ -53,6 +53,6 @@ public interface UserRepository extends JpaRepository<User,Long> {
     @Transactional
     @Modifying
     @Query(value = "update user set rating=?1 where user_id=?2 ",nativeQuery = true)
-    int updateRating(Rating rating,Long user_id);
+    int updateRating(Double rating,Long user_id);
 
 }

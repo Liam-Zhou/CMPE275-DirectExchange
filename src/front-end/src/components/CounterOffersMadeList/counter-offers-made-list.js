@@ -5,6 +5,10 @@ import './counter-offers-made-list.css';
 import OfferDetailsMO from '../OfferDetailsMO/offer-details-mo';
 import CounterOfferMade from '../CounterOfferMade/counter-offer-made';
 import { getCounterOffersMade } from '../../store/reducer/counterOffers/actionCreator';
+import '@fortawesome/fontawesome-free/css/all.css';
+import {
+    Button
+ } from 'reactstrap';
 
 class CounterOffersMadeList extends Component {
 
@@ -16,6 +20,10 @@ class CounterOffersMadeList extends Component {
 
     componentDidMount(){
         // this.props.getCounterOffersMade(this.props.userId);
+    }
+
+    backButton = () => {
+        this.props.history.push("/home/myOffer");
     }
 
     render(){
@@ -40,6 +48,10 @@ class CounterOffersMadeList extends Component {
     }
         return <Fragment>
             <div class="coml-container shadow">
+                <div className="coml-button">
+                    <i class="fas fa-arrow-left"></i>
+                    <Button size="lg" color="link" onClick={this.backButton}>Back</Button>
+                </div>
                 {
                     offerDetails &&
                     <OfferDetailsMO offerDetails={offerDetails}/>
@@ -59,6 +71,20 @@ class CounterOffersMadeList extends Component {
                                 return <CounterOfferMade details={co}/>;
                             })
                         }
+                        </div>
+                    </ScrollArea>
+                }
+                {
+                    (counterOffersMade==null || counterOffersMade.length==0)  &&
+                    <ScrollArea
+                        speed={0.8}
+                        className="area"
+                        contentClassName="content"
+                        horizontal={false}
+                        smoothScrolling={true}
+                        >
+                        <div class="coml-msg-container">
+                            No Counter Offers Made for this offer.
                         </div>
                     </ScrollArea>
                 }

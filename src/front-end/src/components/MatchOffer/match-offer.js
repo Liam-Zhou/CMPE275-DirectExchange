@@ -35,11 +35,15 @@ class MatchOffer extends Component {
     render(){
         let newAmt = this.props.newAmt;
         let myOffer = this.props.myOffer;
-        let exRate = this.props.exRate;
+        let newExRate = this.props.newExRate;
+        let newCurrency = this.props.newCurrency;
+        console.log("new amt: ",newAmt);
+        console.log("new exRate: ",newExRate);
+        console.log("new cur: ",newCurrency);
         return <Fragment>
             <div className="m-container">
                 <div className="m-col">
-                    <h2>Match Offer</h2>
+                    <h2>Modify My Offer</h2>
                 </div>
                 <div className="m-col">
                     <div className="m-heading">
@@ -76,7 +80,7 @@ class MatchOffer extends Component {
                     </div>
                     <div className="m-line">
                         <div className="m-highlight">
-                            New Amount: {newAmt} {myOffer.sourceCurrency} | {this.calculateForignCurrency(newAmt,myOffer.exchangeRate)} {myOffer.destinationCurrency}
+                            New Amount: {newAmt} {myOffer.sourceCurrency} | {this.calculateForignCurrency(newAmt,newExRate)} {newCurrency}
                         </div>
                     </div>
                     <div className="m-line">
@@ -100,7 +104,7 @@ class MatchOffer extends Component {
                     </div>
                 </div>
                 <div className="m-heading">
-                <Button size="lg" color="primary" onClick={this.matchOffer}>Match!</Button>
+                <Button size="lg" color="primary" onClick={this.matchOffer}>Modify My Order</Button>
                 </div>
             </div>
         </Fragment>

@@ -40,7 +40,7 @@ public class UserServiceImpl  {
     }
     
     @Transactional
-    public int updateRating(Rating rating,Long user_id) {		
+    public int updateRating(Double rating,Long user_id) {
     	return userRepository.updateRating(rating, user_id);
     }
     
@@ -53,7 +53,7 @@ public class UserServiceImpl  {
             user.setNickname(nickName);
             user.setPassword(pwd);
             user.setUsername(email);
-            user.setRating(Rating.NA);
+            user.setRating(0.0);
             user.setOut_id(null);
             User temp = userRepository.saveAndFlush(user);
             Optional<User> u2 = Optional.of(temp);
@@ -67,7 +67,7 @@ public class UserServiceImpl  {
     public User creatUserByOutId(String out_id){
         User user = new User();
         user.setOut_id(out_id);
-        user.setRating(Rating.NA);
+        user.setRating(0.0);
         User u = userRepository.saveAndFlush(user);
         return u;
     }

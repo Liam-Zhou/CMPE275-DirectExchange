@@ -47,6 +47,16 @@ class OffersListMO extends Component {
                          curAmt={matchingOffers.offerDetails.amount}/>;
                     })
                 }
+                {
+                    matchingOffers && matchingOffers.offerDetails &&
+                    ( matchingOffers.split==null ||
+                        matchingOffers.split.length==0) &&
+                        ( matchingOffers.singles==null ||
+                            matchingOffers.singles.length==0) &&
+                        <div class="ol-msg-container">
+                            Sorry, no matching offers found for this offer.
+                        </div>
+                }
                 </div>
             </ScrollArea>
             </div>

@@ -9,6 +9,7 @@ import {Button } from 'reactstrap';
 import { setCurOffer } from '../../store/reducer/matchingOffers/actionCreator';
 import { getCounterOffersReceived } from '../../store/reducer/counterOffers/actionCreator';
 import { getCounterOffersMade } from '../../store/reducer/counterOffers/actionCreator';
+import './myOffer.css';
 
 let host = config.host;
 let port = config.back_end_port;
@@ -112,9 +113,9 @@ class MyOffer extends Component{
                                 {
                                     offer.OfferStatus==="Open" &&
                                     <div>
-                                    <Button size="lg" color="primary" onClick={()=> this.getMatchingOffers(offer)}>Matching Offers</Button>
-                                    <Button size="lg" color="primary" onClick={()=> this.getCounterOffersReceived(offer)}>Counter Offers Received</Button>
-                                    <Button size="lg" color="primary" onClick={()=> this.getCounterOffersMade(offer)}>Counter Offers Made</Button>
+                                    <Button size="lg" outline color="primary" className="mo-btn" onClick={()=> this.getMatchingOffers(offer)}>Matching Offers</Button>
+                                    <Button size="lg" outline color="primary" className="mo-btn" onClick={()=> this.getCounterOffersReceived(offer)}>Counter Offers Received</Button>
+                                    <Button size="lg" outline color="primary" className="mo-btn" onClick={()=> this.getCounterOffersMade(offer)}>Counter Offers Made</Button>
                                     </div>
                                 }
                                 {

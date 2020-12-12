@@ -76,7 +76,7 @@ class SplitMO extends Component {
             matchingNewAmt = this.calculateForignCurrency(offer2.amount,offer2.exchangeRate) - offer1.amount;//Math.round(((offer1.amount+Number.EPSILON)*100.0)/100.0);
         }
         else {
-            matchingNewAmt = this.calculateForignCurrency(offer1.amount*offer1.exchangeRate) - offer2.amount;//Math.round(((offer2.amount+Number.EPSILON)*100.0)/100.0);
+            matchingNewAmt = this.calculateForignCurrency(offer1.amount,offer1.exchangeRate) - offer2.amount;//Math.round(((offer2.amount+Number.EPSILON)*100.0)/100.0);
         }
         return matchingNewAmt;
     }
@@ -86,11 +86,23 @@ class SplitMO extends Component {
         let offer2 = this.props.offer2;
         let curOffer = this.props.curOffer;
         if(offer1.sourceCurrency === offer2.sourceCurrency)
+            return curOffer.exchangeRate;
+        else if(offer1.sourceCurrency != offer2.sourceCurrency && offer1.sourceCurrency == curOffer.sourceCurrency)
             return offer1.exchangeRate;
+        else
+            return offer2.exchangeRate;
+    }
+
+    getNewCurrency = () => {
+        let offer1 = this.props.offer1;
+        let offer2 = this.props.offer2;
+        let curOffer = this.props.curOffer;
+        if(offer1.sourceCurrency === offer2.sourceCurrency)
+            return offer1.sourceCurrency;
         else if(offer1.sourceCurrency != offer2.sourceCurrency && offer1.sourceCurrency == curOffer.sourceCurrency)
             return offer2.sourceCurrency;
         else
-            return curOffer.sourceCurrency;
+            return offer1.sourceCurrency;
     }
 
     render() {
@@ -99,7 +111,8 @@ class SplitMO extends Component {
         let curOffer = this.props.curOffer;
         let amtDiff = this.props.difference;
         let newAmt = this.calculateMatchingAmount();
-        let exRate = this.getExRate();
+        let newExRate = this.getExRate();
+        let newCurrency = this.getNewCurrency();
         let biggerOffer =null;
         if(offer1.sourceCurrency==offer2.sourceCurrency)
             biggerOffer = offer1.amount > offer2.amount ? offer1 : offer2;
@@ -266,7 +279,7 @@ class SplitMO extends Component {
                     <AcceptSplitOffer offer1={offer1} offer2={offer2}/>
                     </Modal>
                     <Modal visible={this.state.matchOfferModal} width="400" height="500" effect="fadeInUp" onClickAway={this.matchOfferToggle}>
-                    <MatchOffer  newAmt={newAmt} exRate={exRate} offerId1={offer1.id} offerId2={offer2.id}/>
+                    <MatchOffer  newAmt={newAmt} newExRate={newExRate} newCurrency={newCurrency} offerId1={offer1.id} offerId2={offer2.id}/>
                     </Modal>
                     <Modal visible={this.state.counterOfferModal} width="400" height="550" effect="fadeInUp" onClickAway={this.counterOfferToggle}>
                     <CounterOffer otherOffer={biggerOffer} newAmt={counterOfferAmt}/>

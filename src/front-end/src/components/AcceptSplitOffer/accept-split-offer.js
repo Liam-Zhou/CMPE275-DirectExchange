@@ -23,7 +23,7 @@ class AcceptSingleOffer extends Component {
             timeStamp : Date.now()
         }
         this.props.acceptOfferAction(acceptOfferRequest);
-        this.props.history.push("/matchingOffers");
+        this.props.history.push("/home/myTransaction");
     }
 
     calculateForignCurrency = (amt,exRate) => {

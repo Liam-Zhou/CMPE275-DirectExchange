@@ -59,9 +59,8 @@ public class User {
     @JsonIgnore
     private List<OfferDetails> offers;
 
-    @Enumerated(EnumType.STRING)
-    @Column(name="rating", nullable = false,  columnDefinition="VARCHAR(10) default NA")
-    private Rating rating;
+    @Column(name="rating", nullable = false)
+    private double rating;
     
     private Integer faultTranCnt;
     
@@ -90,7 +89,7 @@ public class User {
     public void calcRating()
     {
     	double currRating = Math.round((1-(this.getFaultTranCnt())/(this.getTotalTranCnt())) * 4) + 1;
-    	this.setRating(Rating.values()[(int)currRating]);
+    	this.setRating(currRating);
     }
 
 }

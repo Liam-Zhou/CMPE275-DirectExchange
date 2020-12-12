@@ -115,7 +115,7 @@ class SingleMO extends Component {
                     <AcceptSingleOffer otherOffer={details}/>
                     </Modal>
                     <Modal visible={this.state.matchOfferModal} width="400" height="500" effect="fadeInUp" onClickAway={this.matchOfferToggle}>
-                    <MatchOffer newAmt={newAmt} exRate={curOffer.exchangeRate} offerId1={details.id} offerId2={null}/>
+                    <MatchOffer newAmt={newAmt} newExRate={curOffer.exchangeRate} newCurrency={curOffer.sourceCurrency} offerId1={details.id} offerId2={null}/>
                     </Modal>
                     <Modal visible={this.state.counterOfferModal} width="400" height="550" effect="fadeInUp" onClickAway={this.counterOfferToggle}>
                     <CounterOffer otherOffer={details} newAmt={newAmt}/>

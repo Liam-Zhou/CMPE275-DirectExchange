@@ -21,3 +21,12 @@
     padding-left: 5%;
     padding-right: 5%;
 }
+
+.ol-msg-container {
+    display: flex;
+    flex-direction: column;
+    padding-left: 5%;
+    padding-right: 5%;
+    font-size: large;
+    font-weight: 600;
+}
