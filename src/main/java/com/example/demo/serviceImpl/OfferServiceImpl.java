@@ -192,7 +192,7 @@ public class OfferServiceImpl {
         return offerList;
     }
     public List<OfferDetails> getTotalOffers(String Scurrency,int Samount,String Dcurrency,long user_id){
-        List<OfferDetails> offerList = offerDetailsRepository.getTotalOffers(Scurrency, Samount, Dcurrency,user_id);
+        List<OfferDetails> offerList = offerDetailsRepository.getTotalOffers(Scurrency, Samount, Dcurrency,user_id,"Open");
         return offerList;
     }
 

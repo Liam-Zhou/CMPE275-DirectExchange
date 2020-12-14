@@ -99,9 +99,9 @@ class MyOffer extends Component{
                             <div class = "education_box" >
                                 <p style=  {{}}>Amount:<h4 className='inline'>{offer.Amount}</h4></p>
                                 <p style=  {{}}>Offer Status:<h4 className='inline'>{offer.OfferStatus}</h4></p>
-                                <button type="button" style={{}} onClick={()=>this.acceptOffer(offer)}
-                                        className="glyphicon glyphicon-triangle-right edit-right">confirm
-                                </button>
+                                {/*<button type="button" style={{}} onClick={()=>this.acceptOffer(offer)}*/}
+                                {/*        className="glyphicon glyphicon-triangle-right edit-right">confirm*/}
+                                {/*</button>*/}
                                 <p style = {{}}>Source Country:<h4 class='inline'>{offer.SCountry}</h4></p>
                                 <p style=  {{}}>Source Currency:<h4 className='inline'>{offer.SCurrency}</h4></p>
                                 <p style=  {{}}>Destination Country:<h4 className='inline'>{offer.DCountry}</h4></p>
@@ -110,6 +110,9 @@ class MyOffer extends Component{
                                 <p style=  {{}}>Allow Counter Offer:<h4 className='inline'>{offer.CounterOffer}</h4></p>
                                 <p style=  {{}}>Allow Split Offer:<h4 className='inline'>{offer.SplitExchange}</h4></p>
                                 <p style=  {{}}>Expire Date:<h4 className='inline'>{offer['expire']}</h4></p>
+                                <p style=  {{}}>owner_name:<h4 className='inline'>{offer.owner_name}</h4></p>
+                                <p style=  {{}}>owner_rating:<h4 className='inline'>{offer.owner_rating}</h4></p>
+
                                 {
                                     offer.OfferStatus==="Open" &&
                                     <div>

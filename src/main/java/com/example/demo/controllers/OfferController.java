@@ -26,6 +26,7 @@ import java.util.Optional;
 @Controller
 @RequestMapping("/offer")
 @CrossOrigin("http://localhost:3000")
+//@CrossOrigin("http://3.14.151.147:3000")
 public class OfferController {
     @Resource
     OfferServiceImpl offerService;
@@ -80,12 +81,12 @@ public class OfferController {
                                     @RequestParam(required = true) long user_id
                                     )
     {
-        boolean temp1= true;
-        boolean temp2 =true;
-        if(counterOffer == "false"){
+        Boolean temp1=true;
+        Boolean temp2=true;
+        if(counterOffer.equals("false") ){
             temp1 = false;
         }
-        if(splitOffer == "false"){
+        if(splitOffer.equals("false")){
             temp2 = false;
         }
         RestResponse response = new RestResponse();
@@ -104,7 +105,6 @@ public class OfferController {
             offer.setAmount(amount);
             offer.setStatus("open");
             offer.setOfferStatus(OfferStatus.Open);
-
             JsonConfig jc = new JsonConfig();
             jc.setExcludes(new String[]{"userId"});
             jc.setCycleDetectionStrategy(CycleDetectionStrategy.LENIENT);
