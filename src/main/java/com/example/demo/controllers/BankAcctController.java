@@ -6,6 +6,7 @@ import com.example.demo.enums.Currency;
 import com.example.demo.pojos.BankSetupRequest;
 import com.example.demo.pojos.RestResponse;
 import com.example.demo.serviceImpl.BankAcctServiceImpl;
+import com.example.demo.serviceImpl.EmailService;
 import com.example.demo.serviceImpl.UserServiceImpl;
 import net.sf.json.JSONObject;
 import net.sf.json.JsonConfig;
@@ -18,6 +19,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 import javax.annotation.Resource;
+import javax.persistence.Embedded;
 import java.sql.SQLException;
 import java.util.Optional;
 
@@ -33,6 +35,9 @@ public class BankAcctController {
 
     @Resource
     UserServiceImpl userService;
+
+    @Resource
+    EmailService emailService;
 
     @RequestMapping(value={"/setup"},method = RequestMethod.POST,produces = {"application/json;charset=utf-8"})
     @ResponseBody
@@ -59,6 +64,16 @@ public class BankAcctController {
                 response.setPayload(JSONObject.fromObject(acct, jc));
                 response.setCode(HttpStatus.OK.value());
                 response.setMessage("success");
+                emailService.sendSimpleMessage(new String[]{user.get().getUsername()},"Bank Account Added!",
+                        "Bank Account with the following details has been added to your direct exchange account:\n"+
+                        "Account Number: "+request.getAcctNo()+"\n"+
+                                "Bank Name: "+request.getBankName()+"\n"+
+                                "Country: "+request.getCountry()+"\n"+
+                                "Currency: "+request.getCurrency()+"\n"+
+                                "Owner Name: "+request.getOwnerName()+"\n"+
+                                "Owner Address: "+request.getOwnerAddress()+"\n"+
+                                "Receiving Enabled: "+request.getReceiving()+"\n"+
+                                "Sending Enabled: "+request.getSending()+"\n");
             } else {
                 response.setPayload(null);
                 response.setCode(HttpStatus.BAD_REQUEST.value());
@@ -82,4 +97,5 @@ public class BankAcctController {
             return response;
         }
     }
+
 }

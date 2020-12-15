@@ -29,6 +29,9 @@ public class CounterOfferServiceImpl {
     @Resource
     UserServiceImpl userService;
 
+    @Resource
+    EmailService emailService;
+
     @Transactional
     public CounterOfferDetails createCounterOffer(CounterOfferRequest counterOfferRequest) throws  NotFoundException{
         CounterOfferDetails saved = null;
@@ -53,6 +56,11 @@ public class CounterOfferServiceImpl {
         } catch (Exception ex) {
             throw new NotFoundException(ex.getMessage());
         }
+        emailService.sendSimpleMessage(new String[]{toOffer.get().getUserId().getUsername()},"Received Counter Offer",
+                "Hey! You just received a counter offer for one of your offers.\n"+
+                "Offer Id: "+toOffer.get().getId() + "\n" +
+                "Original Amount: "+toOffer.get().getAmount()+"\n" +
+                "New Amount: "+counterOfferRequest.getNewAmount()+"\n");
         return saved;
     }
 

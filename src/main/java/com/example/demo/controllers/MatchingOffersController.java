@@ -6,6 +6,7 @@ import com.example.demo.enums.OfferStatus;
 import com.example.demo.exceptions.NotFoundException;
 import com.example.demo.pojos.*;
 import com.example.demo.serviceImpl.CounterOfferServiceImpl;
+import com.example.demo.serviceImpl.EmailService;
 import com.example.demo.serviceImpl.OfferServiceImpl;
 import com.example.demo.serviceImpl.UserServiceImpl;
 import com.example.demo.utils.ResponsePayloadUtils;
