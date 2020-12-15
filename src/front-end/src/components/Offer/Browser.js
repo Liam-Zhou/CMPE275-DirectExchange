@@ -312,7 +312,7 @@ class browserOffer extends Component{
                         <p style={{}}>owner_id:<h4 className='inline'>{this.state.offer.owner_id}</h4></p>
                         <p style={{}}>owner_name:<h4 className='inline'>{this.state.offer.owner_name}</h4></p>
                         <p style={{}}>owner_rating:<h4 className='inline'><Rating name="disabled" value={parseInt(this.state.offer.owner_rating)} disabled /></h4></p>
-                        <button style = {{'display':this.state.showAcceptButton}} onClick={this.jumpToTransaction}>Accept</button>
+                        {/*<button style = {{'display':this.state.showAcceptButton}} onClick={this.jumpToTransaction}>Accept</button>*/}
 
                     </div>
 
