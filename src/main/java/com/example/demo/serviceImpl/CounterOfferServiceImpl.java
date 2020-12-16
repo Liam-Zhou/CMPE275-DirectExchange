@@ -8,6 +8,7 @@ import com.example.demo.enums.OfferStatus;
 import com.example.demo.exceptions.NotFoundException;
 import com.example.demo.pojos.CounterOfferRequest;
 import com.example.demo.repositories.CounterOfferRepository;
+import com.example.demo.repositories.OfferDetailsRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -31,6 +32,9 @@ public class CounterOfferServiceImpl {
 
     @Resource
     EmailService emailService;
+
+    @Resource
+    OfferDetailsRepository offerDetailsRepository;
 
     @Transactional
     public CounterOfferDetails createCounterOffer(CounterOfferRequest counterOfferRequest) throws  NotFoundException{
@@ -106,11 +110,17 @@ public class CounterOfferServiceImpl {
 
     public void updateExpiredOffers(){
         List<CounterOfferDetails> counterOfferDetails = counterOfferRepository.findAll();
+
         counterOfferDetails.forEach( co -> {
+
             if(co.getStatus()==CounterOfferStatus.New && isExpired(co)) {
+                Optional<OfferDetails> offerDetails = offerService.getOfferDetailsById(co.getFromOfferId());
                 co.setStatus(CounterOfferStatus.Expired);
+                offerDetails.get().setOfferStatus(OfferStatus.Open);
                 try {
+                    offerDetailsRepository.save(offerDetails.get());
                     counterOfferRepository.save(co);
+
                 } catch (Exception ex) {
                     System.out.println("Cron failure with ex: " + ex.getMessage());
                 }
@@ -118,12 +128,15 @@ public class CounterOfferServiceImpl {
         });
     }
 
-    public synchronized boolean isExpired(CounterOfferDetails co){
+    public boolean isExpired(CounterOfferDetails co){
         Date curr = new Date();
         long diff = curr.getTime() - co.getCreatedAt().getTime();
         long diffMinutes = diff / (60 * 1000) % 60;
         long diffSeconds = diff / 1000 % 60;
         long diffHours = diff / (60 * 60 * 1000);
+        System.out.println("curTime: "+curr.toString());
+        System.out.println("counter offer time: "+co.getCreatedAt().getTime());
+        System.out.println("Diff is "+diffHours+" hours "+diffMinutes+" minutes "+diffSeconds+" seconds");
         if( diffHours>0 || diffMinutes> 5 || (diffMinutes==5 && diffSeconds>0))
             return true;
         return false;

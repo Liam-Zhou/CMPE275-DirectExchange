@@ -18,9 +18,9 @@ public class ExpirationCheckCron {
 
     @Scheduled(cron = "0 0/1 * * * *")
     public void checkForExpiration(){
-        logger.debug("Strating Cron Job at "+(new Date()).toString()+"....");
+        System.out.println("Strating Cron Job at "+(new Date()).toString()+"....");
         counterOfferService.updateExpiredOffers();
-        logger.debug("Cron Job Completed....");
+        System.out.println("Cron Job Completed....");
     }
 
 
