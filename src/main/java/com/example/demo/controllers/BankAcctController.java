@@ -64,7 +64,7 @@ public class BankAcctController {
                 response.setPayload(JSONObject.fromObject(acct, jc));
                 response.setCode(HttpStatus.OK.value());
                 response.setMessage("success");
-                emailService.sendSimpleMessage(new String[]{user.get().getUsername()},"Bank Account Added!",
+               /* emailService.sendSimpleMessage(new String[]{user.get().getUsername()},"Bank Account Added!",
                         "Bank Account with the following details has been added to your direct exchange account:\n"+
                         "Account Number: "+request.getAcctNo()+"\n"+
                                 "Bank Name: "+request.getBankName()+"\n"+
@@ -73,7 +73,7 @@ public class BankAcctController {
                                 "Owner Name: "+request.getOwnerName()+"\n"+
                                 "Owner Address: "+request.getOwnerAddress()+"\n"+
                                 "Receiving Enabled: "+request.getReceiving()+"\n"+
-                                "Sending Enabled: "+request.getSending()+"\n");
+                                "Sending Enabled: "+request.getSending()+"\n");*/
             } else {
                 response.setPayload(null);
                 response.setCode(HttpStatus.BAD_REQUEST.value());
