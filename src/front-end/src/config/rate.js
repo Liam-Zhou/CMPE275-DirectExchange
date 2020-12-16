@@ -17,10 +17,10 @@ module.exports = {
     'INR_EUR':0.011,
     'INR_GBP':0.010,
     'INR_RMB':0.089,
-    'INR_USD':0.01346982758,
+    'INR_USD':0.0134372481,
 
     'USD_EUR':0.84,
     'USD_GBP':0.75,
     'USD_RMB':6.56,
-    'USD_INR':73.84
+    'USD_INR':74.24
 }
