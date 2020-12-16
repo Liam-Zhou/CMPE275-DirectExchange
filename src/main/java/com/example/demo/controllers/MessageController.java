@@ -42,8 +42,8 @@ public class MessageController {
 
         javaMailSender.send(mailMessage);
 
-        response.setCode(HttpStatus.OK.value());
-        response.setMessage("message sent to " + toEmail);
+        //response.setCode(HttpStatus.OK.value());
+        //response.setMessage("message sent to " + toEmail);
 
         return response;
     }
