@@ -49,4 +49,8 @@ public class TransactionSeriveImpl {
     public List<Transaction> getByOffer(long offerId){
         return transactionRepository.getByOffer(offerId);
     }
+    @Transactional
+    public List<Transaction> getTxnHistoryWithUserName(long userID){
+        return transactionRepository.getTxnHistoryWithUserName(userID);
+    }
 }

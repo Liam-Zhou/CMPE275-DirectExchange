@@ -155,4 +155,27 @@ public class transactionController {
         response.setMessage("success");
         return response;
     }
+    
+    @RequestMapping(value={"/getTxnHistory"},method = RequestMethod.GET,produces = {"application/json;charset=utf-8"})
+    @ResponseBody
+    @Transactional
+    public RestResponse getTxnHistoryWithUserName(
+            @RequestParam(required = true) long user_id
+    ){
+        RestResponse response = new RestResponse();
+        List<Transaction> transactionListOfUser = transactionSerive.getTxnHistoryWithUserName(user_id);
+        JSONArray jsonArray = new JSONArray();
+        for(Transaction t : transactionListOfUser){
+            JSONObject tempObj = new JSONObject();
+            tempObj.put("id",t.getId());
+            tempObj.put("status",t.getStatus());
+            tempObj.put("user_id",t.getUserId());
+            tempObj.put("offer_id", t.getOffer().getId());
+            jsonArray.add(tempObj);
+        }
+        response.setPayload_arr(jsonArray);
+        response.setCode(HttpStatus.OK.value());
+        response.setMessage("success");
+        return response;
+    }
 }

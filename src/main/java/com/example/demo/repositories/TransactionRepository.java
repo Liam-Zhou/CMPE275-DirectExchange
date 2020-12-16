@@ -49,5 +49,15 @@ public interface TransactionRepository extends JpaRepository<Transaction,Long> {
     @Transactional
     @Query(value = "select * from transactions_details where offer_id=?1 ",nativeQuery = true)
     List<Transaction> getByOffer(long offerId);
+    
+    @Transactional
+    @Query(value = "select T.*\n"
+    		+ "from (select id\n"
+    		+ "	  from offer_details\n"
+    		+ "      where user_id = ?1) as O, transactions_details T\n"
+    		+ "where T.offer_id = O.id\n"
+    		+ "and T.user_id !=?1\n"
+    		+ "and (upper(T.status) = \"COMPLETED\" or  upper(T.status) =\"ABORTED\")",nativeQuery = true) 	 
+    List<Transaction> getTxnHistoryWithUserName(Long userID);
 
 }
