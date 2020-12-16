@@ -18,6 +18,8 @@ import transaction from './Offer/transaction'
 import myTransaction from './Offer/myTransaction'
 import counterOffersReceivedList from './CounterOffersReceivedList/counter-offers-received-list';
 import counterOffersMadeList from './CounterOffersMadeList/counter-offers-made-list';
+import Reporting from './Reporting/reporting'
+import SystemReport from './Reporting/systemreport'
 
 //Create a Main Component
 class Main extends Component {
@@ -45,6 +47,8 @@ class Main extends Component {
                 <Route path="/counterOffersMade" component={counterOffersMadeList}/>
 
                 {/*<Route path="/home/postOffer" component={postOffer}/>*/}
+                <Route path="/reporting" component={Reporting}/>
+                <Route path="/systemReport" component={SystemReport}/>
 
                 <Route path="/home/rates" component={PrevailingRates}/>
                 <Route path="/home/postOffer" component={postOffer}/>
