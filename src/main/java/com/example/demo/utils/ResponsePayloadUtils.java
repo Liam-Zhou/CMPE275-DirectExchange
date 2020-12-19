@@ -2,6 +2,7 @@ package com.example.demo.utils;
 
 import com.example.demo.entities.CounterOfferDetails;
 import com.example.demo.entities.OfferDetails;
+import com.example.demo.entities.Transaction;
 import com.example.demo.entities.User;
 import com.example.demo.pojos.MatchingOffers;
 import com.example.demo.pojos.SingleMatchOffer;
@@ -113,5 +114,30 @@ public class ResponsePayloadUtils {
 //            json.put("approxSplit",approxSplit);
         }
         return  json;
+    }
+
+    public JSONObject txnJson(Transaction txn){
+        JSONObject json = new JSONObject();
+        if(txn!=null){
+            json.put("id",txn.getId());
+            json.put("userId",txn.getUserId());
+            json.put("amount",txn.getAmount());
+            json.put("currency",txn.getCurrency());
+            json.put("offer",offerDetailsJson(txn.getOffer()));
+            json.put("serviceFee",txn.getServiceFee());
+            json.put("status",txn.getStatus());
+            json.put("createdAt", txn.getCreatedAt());
+        }
+        return json;
+    }
+
+    public JSONObject txnsListJson(List<Transaction> txns){
+        JSONObject json = new JSONObject();
+        List<JSONObject> txnsList = new ArrayList<>();
+        for(Transaction txn : txns){
+            txnsList.add(txnJson(txn));
+        }
+        json.put("txns",txnsList);
+        return json;
     }
 }

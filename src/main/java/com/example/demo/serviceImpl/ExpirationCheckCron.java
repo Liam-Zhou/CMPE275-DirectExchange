@@ -16,10 +16,14 @@ public class ExpirationCheckCron {
     @Resource
     CounterOfferServiceImpl counterOfferService;
 
+    @Resource
+    OfferServiceImpl offerService;
+
     @Scheduled(cron = "0 0/1 * * * *")
     public void checkForExpiration(){
         System.out.println("Strating Cron Job at "+(new Date()).toString()+"....");
         counterOfferService.updateExpiredOffers();
+        offerService.updateExpiredOffers();
         System.out.println("Cron Job Completed....");
     }
 

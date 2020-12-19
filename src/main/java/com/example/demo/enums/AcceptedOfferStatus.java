@@ -4,6 +4,6 @@ public enum AcceptedOfferStatus {
 
     InTransaction,
     Complete,
-    Expired
+    Cancelled
     
 }

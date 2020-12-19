@@ -1,7 +1,7 @@
 package com.example.demo.entities;
 
 import com.example.demo.enums.Currency;
-import com.example.demo.enums.TransactionType;
+import com.example.demo.enums.TransactionStatus;
 import lombok.Data;
 
 import javax.persistence.*;
@@ -17,9 +17,10 @@ public class Transaction {
     @Column(name = "id", unique = true)
     private long id;
 
-    @ManyToOne
-    @JoinColumn(name = "user_id")
-    private User userId;
+//    @ManyToOne
+//    @JoinColumn(name = "user_id")
+    @Column(name="user_id")
+    private Long userId;
 
     @ManyToOne
     @JoinColumn(name = "offer_id")
@@ -28,26 +29,27 @@ public class Transaction {
     @Column(name = "amount",nullable = false)
     private double amount;
 
-    @Enumerated(EnumType.STRING)
-    @Column(name = "type"
-//            ,nullable = false
-    )
-    private TransactionType type;
-
     @Column(name="created_at")
-    private long createdAt;
+    private Date createdAt;
 
     @Column(name="status")
-    private String status;
+    @Enumerated(EnumType.STRING)
+    private TransactionStatus status;
 
     @Enumerated(EnumType.STRING)
     @Column(name="currency")
     private Currency currency;
 
-//    @PrePersist
-//    protected void onCreate() {
-//        createdAt = new Date();
-//    }
+    @Column(name="service_fee",nullable = false)
+    private Double serviceFee;
+
+    @Column(name="accepted_offer_id")
+    private Long acceptedOfferId;
+
+    @PrePersist
+    protected void onCreate() {
+        createdAt = new Date();
+    }
 
 
 

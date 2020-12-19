@@ -1,12 +1,8 @@
 package com.example.demo.serviceImpl;
 
-import com.example.demo.entities.AcceptedOffer;
-import com.example.demo.entities.BankAccount;
-import com.example.demo.entities.OfferDetails;
-import com.example.demo.entities.User;
-import com.example.demo.enums.AcceptedOfferStatus;
+import com.example.demo.entities.*;
+import com.example.demo.enums.*;
 import com.example.demo.enums.Currency;
-import com.example.demo.enums.OfferStatus;
 import com.example.demo.exceptions.NotFoundException;
 import com.example.demo.pojos.AcceptOfferRequest;
 import com.example.demo.pojos.MatchingOffers;
@@ -14,6 +10,7 @@ import com.example.demo.pojos.SingleMatchOffer;
 import com.example.demo.pojos.SplitMatchOffer;
 import com.example.demo.repositories.AcceptedOfferRepository;
 import com.example.demo.repositories.OfferDetailsRepository;
+import com.example.demo.repositories.TransactionRepository;
 import com.example.demo.utils.SingleOfferComparator;
 import com.example.demo.utils.SplitOffersComparator;
 import org.springframework.stereotype.Service;
@@ -36,7 +33,10 @@ public class OfferServiceImpl {
     UserServiceImpl userService;
 
     @Resource
-    BankAcctServiceImpl bankAcctService;
+    TransactionRepository transactionRepository;
+
+    @Resource
+    EmailService emailService;
 
     @Transactional
     public Optional<OfferDetails> getOfferDetailsById(Long offerId) {
@@ -92,10 +92,6 @@ public class OfferServiceImpl {
     public Boolean acceptOffer(AcceptOfferRequest acceptOfferRequest) throws NotFoundException {
         Optional<OfferDetails> offer2 = null;
         Optional<OfferDetails> offer3 = null;
-//        Optional<User> userDetails = userService.getUserDetails(acceptOfferRequest.getUserId());
-//        if(userDetails.isPresent() && !bankAcctService.bankAccountVerification(userDetails.get())){
-//            throw new NotFoundException("Please add at least two bank accts to post or accept an offer");
-//        }
         Optional<OfferDetails> offer1 = offerDetailsRepository.findById(acceptOfferRequest.getOfferId1());
         if (offer1.isPresent() && acceptOfferRequest.getOfferId2() != null
                 && acceptOfferRequest.getOfferId3() != null) {
@@ -111,14 +107,44 @@ public class OfferServiceImpl {
                 acceptedOffer.setOfferId3(offer3.get().getId());
                 acceptedOffer.setOfferStatus(AcceptedOfferStatus.InTransaction);
                 acceptedOffer.setTimeStamp(new Date(acceptOfferRequest.getTimeStamp()));
+                Transaction txn1 = new Transaction();
+                txn1.setAmount(offer1.get().getAmount());
+                txn1.setCurrency(offer1.get().getSourceCurrency());
+                txn1.setOffer(offer1.get());
+                txn1.setServiceFee(0.0005*offer1.get().getAmount());
+                txn1.setStatus(TransactionStatus.Pending);
+                txn1.setUserId(offer1.get().getUserId().getId());
+                emailService.sendSimpleMessage(new String[]{offer1.get().getUserId().getUsername(),
+                            offer2.get().getUserId().getUsername()},"Offer accepted!",
+                        "Your offer has been accepted. Please complete your transaction in my transactions page.");
+                emailService.sendSimpleMessage(new String[]{offer3.get().getUserId().getUsername()},"Offer accepted!",
+                        "Your offer has been accepted. Please complete your transaction in my transactions page.");
+                Transaction txn2 = new Transaction();
+                txn2.setAmount(offer2.get().getAmount());
+                txn2.setCurrency(offer2.get().getSourceCurrency());
+                txn2.setOffer(offer2.get());
+                txn2.setServiceFee(0.0005*offer2.get().getAmount());
+                txn2.setStatus(TransactionStatus.Pending);
+                txn2.setUserId(offer2.get().getUserId().getId());
+                Transaction txn3 = new Transaction();
+                txn3.setAmount(offer3.get().getAmount());
+                txn3.setCurrency(offer3.get().getSourceCurrency());
+                txn3.setOffer(offer3.get());
+                txn3.setServiceFee(0.0005*offer3.get().getAmount());
+                txn3.setStatus(TransactionStatus.Pending);
+                txn3.setUserId(offer3.get().getUserId().getId());
                 try {
-                    acceptedOfferRepository.saveAndFlush(acceptedOffer);
+                    AcceptedOffer savedOffer = acceptedOfferRepository.saveAndFlush(acceptedOffer);
+                    txn1.setAcceptedOfferId(savedOffer.getId());
+                    txn2.setAcceptedOfferId(savedOffer.getId());
+                    txn3.setAcceptedOfferId(savedOffer.getId());
+                    transactionRepository.save(txn1);
+                    transactionRepository.save(txn2);
+                    transactionRepository.save(txn3);
                     return true;
                 } catch (Exception ex) {
                     throw ex;
                 }
-//                acceptedOfferRepository.addUserForeignKey(savedAcceptedOffer.getId(),offer1.get().getId(),
-//                        offer2.get().getId(),offer3.get().getId());
             } else {
                 throw new NotFoundException("One or more offer ids " + offer2.get().getId() +
                         ", " + ", " + offer2.get().getId() + " are invalid");
@@ -133,8 +159,29 @@ public class OfferServiceImpl {
                 acceptedOffer.setOfferId2(offer2.get().getId());
                 acceptedOffer.setOfferStatus(AcceptedOfferStatus.InTransaction);
                 acceptedOffer.setTimeStamp(new Date(acceptOfferRequest.getTimeStamp()));
+                Transaction txn1 = new Transaction();
+                txn1.setAmount(offer1.get().getAmount());
+                txn1.setCurrency(offer1.get().getSourceCurrency());
+                txn1.setOffer(offer1.get());
+                txn1.setServiceFee(0.0005*offer1.get().getAmount());
+                txn1.setStatus(TransactionStatus.Pending);
+                txn1.setUserId(offer1.get().getUserId().getId());
+                Transaction txn2 = new Transaction();
+                txn2.setAmount(offer2.get().getAmount());
+                txn2.setCurrency(offer2.get().getSourceCurrency());
+                txn2.setOffer(offer2.get());
+                txn2.setServiceFee(0.0005*offer2.get().getAmount());
+                txn2.setStatus(TransactionStatus.Pending);
+                txn2.setUserId(offer2.get().getUserId().getId());
+                emailService.sendSimpleMessage(new String[]{offer1.get().getUserId().getUsername(),
+                                offer2.get().getUserId().getUsername()},"Offer accepted!",
+                        "Your offer has been accepted. Please complete your transaction in my transactions page.");
                 try {
-                    acceptedOfferRepository.saveAndFlush(acceptedOffer);
+                    AcceptedOffer savedOffer = acceptedOfferRepository.saveAndFlush(acceptedOffer);
+                    txn1.setAcceptedOfferId(savedOffer.getId());
+                    txn2.setAcceptedOfferId(savedOffer.getId());
+                    transactionRepository.save(txn1);
+                    transactionRepository.save(txn2);
                     return true;
                 } catch (Exception ex) {
                     throw ex;
@@ -206,6 +253,52 @@ public class OfferServiceImpl {
             throw new NotFoundException("Offer id " + offerId +
                     " is invalid");
         }
+    }
+
+    public void updateExpiredOffers(){
+        List<AcceptedOffer> acceptedOffers = acceptedOfferRepository.findAll();
+        acceptedOffers.forEach( offer -> {
+
+            if(offer.getOfferStatus() == AcceptedOfferStatus.InTransaction && isExpired(offer)) {
+                Optional<OfferDetails> offer1 = offerDetailsRepository.findById(offer.getOfferId1());
+                Optional<OfferDetails> offer2 = offerDetailsRepository.findById(offer.getOfferId2());
+                offer1.get().setOfferStatus(OfferStatus.Open);
+                offer2.get().setOfferStatus(OfferStatus.Open);
+                offer.setOfferStatus(AcceptedOfferStatus.Cancelled);
+                Transaction txn1 = transactionRepository.getTxnByUserOffer(offer1.get().getUserId().getId(),offer1.get().getId());
+                Transaction txn2 = transactionRepository.getTxnByUserOffer(offer2.get().getUserId().getId(),offer2.get().getId());
+                txn1.setStatus(TransactionStatus.Cancelled);
+                txn2.setStatus(TransactionStatus.Cancelled);
+                try {
+                    offerDetailsRepository.save(offer1.get());
+                    offerDetailsRepository.save(offer2.get());
+                    transactionRepository.save(txn1);
+                    transactionRepository.save(txn2);
+                    if(offer.getOfferId3()!=null){
+                        Optional<OfferDetails> offer3 = offerDetailsRepository.findById(offer.getOfferId3());
+                        offer3.get().setOfferStatus(OfferStatus.Open);
+                        offerDetailsRepository.save(offer3.get());
+                        Transaction txn3 = transactionRepository.getTxnByUserOffer(offer3.get().getUserId().getId(),offer3.get().getId());
+                        txn3.setStatus(TransactionStatus.Cancelled);
+                        transactionRepository.save(txn3);
+                    }
+                    acceptedOfferRepository.save(offer);
+                } catch (Exception ex) {
+                    System.out.println("Cron failure with ex: " + ex.getMessage());
+                }
+            }
+        });
+    }
+
+    public boolean isExpired(AcceptedOffer offer){
+        Date curr = new Date();
+        long diff = curr.getTime() - offer.getTimeStamp().getTime();
+        long diffMinutes = diff / (60 * 1000) % 60;
+        long diffSeconds = diff / 1000 % 60;
+        long diffHours = diff / (60 * 60 * 1000);
+        if( diffHours>0 || diffMinutes> 10 || (diffMinutes==10 && diffSeconds>0))
+            return true;
+        return false;
     }
 
 

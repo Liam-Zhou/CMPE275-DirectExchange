@@ -4,7 +4,6 @@ import Login from './Login/login';
 import Signup from './Login/signup';
 import emailVerification from './Login/emailVerification'
 import Transfer from './Login/transfer'
-import Landing from './Landing/landing';
 import BankSetup from './BankSetup/bank-setup';
 import Navbar from "./Nav/navBar";
 
@@ -15,7 +14,7 @@ import browserOffer from './Offer/Browser'
 import myOffer from './Offer/myOffer'
 import PrevailingRates from'./Offer/PrevailingRates'
 import transaction from './Offer/transaction'
-import myTransaction from './Offer/myTransaction'
+import TxnList from './transactionsList/transactions-list';
 import counterOffersReceivedList from './CounterOffersReceivedList/counter-offers-received-list';
 import counterOffersMadeList from './CounterOffersMadeList/counter-offers-made-list';
 import Reporting from './Reporting/reporting'
@@ -54,9 +53,9 @@ class Main extends Component {
                 <Route path="/home/postOffer" component={postOffer}/>
                 <Route path="/home/browserOffer" component={browserOffer}/>
                 <Route path="/home/myOffer" component={myOffer}/>
-                <Route path="/home/transaction" component={transaction}/>
+                <Route path="/home/transaction" component={TxnList}/>
 
-                <Route path="/home/myTransaction" component={myTransaction}/>
+                <Route path="/home/myTransaction" component={TxnList}/>
             </div>
         )
     }

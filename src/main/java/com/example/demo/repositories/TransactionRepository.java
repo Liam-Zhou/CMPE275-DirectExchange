@@ -60,4 +60,31 @@ public interface TransactionRepository extends JpaRepository<Transaction,Long> {
     		+ "and (upper(T.status) = \"COMPLETED\" or  upper(T.status) =\"ABORTED\")",nativeQuery = true) 	 
     List<Transaction> getTxnHistoryWithUserName(Long userID);
 
+    @Transactional
+    @Query(value = "select * from transactions_details where status='Pending' and user_id=?1",nativeQuery = true)
+    List<Transaction> getPendingTxnsByUserId(Long userId);
+
+    @Transactional
+    @Query(value = "select * from transactions_details where status='Fulfilled' and user_id=?1",nativeQuery = true)
+    List<Transaction> getFulfilledTxnsByUserId(Long userId);
+
+    @Transactional
+    @Query(value = "select * from transactions_details where status='Awaiting' and user_id=?1",nativeQuery = true)
+    List<Transaction> getAwaitingTxnsByUserId(Long userId);
+
+    @Transactional
+    @Query(value = "select * from transactions_details where status='Cancelled' and user_id=?1",nativeQuery = true)
+    List<Transaction> getCancelledTxnsByUserId(Long userId);
+
+    @Transactional
+    @Query(value= "select * from transactions_details where user_id=?1 and offer_id=?2",nativeQuery = true)
+    Transaction getTxnByUserOffer(Long userId, Long offerId);
+
+    @Transactional
+    @Query(value= "select * from transactions_details where user_id=?1 and offer_id=?2 and status!='Cancelled'",nativeQuery = true)
+    Transaction getTxnByUserOfferActive(Long userId, Long offerId);
+
+    @Transactional
+    @Query(value= "select * from transactions_details where offer_id=?1 and accepted_offer_id=?2",nativeQuery = true)
+    Transaction findByOfferIdAcceptedOfferId(Long offerId,Long acceptedOfferId);
 }

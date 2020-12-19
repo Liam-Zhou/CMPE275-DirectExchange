@@ -36,6 +36,10 @@ public class CounterOfferDetails {
     @Column(name="from_offer_id")
     private Long fromOfferId;
 
+    @Column(name="other_offer_id")
+    @JsonIgnore
+    private Long thirdOffer = null;
+
     @Column(name="new_amount")
     private double newAmount;
 

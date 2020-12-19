@@ -1,12 +1,16 @@
 package com.example.demo.serviceImpl;
 
+import com.example.demo.entities.AcceptedOffer;
 import com.example.demo.entities.CounterOfferDetails;
 import com.example.demo.entities.OfferDetails;
 import com.example.demo.entities.User;
+import com.example.demo.enums.AcceptedOfferStatus;
 import com.example.demo.enums.CounterOfferStatus;
 import com.example.demo.enums.OfferStatus;
 import com.example.demo.exceptions.NotFoundException;
+import com.example.demo.pojos.AcceptOfferRequest;
 import com.example.demo.pojos.CounterOfferRequest;
+import com.example.demo.repositories.AcceptedOfferRepository;
 import com.example.demo.repositories.CounterOfferRepository;
 import com.example.demo.repositories.OfferDetailsRepository;
 import org.springframework.stereotype.Service;
@@ -36,6 +40,9 @@ public class CounterOfferServiceImpl {
     @Resource
     OfferDetailsRepository offerDetailsRepository;
 
+    @Resource
+    AcceptedOfferRepository acceptedOfferRepository;
+
     @Transactional
     public CounterOfferDetails createCounterOffer(CounterOfferRequest counterOfferRequest) throws  NotFoundException{
         CounterOfferDetails saved = null;
@@ -49,6 +56,7 @@ public class CounterOfferServiceImpl {
         counterOfferDetails.setNewAmount(counterOfferRequest.getNewAmount());
         counterOfferDetails.setStatus(CounterOfferStatus.New);
         counterOfferDetails.setFromOfferId(counterOfferRequest.getFromOffer());
+        counterOfferDetails.setThirdOffer(counterOfferRequest.getThirdOffer());
         fromOffer.get().setOfferStatus(OfferStatus.CounterMade);
         try {
             saved = counterOfferRepository.saveAndFlush(counterOfferDetails);
@@ -86,6 +94,16 @@ public class CounterOfferServiceImpl {
         }
         fromOffer.get().setOfferStatus(OfferStatus.InTransaction);
         counterOfferDetails.get().setStatus(CounterOfferStatus.Accept);
+        AcceptOfferRequest acceptOfferRequest = new AcceptOfferRequest();
+        acceptOfferRequest.setOfferId1(offer.get().getId());
+        acceptOfferRequest.setOfferId2(fromOffer.get().getId());
+        if(counterOfferDetails.get().getThirdOffer()!=null) {
+            Optional<OfferDetails> thirdOffer = offerDetailsRepository.findById(counterOfferDetails.get().getThirdOffer());
+            thirdOffer.get().setOfferStatus(OfferStatus.InTransaction);
+            acceptOfferRequest.setOfferId3(counterOfferDetails.get().getThirdOffer());
+        }
+        acceptOfferRequest.setTimeStamp(new Date().getTime());
+        offerService.acceptOffer(acceptOfferRequest);
         return counterOfferDetails.get();
     }
 
@@ -100,6 +118,8 @@ public class CounterOfferServiceImpl {
             throw new NotFoundException("Invalid from offer id");
         }
         fromOffer.get().setOfferStatus(OfferStatus.Open);
+        Optional<OfferDetails> thirdOffer = offerDetailsRepository.findById(counterOfferDetails.get().getThirdOffer());
+        thirdOffer.get().setOfferStatus(OfferStatus.Open);
         counterOfferDetails.get().setStatus(CounterOfferStatus.Reject);
         return counterOfferDetails.get();
     }

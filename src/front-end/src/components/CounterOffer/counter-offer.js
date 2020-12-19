@@ -49,7 +49,8 @@ class CounterOffer extends Component {
             "fromUserId" : this.props.userId,
             "newAmount" : this.props.newAmt,
             "toOffer" : this.props.otherOffer.id,
-            "fromOffer" : this.props.offerDetails.offerId
+            "fromOffer" : this.props.offerDetails.offerId,
+            "thirdOffer" : this.props.smallerOffer
         }
         this.props.createCounterOffer(counterOfferRequest);
         this.props.history.push("/home/myOffers");

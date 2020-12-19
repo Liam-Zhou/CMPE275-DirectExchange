@@ -16,5 +16,6 @@ public class CounterOfferRequest {
     private double newAmount;
     private Long toOffer;
     private Long fromOffer;
+    private Long thirdOffer = null;
 
 }
