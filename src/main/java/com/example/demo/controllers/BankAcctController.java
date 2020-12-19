@@ -23,8 +23,10 @@ import javax.persistence.Embedded;
 import java.sql.SQLException;
 import java.util.Optional;
 
-@CrossOrigin("http://localhost:3000")
+//@CrossOrigin("http://localhost:3000")
+@CrossOrigin("http://3.136.86.151:3000")
 @Controller
+
 @RequestMapping("/bank")
 public class BankAcctController {
 
@@ -64,16 +66,16 @@ public class BankAcctController {
                 response.setPayload(JSONObject.fromObject(acct, jc));
                 response.setCode(HttpStatus.OK.value());
                 response.setMessage("success");
-                emailService.sendSimpleMessage(new String[]{user.get().getUsername()},"Bank Account Added!",
-                        "Bank Account with the following details has been added to your direct exchange account:\n"+
-                        "Account Number: "+request.getAcctNo()+"\n"+
-                                "Bank Name: "+request.getBankName()+"\n"+
-                                "Country: "+request.getCountry()+"\n"+
-                                "Currency: "+request.getCurrency()+"\n"+
-                                "Owner Name: "+request.getOwnerName()+"\n"+
-                                "Owner Address: "+request.getOwnerAddress()+"\n"+
-                                "Receiving Enabled: "+request.getReceiving()+"\n"+
-                                "Sending Enabled: "+request.getSending()+"\n");
+//                emailService.sendSimpleMessage(new String[]{user.get().getUsername()},"Bank Account Added!",
+//                        "Bank Account with the following details has been added to your direct exchange account:\n"+
+//                        "Account Number: "+request.getAcctNo()+"\n"+
+//                                "Bank Name: "+request.getBankName()+"\n"+
+//                                "Country: "+request.getCountry()+"\n"+
+//                                "Currency: "+request.getCurrency()+"\n"+
+//                                "Owner Name: "+request.getOwnerName()+"\n"+
+//                                "Owner Address: "+request.getOwnerAddress()+"\n"+
+//                                "Receiving Enabled: "+request.getReceiving()+"\n"+
+//                                "Sending Enabled: "+request.getSending()+"\n");
             } else {
                 response.setPayload(null);
                 response.setCode(HttpStatus.BAD_REQUEST.value());
