@@ -74,9 +74,8 @@ class SystemReport extends Component {
                     <table className="table table-striped">
                       <thead>
                         <tr>
-                          
-                          <td>No of Completed Txns</td>
                           <td>Total Remitted Amount</td>
+                          <td>No of Completed Txns</td>
                           <td>No of Incomplete Txns</td>
                           <td>Total Service Fee</td>
                         </tr>
