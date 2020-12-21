@@ -30,6 +30,9 @@ public class TransactionSeriveImpl {
     EmailService emailService;
 
     @Resource
+    UserServiceImpl userService;
+
+    @Resource
     OfferDetailsRepository offerDetailsRepository;
 
     @Transactional
@@ -40,6 +43,7 @@ public class TransactionSeriveImpl {
 //        transactionRepository.addUserForeignKey(user_id,offer_id,t_id);
         transactionRepository.addUserForeignKey(user_id,t_id);
         transactionRepository.addOfferForeignKey(offer_id,t_id);
+        this.updateUserRating(user_id);
         return transaction;
     }
 
@@ -133,5 +137,24 @@ public class TransactionSeriveImpl {
         catch (Exception ex){
             throw new NotFoundException("Exception in payment confirmation "+ex.getMessage());
         }
+    }
+
+    private void updateUserRating(Long user_id){
+        double rating = 0;
+        double totalTransactions = 0;
+        double totalFaultTransactions = 0;
+
+        List<Transaction> transactionList = this.getTxnHistoryWithUserName(user_id);
+        totalTransactions = transactionList.size();
+
+        for(Transaction transaction : transactionList){
+            if(transaction.getStatus() == TransactionStatus.Cancelled){
+                totalFaultTransactions++;
+            }
+        }
+        if(totalTransactions > 0) {
+            rating = Math.toIntExact(Math.round(((1 - (totalFaultTransactions/totalTransactions)) * 4) + 1));
+        }
+        userService.updateRating(rating, user_id);
     }
 }

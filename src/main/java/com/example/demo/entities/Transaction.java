@@ -51,6 +51,8 @@ public class Transaction {
         createdAt = new Date();
     }
 
-
+    public TransactionStatus getStatus() {
+        return this.status;
+    }
 
 }
